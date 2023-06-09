@@ -1,6 +1,8 @@
 import { StyleSheet, Text, View } from 'react-native';
+import { MD3DarkTheme, PaperProvider } from 'react-native-paper';
 import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
-import WelcomeScreen from './src/WelcomeScreen';
+import WelcomeScreen from './src/components/auth/WelcomeScreen';
+import AppNavigation from './src/components/app/AppNavigation';
 
 // Place into .env file eventually
 CLERK_PUBLISHABLE_KEY="pk_test_Z29vZC1jYXRmaXNoLTgzLmNsZXJrLmFjY291bnRzLmRldiQ"
@@ -9,14 +11,17 @@ CLERK_PUBLISHABLE_KEY="pk_test_Z29vZC1jYXRmaXNoLTgzLmNsZXJrLmFjY291bnRzLmRldiQ"
 export default function App() {
 	return (
 	<ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY}>
-		{/* These components display if user is signed-in with Clerk */}
-		<SignedIn>
-			<Text>You are Signed in.</Text>
-		</SignedIn>
-		{/* These components display if user is not signed-in with Clerk */}
-		<SignedOut>
-			<WelcomeScreen/>
-		</SignedOut>
+		{/* PaperProvider is used for UI management */}
+		<PaperProvider theme={MD3DarkTheme}>
+			{/* These components display if user is signed-in with Clerk */}
+			<SignedIn>
+				<AppNavigation/>
+			</SignedIn>
+			{/* These components display if user is not signed-in with Clerk */}
+			<SignedOut>
+				<WelcomeScreen/>
+			</SignedOut>	
+		</PaperProvider>
 	</ClerkProvider>
 	);
 };
