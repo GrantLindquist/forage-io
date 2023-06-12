@@ -1,15 +1,18 @@
-import { SafeAreaView, ScrollView, View, StyleSheet} from "react-native";
+import { ScrollView, View, StyleSheet } from "react-native";
 import { Text } from "react-native-paper";
+import RecipeList from './RecipeList';
+import mockData from '../../../mockRecipes.json';
 
 // Collection of recipes created by other users
-export default function CommunityRecipes(props) {
+export default function CommunityRecipes() {
 
 	return (
-	<SafeAreaView>
-		<ScrollView style={styles.container}>
-			<Text variant='headlineLarge'>Community Recipes</Text>
+		<ScrollView>
+			<View style={styles.container}>
+				<Text variant='headlineLarge'>For You</Text>
+				<RecipeList recipes={mockData} />
+			</View>
 		</ScrollView>
-	</SafeAreaView>
 	);
 };
 

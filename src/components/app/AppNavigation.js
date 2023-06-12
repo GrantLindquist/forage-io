@@ -9,7 +9,7 @@ const UserRecipesRoute = () => <UserRecipes/>;
 const CommunityRecipesRoute = () => <CommunityRecipes/>;
 const ProfileRoute = () => <Profile/>;
 
-// Handles app navigation
+// Handles app navigation within app stack
 export default function AppNavigation() {
 	
 	// Active navigation index
