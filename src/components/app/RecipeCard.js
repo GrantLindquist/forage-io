@@ -10,13 +10,18 @@ export default function RecipeCard(props) {
 		{props.recipe != undefined ? 
 		<Card style={styles.card}>
 			<Card.Content>
-				<Text variant="titleLarge">{props.recipe.title}</Text>
-				<Text variant="bodyMedium">{props.recipe.tags}</Text>
-				<View style={styles.likeButton}>
-					<IconButton
-						icon="thumb-up"
-						size={24}
-					/>
+				<View style={{flexDirection: 'row'}}>
+					<View style={{width: '88%'}}>
+						<Text variant="titleLarge">{props.recipe.title}</Text>
+						<Text variant="bodyMedium">{props.recipe.tags}</Text>
+					</View>
+					<View style={{flexDirection: 'row'}}>
+						{/* TODO: Place recipe.likes in here. */}
+						<IconButton
+							icon="thumb-up"
+							size={24}
+						/>
+					</View>
 				</View>
 			</Card.Content>
 	  	</Card> : <></>}

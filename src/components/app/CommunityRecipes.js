@@ -10,7 +10,7 @@ export default function CommunityRecipes() {
 		<ScrollView>
 			<View style={styles.container}>
 				<Text variant='headlineLarge'>For You</Text>
-				<RecipeList recipes={mockData} />
+				<RecipeList recipes={mockData} filters={true}/>
 			</View>
 		</ScrollView>
 	);

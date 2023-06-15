@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { StyleSheet, View, Pressable } from "react-native";
-import { Searchbar } from "react-native-paper";
+import { Searchbar, Button, Text } from "react-native-paper";
 import RecipeCard from './RecipeCard';
 import { useNavigation } from '@react-navigation/native';
 
@@ -9,6 +9,9 @@ export default function RecipeList(props) {
 
 	// State that provides navigation property
 	const navigation = useNavigation();
+
+	// State that handles filter display
+	const [filtersVisible, setFiltersVisible] = useState(false);
 
 	// State for tracking items in recipe list - if list is undefined default to empty array
 	const [recipes, setRecipes] = useState(props.recipes != undefined ? props.recipes : []);
@@ -31,21 +34,38 @@ export default function RecipeList(props) {
 
 	return (
 		<View>
-			<Searchbar
-				style={styles.searchbar}
-				showDivider={false}
-				mode={'view'}
-				onChangeText={query => setSearchQuery(query)}
-				value={searchQuery}
-			/>
+			<View style={{flexDirection:'row'}}>
+				<Searchbar
+					style={props.filters ? styles.searchbarShort : styles.searchbarLong }
+					inputStyle={{paddingLeft: 0}}
+					showDivider={false}
+					mode={'view'}
+					onChangeText={query => setSearchQuery(query)}
+					value={searchQuery}
+				/>
+				{/* If props.filters is true then display filter options */}
+				{props.filters ? <Button 
+					contentStyle={{paddingTop: 3}}
+					onPress={() => setFiltersVisible(!filtersVisible)}
+				>Filters</Button> : <></>}
+			</View>
+			{filtersVisible ? 
+				<Text>filter stuff lmao</Text> 
+			: <></>}
 			{renderedList}
 		</View>
 	);
 };
 
 const styles = StyleSheet.create({
-	searchbar: {
+	searchbarShort: {
 		height: 35,
+		width: '75%',
+		marginVertical: 5
+	},
+	searchbarLong: {
+		height: 35,
+		width: '100%',
 		marginVertical: 5
 	},
 });
