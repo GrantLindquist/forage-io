@@ -1,0 +1,59 @@
+{
+    "mealTypeFilters": [
+        { "title": "breakfast" },
+        { "title": "lunch" },
+        { "title": "dinner" },
+        { "title": "dessert" },
+        { "title": "main course" },
+        { "title": "side dish" },
+        { "title": "salad" },
+        { "title": "soup" }
+    ],
+    "cuisineFilters": [
+        { "title": "African" },
+        { "title": "Asian" },
+        { "title": "American" },
+        { "title": "British" },
+        { "title": "Cajun" },
+        { "title": "Caribbean" },
+        { "title": "Chinese" },
+        { "title": "Eastern European" },
+        { "title": "French" },
+        { "title": "German" },
+        { "title": "Greek" },
+        { "title": "Indian" },
+        { "title": "Irish" },
+        { "title": "Italian" },
+        { "title": "Japanese" },
+        { "title": "Jewish" },
+        { "title": "Korean" },
+        { "title": "Latin American" },
+        { "title": "Mediterranean" },
+        { "title": "Mexican" },
+        { "title": "Middle Eastern" },
+        { "title": "Nordic" },
+        { "title": "Southern" },
+        { "title": "Spanish" },
+        { "title": "Thai" },
+        { "title": "Vietnamese" }
+    ],
+    "dietFilters": [
+        { "title": "vegetarian" },
+        { "title": "vegan" },
+        { "title": "paleo" },
+        { "title": "pescetarian" },
+        { "title": "keto" },
+        { "title": "dairy-free" },
+        { "title": "gluten-free" },
+        { "title": "peanut-free" },
+        { "title": "shellfish-free" }
+    ],
+    "flavorFilters": [
+        { "title": "bitter" },
+        { "title": "sweet" },
+        { "title": "spicy" },
+        { "title": "savory" },
+        { "title": "sour" },
+        { "title": "salty" }
+    ]
+}
