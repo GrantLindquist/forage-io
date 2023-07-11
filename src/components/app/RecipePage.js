@@ -12,8 +12,8 @@ export default function RecipePage() {
 	return (
 	<SafeAreaView>
 		<ScrollView style={styles.container}>
-			<Text variant='headlineLarge'>{recipe.title}</Text>
-			<Text variant="bodySmall">{recipe.description}</Text>
+			<Text variant='headlineLarge'>{recipe.Title}</Text>
+			<Text variant="bodySmall">{recipe.Description}</Text>
 
 			<Text variant='headlineSmall'>Ingredients</Text>
 

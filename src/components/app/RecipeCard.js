@@ -6,11 +6,11 @@ import RecipeTag from "./RecipeTag";
 export default function RecipeCard(props) {
 
 	// Sub-component that lists a tag component for each recipe tag
-	const tags = props.recipe.tags.map((tag) => {
-		return(
-			<RecipeTag key={tag.title} immutable={true}>{tag}</RecipeTag>
-		)
-	});
+	// const tags = props.recipe.tags.map((tag) => {
+	// 	return(
+	// 		<RecipeTag key={tag.title} immutable={true}>{tag}</RecipeTag>
+	// 	)
+	// });
 
 	return (
 	<>
@@ -20,9 +20,9 @@ export default function RecipeCard(props) {
 			<Card.Content>
 				<View style={{flexDirection: 'row'}}>
 					<View style={{width: '88%'}}>
-						<Text variant="titleLarge">{props.recipe.title}</Text>
+						<Text variant="titleLarge">{props.recipe.Title}</Text>
 						<View style={{flexDirection: 'row'}}>
-							{tags}
+							{/* {tags} */}
 						</View>
 					</View>
 					<View style={{flexDirection: 'row'}}>

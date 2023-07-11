@@ -1,7 +1,6 @@
 import { ScrollView, View, StyleSheet } from "react-native";
 import { Text } from "react-native-paper";
 import RecipeList from './RecipeList';
-import mockData from '../../../mockRecipes.json';
 
 // Collection of recipes created by other users
 export default function CommunityRecipes() {
@@ -10,7 +9,7 @@ export default function CommunityRecipes() {
 		<ScrollView>
 			<View style={styles.container}>
 				<Text variant='headlineLarge'>For You</Text>
-				<RecipeList recipes={mockData} filters={true}/>
+				<RecipeList recipes={[]} filters={true}/>
 			</View>
 		</ScrollView>
 	);
