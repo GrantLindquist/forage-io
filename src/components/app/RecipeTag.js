@@ -6,14 +6,16 @@ import { Chip } from "react-native-paper";
 export default function RecipeTag(props) {
 
 	// State for tracking whether or not chip is selected
-	const [selected, setSelected] = useState(false);
+	const [selected, setSelected] = useState(props.immutable ? true : false);
 
 	// Function that handles user interaction with chip
 	const handlePress = () => {
-		// Update selected state
-		setSelected(!selected);
-		// Use parental callback method to make specified action occur
-		props.handleSelect();
+		// Update selected state if tag is mutable
+		if(!props.immutable){
+			setSelected(!selected);
+			// Use parental callback method to make specified action occur
+			props.handleSelect();
+		}
 	}
 
 	return (

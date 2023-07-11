@@ -5,6 +5,7 @@ import RecipeTag from './RecipeTag';
 import IngredientTag from './IngredientTag'
 import filters from '../../../filters.json'
 import BudgetSlider from './BudgetSlider';
+import FilterSelection from './FilterSelection';
 
 // Contains UI components that must be rendered on the highest z-index (modals, dialogs, etc.)
 export default function CreateRecipeModal() {
@@ -111,22 +112,18 @@ export default function CreateRecipeModal() {
 		<View style={styles.modal}>
 			<ScrollView>
 				<View style={{margin: 20}}>
-					<Text variant='headlineSmall'>Meal Type</Text>
-					<ScrollView style={{paddingVertical:8}} horizontal={true}>
+					<FilterSelection title={"Meal Type"}>
 						{mealTypeFilterTags}
-					</ScrollView>
-					<Text variant='headlineSmall'>Cuisine Type</Text>
-					<ScrollView style={{paddingVertical:8}} horizontal={true}>
+					</FilterSelection>
+					<FilterSelection title={"Cuisine"}>
 						{cuisineFilterTags}
-					</ScrollView>
-					<Text variant='headlineSmall'>Dietary Restrictions</Text>
-					<ScrollView style={{paddingVertical:8}} horizontal={true}>
+					</FilterSelection>
+					<FilterSelection title={"Diet"}>
 						{dietTags}
-					</ScrollView>
-					<Text variant='headlineSmall'>Flavors</Text>
-					<ScrollView style={{paddingVertical:8}} horizontal={true}>
+					</FilterSelection>
+					<FilterSelection title={"Flavor"}>
 						{flavorTags}
-					</ScrollView>
+					</FilterSelection>					
 					<Text variant='headlineSmall'>Ingredients</Text>
 					<View style={{flexDirection: 'row'}}>
 						<TextInput style={{height: 40, width: '85%'}} onChangeText={(val) => setIngredientInput(val)}/>

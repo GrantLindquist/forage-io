@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { StyleSheet, View, Pressable } from "react-native";
 import { Searchbar, Button, Text } from "react-native-paper";
 import RecipeCard from './RecipeCard';
+import RecipeTag from './RecipeTag';
+import FilterSelection from './FilterSelection';
+import filters from '../../../filters.json'
 import { useNavigation } from '@react-navigation/native';
 
 // Allows user to key-search through a collection of items.
@@ -18,6 +21,31 @@ export default function RecipeList(props) {
 
 	// State for tracking user search input
 	const [searchQuery, setSearchQuery] = useState('');
+
+	// Sub-component that displays a recipe tag for each available meal-type filter
+	const mealTypeFilterTags = filters.mealTypeFilters.map((item) => {
+		return(
+			<RecipeTag key={item.title} handleSelect={()=>{updateFilter(item.title, selectedMealTypeFilters, setSelectedMealTypeFilters)}} >{item.title}</RecipeTag>
+		)
+	});
+	// Sub-component that displays a recipe tag for each available cuisine filter
+	const cuisineFilterTags = filters.cuisineFilters.map((item) => {
+		return(
+			<RecipeTag key={item.title} handleSelect={()=>{updateFilter(item.title, selectedCuisineFilters, setSelectedCuisineFilters)}} >{item.title}</RecipeTag>
+		)
+	});
+	// Sub-component that displays a recipe tag for each available dietary filter
+	const dietTags = filters.dietFilters.map((item) => {
+		return(
+			<RecipeTag key={item.title} handleSelect={()=>{updateFilter(item.title, selectedDietFilters, setSelectedDietFilters)}} >{item.title}</RecipeTag>
+		)
+	});
+	// Sub-component that displays a recipe tag for each available meal-type filter
+	const flavorTags = filters.flavorFilters.map((item) => {
+		return(
+			<RecipeTag key={item.title} handleSelect={()=>{updateFilter(item.title, selectedFlavorFilters, setSelectedFlavorFilters)}} >{item.title}</RecipeTag>
+		)
+	});
 
 	// Maps recipes into RecipeCard components
 	const renderedList = recipes.map((recipe) => {
@@ -50,7 +78,20 @@ export default function RecipeList(props) {
 				>Filters</Button> : <></>}
 			</View>
 			{filtersVisible ? 
-				<Text>filter stuff lmao</Text> 
+				<View>
+					<FilterSelection title={"Meal Type"}>
+						{mealTypeFilterTags}
+					</FilterSelection>
+					<FilterSelection title={"Cuisine"}>
+						{cuisineFilterTags}
+					</FilterSelection>
+					<FilterSelection title={"Diet"}>
+						{dietTags}
+					</FilterSelection>
+					<FilterSelection title={"Flavor"}>
+						{flavorTags}
+					</FilterSelection>
+				</View> 
 			: <></>}
 			{renderedList}
 		</View>

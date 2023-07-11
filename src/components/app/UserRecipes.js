@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { ScrollView, View, StyleSheet } from "react-native";
 import { Text, FAB, Portal, Modal } from "react-native-paper";
 import RecipeList from './RecipeList';
-import mockData from '../../../mockRecipes.json';
 import CreateRecipeModal from './CreateRecipeModal';
 
 // Collection of recipes created or saved by the user
