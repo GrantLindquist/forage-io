@@ -13,6 +13,8 @@ export default function UserRecipes() {
 
 	// State for handling modal visibility
 	const [modalVisible, setModalVisible] = useState(false);
+	// State for refreshing component
+	const [refresh, setRefresh] = useState(true);
 
 	// States for listing recipes
 	const [createdRecipes, setCreatedRecipes] = useState([]);
@@ -21,7 +23,7 @@ export default function UserRecipes() {
 	// Gets recipes that user has created and sets state to response
 	const loadCreatedRecipes = async() => {
 		// Executes request
-        const response = await fetch(`https://oongvnk9o0.execute-api.us-east-1.amazonaws.com/test/recipes?creatorId=${user.id}`, {
+        const response = await fetch(`https://oongvnk9o0.execute-api.us-east-1.amazonaws.com/test/recipes/user?creatorId=${user.id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -34,23 +36,40 @@ export default function UserRecipes() {
 
 	// Gets recipes that user has saved and sets state to response
 	const loadSavedRecipes = async() => {
-		// // Executes request
-		// const response = await fetch(``, {
-		// 	method: 'GET',
-		// 	headers: {
-		// 		'Content-Type': 'application/json'
-		// 	}
-		// });
-		// // Returns recipe JSON
-		// let data = await response.json();
-		// console.log("loadSavedRecipes: " + data);
+		// Loops through each saved recipe id and fetches it from DB
+		const savedRecipeIds = user.unsafeMetadata.savedRecipeIds;
+		var savedRecipeData = [];
+		if(savedRecipeIds){
+			for(item of savedRecipeIds){
+				// Executes request
+				const response = await fetch(`https://oongvnk9o0.execute-api.us-east-1.amazonaws.com/test/recipes/?recipeId=${item}`, {
+					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json'
+					}
+				});
+				// Pushes recipe JSON to list
+				let data = await response.json();
+				if(data.Item){
+					savedRecipeData.push(data.Item);
+				}
+			}
+		}
+		// Sets savedRecipes state
+		setSavedRecipes(savedRecipeData);
+	}
+
+	// Refreshes component to activate useEffect and update recipe list
+	const refreshComponent = () => {
+		setModalVisible(false);
+		setRefresh(!refresh);
 	}
 
 	// Renders recipes on component load
 	useEffect(() => {
 		loadCreatedRecipes();
 		loadSavedRecipes();
-	}, []);
+	}, [refresh]);
 
 	return (
 		<View style={{minHeight: '100%'}}>
@@ -61,7 +80,7 @@ export default function UserRecipes() {
 				</View>
 				<View style={styles.container}>
 					<Text variant='headlineLarge'>Liked Recipes</Text>
-					<RecipeList recipes={[]}/>
+					<RecipeList recipes={savedRecipes}/>
 				</View>
 			</ScrollView>
 			{/* Components for modal display */}
@@ -73,7 +92,7 @@ export default function UserRecipes() {
 			/>
 			<Portal>
 				<Modal visible={modalVisible} onDismiss={() => setModalVisible(false)}>
-					<CreateRecipeModal/>
+					<CreateRecipeModal dismissModal={() => refreshComponent()}/>
 				</Modal>
 			</Portal>
 		</View>

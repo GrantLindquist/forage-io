@@ -1,4 +1,3 @@
-
 // eas build -p ios --profile preview
 
 import { MD2DarkTheme, PaperProvider } from 'react-native-paper';
@@ -10,11 +9,11 @@ import AppNavigation from './src/components/app/AppNavigation';
 import Header from './src/components/app/Header';
 import RecipePage from './src/components/app/RecipePage';
 
-// Place into .env file eventually
-CLERK_PUBLISHABLE_KEY="pk_test_bW9yYWwtbWFrby05NC5jbGVyay5hY2NvdW50cy5kZXYk"
-
 // Creates tab navigator
 const Stack = createStackNavigator();
+
+// Clerk API key
+const CLERK_PUBLISHABLE_KEY = "pk_test_bW9yYWwtbWFrby05NC5jbGVyay5hY2NvdW50cy5kZXYk";
 
 // App entry point
 export default function App() {
