@@ -13,6 +13,9 @@ export default function CommunityRecipes() {
 	// State for handling modal visibility
 	const [communityRecipes, setCommunityRecipes] = useState([]);
 
+	// State for refreshing component
+	const [refresh, setRefresh] = useState(true);
+
 	// Gets a collection of 50 recipes that the user has not created
 	const loadCommunityRecipes = async() => {
 		// Executes request
@@ -30,7 +33,7 @@ export default function CommunityRecipes() {
 	// Renders recipes on component load
 	useEffect(() => {
 		loadCommunityRecipes();
-	});
+	}, [refresh]);
 
 	return (
 		<ScrollView>
@@ -44,6 +47,7 @@ export default function CommunityRecipes() {
 
 const styles = StyleSheet.create({
 	container: {
-		margin: 20
+		margin: 20,
+		marginTop: 0
 	},
 });

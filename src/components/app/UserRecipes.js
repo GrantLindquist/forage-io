@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ScrollView, View, StyleSheet } from "react-native";
-import { Text, FAB, Portal, Modal } from "react-native-paper";
+import { Text, FAB, Portal, Modal, Snackbar } from "react-native-paper";
 import RecipeList from './RecipeList';
 import CreateRecipeModal from './CreateRecipeModal';
 import { useUser } from '@clerk/clerk-expo';
@@ -11,8 +11,9 @@ export default function UserRecipes() {
 	// User object
 	const { user } = useUser(); 
 
-	// State for handling modal visibility
+	// State for handling modal & snackbar visibility
 	const [modalVisible, setModalVisible] = useState(false);
+	const [snackbarVisible, setSnackbarVisible] = useState(false);
 	// State for refreshing component
 	const [refresh, setRefresh] = useState(true);
 
@@ -59,10 +60,14 @@ export default function UserRecipes() {
 		setSavedRecipes(savedRecipeData);
 	}
 
-	// Refreshes component to activate useEffect and update recipe list
-	const refreshComponent = () => {
+	// Handles UI updates for parent component once recipe is created
+	const handleCreateRecipe = () => {
+		// Refresh component
 		setModalVisible(false);
 		setRefresh(!refresh);
+		
+		// Display snackbar
+		setSnackbarVisible(true);
 	}
 
 	// Renders recipes on component load
@@ -79,7 +84,7 @@ export default function UserRecipes() {
 					<RecipeList recipes={createdRecipes}/>
 				</View>
 				<View style={styles.container}>
-					<Text variant='headlineLarge'>Liked Recipes</Text>
+					<Text variant='headlineLarge'>Saved Recipes</Text>
 					<RecipeList recipes={savedRecipes}/>
 				</View>
 			</ScrollView>
@@ -92,8 +97,14 @@ export default function UserRecipes() {
 			/>
 			<Portal>
 				<Modal visible={modalVisible} onDismiss={() => setModalVisible(false)}>
-					<CreateRecipeModal dismissModal={() => refreshComponent()}/>
+					<CreateRecipeModal handleCreateRecipe={handleCreateRecipe}/>
 				</Modal>
+				<Snackbar 
+					visible={snackbarVisible}
+					onDismiss={() => setSnackbarVisible(false)}
+					duration={5000}>
+					New recipe has been created!
+				</Snackbar>
 			</Portal>
 		</View>
 	);
@@ -101,7 +112,8 @@ export default function UserRecipes() {
 
 const styles = StyleSheet.create({
 	container: {
-		margin: 20
+		margin: 20,
+		marginTop: 0
 	},
 	fab: {
 		position: 'absolute',

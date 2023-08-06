@@ -1,5 +1,5 @@
 import { SafeAreaView, ScrollView, View , StyleSheet} from "react-native";
-import { Text } from "react-native-paper";
+import { Text, Avatar } from "react-native-paper";
 import { useUser } from "@clerk/clerk-expo";
 
 // Contains information about the user and various modifiable settings/configurations
@@ -11,7 +11,11 @@ export default function Profile() {
 	return (
 	<SafeAreaView>
 		<ScrollView style={styles.container}>
-			<Text variant='headlineLarge'>{user.username}</Text>
+			<View style={{alignItems: 'center'}}>
+				<Avatar.Image source={{uri: user.imageUrl}} size={120} style={{margin: 20}}/>
+				<Text variant='headlineLarge'>{user.username}</Text>
+				<Text variant='headlineSmall'>{user.createdAt.toDateString()}</Text>
+          	</View>
 		</ScrollView>
 	</SafeAreaView>
 	);	
@@ -19,6 +23,6 @@ export default function Profile() {
 
 const styles = StyleSheet.create({
 	container: {
-		margin: 20
+		margin: 20,
 	},
 });

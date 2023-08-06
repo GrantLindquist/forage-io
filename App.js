@@ -1,6 +1,6 @@
 // eas build -p ios --profile preview
 
-import { MD2DarkTheme, PaperProvider } from 'react-native-paper';
+import { MD3DarkTheme, PaperProvider } from 'react-native-paper';
 import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
 import { NavigationContainer, DarkTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -20,7 +20,7 @@ export default function App() {
 	return (
 	<ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY}>
 		{/* PaperProvider is used for UI management */}
-		<PaperProvider theme={MD2DarkTheme}>
+		<PaperProvider theme={MD3DarkTheme}>
 			{/* These components display if user is signed-in with Clerk */}
 			<SignedIn>
 				<NavigationContainer theme={DarkTheme}>

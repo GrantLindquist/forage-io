@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { View, StyleSheet } from "react-native";
+import { KeyboardAvoidingView, View, Image, StyleSheet } from "react-native";
+import { Text, Button } from "react-native";
 import SignIn from "./SignIn";
 import CreateAccount from "./CreateAccount";
 
@@ -11,8 +12,24 @@ export default function WelcomeScreen() {
 
 	return (
 	<View style={styles.container}>
+		{/* <Image 
+			source={require('../../../assets/layered-waves.png')} 
+			style={{width: '100%', height: '100%', zIndex: -3, position: 'absolute'}}
+		/> */}
+
+		<Text style={styles.title}>forage-io</Text>
+		
 		{/* Either sign-in or create account components are displayed, depending on which option user selects */}
-		{isCreatingAccount ? <CreateAccount/> : <SignIn/>}
+		<KeyboardAvoidingView behavior="padding" style={{width: "80%", position: 'absolute', bottom: "16%"}}>
+			{isCreatingAccount ? <CreateAccount/> : <SignIn/>}
+		</KeyboardAvoidingView>
+
+		<View style={{alignItems: 'center', margin: 10, position: 'absolute', bottom: "8%"}}>
+			{isCreatingAccount ? <><Text>Already have an account?</Text>
+			<Button onPress={() => setCreatingAccount(false)} title="Sign in here!"></Button></> : 
+			<><Text>Don't have an account?</Text>
+			<Button onPress={() => setCreatingAccount(true)} title="Create one for free!"><Text>Create one here!</Text></Button></>}
+		</View>
 	</View>
 	);	
 };
@@ -22,5 +39,12 @@ const styles = StyleSheet.create({
 	  flex: 1,
 	  alignItems: "center",
 	  justifyContent: "center",
+	  backgroundColor: "#101010"
 	},
+	title: {
+		fontSize: 50,
+		color: "white", 
+		position: 'absolute', 
+		top: "20%"
+	}
 });
