@@ -1,28 +1,88 @@
-import { SafeAreaView, ScrollView, View , StyleSheet} from "react-native";
-import { Text, Avatar } from "react-native-paper";
-import { useUser } from "@clerk/clerk-expo";
+import { useState } from 'react';
+import { SafeAreaView, View , StyleSheet} from "react-native";
+import { Text, Avatar, IconButton, Button, Divider, Portal, Dialog } from "react-native-paper";
+import { useUser, useClerk } from "@clerk/clerk-expo";
 
 // Contains information about the user and various modifiable settings/configurations
-export default function Profile() {
+export default function Profile(props) {
+
+	// State for tracking whether or not account deletion dialog drawer is open
+	const [warningDialogVisible, setWarningDialogVisible] = useState(false);
 
 	// User object
 	const { user } = useUser(); 
+	// Clerk signOut object
+	const { signOut } = useClerk();
+
+	// Signs user out of account
+	const handleSignOut = () => {
+		// Handles signOut through Clerk
+		signOut();
+
+		// Closes profile drawer
+		props.closeDrawer();
+	}
+
+	// Deletes user's account
+	const handleDeleteAccount = async() => {
+
+		// Signs user out of account
+		signOut();
+
+		// Deletes user
+        const response = await fetch(`https://api.clerk.com/v1/users/${user.id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+				'authorization': 'Bearer sk_test_HzsEx0j19wgRsG6O7hq45WhqdgFpJRlJid7H6p0aPb',
+            }
+        });
+        // Returns recipe JSON
+        let data = await response.json();
+		console.log(data);
+	}
 
 	return (
-	<SafeAreaView>
-		<ScrollView style={styles.container}>
-			<View style={{alignItems: 'center'}}>
-				<Avatar.Image source={{uri: user.imageUrl}} size={120} style={{margin: 20}}/>
+	<>
+		<SafeAreaView style={{backgroundColor: '#101010'}}>
+			<IconButton
+				icon="close"
+				size={20}
+				onPress={props.closeDrawer}
+			/>
+			<View style={styles.container}>
+				<Avatar.Image source={{uri: user.imageUrl}} size={120} style={{marginBottom: 20}}/>
 				<Text variant='headlineLarge'>{user.username}</Text>
 				<Text variant='headlineSmall'>{user.createdAt.toDateString()}</Text>
-          	</View>
-		</ScrollView>
-	</SafeAreaView>
+			</View>
+			<Button mode="text">Terms of Service</Button>
+			<Divider style={{marginHorizontal: 20}}/>
+			<Button mode="text" onPress={handleSignOut}>Sign out</Button>
+			<Divider style={{marginHorizontal: 20}}/>
+			<Button mode="text" onPress={() => setWarningDialogVisible(true)}>Delete account</Button>
+		</SafeAreaView>
+
+		{/* Account deletion warning dialog */}
+		<Portal>
+          <Dialog visible={warningDialogVisible} onDismiss={() => setWarningDialogVisible(false)}>
+            <Dialog.Title>Alert</Dialog.Title>
+            <Dialog.Content>
+              <Text variant="bodyMedium">Are you sure you want to delete your account?</Text>
+			  <Text variant="bodyMedium">This action is irreversible.</Text>
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button onPress={() => setWarningDialogVisible(false)}>No way!</Button>
+			  <Button onPress={handleDeleteAccount}>Yes, delete my account.</Button>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
+	</>
 	);	
 };
 
 const styles = StyleSheet.create({
 	container: {
-		margin: 20,
+		marginBottom: 20,
+		alignItems: 'center'
 	},
 });

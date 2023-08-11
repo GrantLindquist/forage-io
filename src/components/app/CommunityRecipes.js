@@ -3,6 +3,7 @@ import { ScrollView, View, StyleSheet } from "react-native";
 import { Text } from "react-native-paper";
 import RecipeList from './RecipeList';
 import { useUser } from '@clerk/clerk-expo';
+import recipeService from '../../services/recipeService'
 
 // Collection of recipes created by other users
 export default function CommunityRecipes() {
@@ -18,21 +19,15 @@ export default function CommunityRecipes() {
 
 	// Gets a collection of 50 recipes that the user has not created
 	const loadCommunityRecipes = async() => {
-		// Executes request
-		const response = await fetch(`https://oongvnk9o0.execute-api.us-east-1.amazonaws.com/test/recipes/community?creatorId=${user.id}`, {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json'
-			}
-		});
-		// Returns recipe JSON
-		let data = await response.json();
-		setCommunityRecipes(data.Items);
+		// Gets response from recipeService
+		let response = await recipeService.getCommunityRecipes(user.id);
+		setCommunityRecipes(response);
 	}
 
 	// Renders recipes on component load
 	useEffect(() => {
 		loadCommunityRecipes();
+		console.log('loaded communityRecipes.js');
 	}, [refresh]);
 
 	return (

@@ -69,6 +69,7 @@ export default function RecipeList(props) {
 				/>
 				{/* If props.filters is true then display filter options */}
 				{props.filters ? <Button 
+					style={{width: '25%'}}
 					contentStyle={{paddingTop: 3}}
 					onPress={() => setFiltersVisible(!filtersVisible)}
 				>Filters</Button> : <></>}

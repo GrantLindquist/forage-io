@@ -124,7 +124,7 @@ export default function CreateRecipeModal(props) {
 
 	return (
 	<KeyboardAvoidingView behavior='position'>
-		<View style={styles.modal}>
+		<View>
 			{!isGeneratingRecipe ?
 			<>
 				<ScrollView>
@@ -167,11 +167,6 @@ export default function CreateRecipeModal(props) {
 };
 
 const styles = StyleSheet.create({
-	modal: {
-		backgroundColor: '#2C2C2C',
-		margin: 30,
-		height: 460
-	},
 	container: {
 		margin: 30,
 	},
