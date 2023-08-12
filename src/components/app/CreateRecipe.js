@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { View, ScrollView, KeyboardAvoidingView, StyleSheet } from "react-native";
-import { Text, TextInput, Button, IconButton, Checkbox, ActivityIndicator } from 'react-native-paper';
+import { Text, TextInput, Button, IconButton, Checkbox, ActivityIndicator, Snackbar } from 'react-native-paper';
 import RecipeTag from './RecipeTag';
 import IngredientTag from './IngredientTag'
 import filters from '../../../filters.json'
@@ -10,13 +10,17 @@ import generateRecipe from '../../services/gptCreateRecipeService';
 import { useUser } from '@clerk/clerk-expo';
 
 // Contains UI components that must be rendered on the highest z-index (modals, dialogs, etc.)
-export default function CreateRecipeModal(props) {
+export default function CreateRecipeModal() {
 
 	// Gets user from Clerk
 	const { user } = useUser(); 
 
 	// State that tracks whether or not recipe is being actively generated
 	const [isGeneratingRecipe, setGeneratingRecipe] = useState(false);
+
+	// State that tracks snackbar status
+	const [infoSnackbarVisible, setInfoSnackbarVisible] = useState(false);
+	const [errorSnackbarVisible, setErrorSnackbarVisible] = useState(false);
 
 	// List states that track filter categories
 	const [selectedMealTypeFilters, setSelectedMealTypeFilters] = useState([]);
@@ -53,15 +57,21 @@ export default function CreateRecipeModal(props) {
 			budgetString = ' with a budget of under $' + budget.current;
 		}
 
-		// Create recipe description 
+		// Create recipe description  
 		let recipeDescription = `${selectedFlavorFilters[0] != undefined ? selectedFlavorFilters[0] + ' ' : ''}${selectedDietFilters[0] != undefined ? selectedDietFilters[0] + ' ' : ''}${selectedCuisineFilters[0] != undefined ? selectedCuisineFilters[0] + ' ' : ''}${selectedMealTypeFilters[0] != undefined ? selectedMealTypeFilters[0] + ' ' : ''}recipe${ingredientString}${budgetString}.`; 
 		// Set loading state to true
 		setGeneratingRecipe(true);
 		// Confirm recipe completion and change state back to false once recipe is complete
-		await generateRecipe(recipeDescription, user);
-		setGeneratingRecipe(false)
-		// Dismiss modal and refresh parent component
-		props.dismissModal();
+		let response = await generateRecipe(recipeDescription, user);
+		setGeneratingRecipe(false);
+
+		// Display snackbar depending on service response
+		if(response.success){
+			setInfoSnackbarVisible(true);
+		}
+		else{
+			setErrorSnackbarVisible(true);
+		}
 	}
 
 	// Updates a filter using specified parameters
@@ -162,6 +172,28 @@ export default function CreateRecipeModal(props) {
 				<ActivityIndicator size={"large"} animating={true}></ActivityIndicator>
 			</View>}
 		</View>	
+		
+		{/* Info snackbar */}
+		<Snackbar
+       		visible={infoSnackbarVisible}
+        	onDismiss={() => setInfoSnackbarVisible(false)}
+			action={{
+          		label: 'View',
+         	 	onPress: () => {},
+        	}}>
+        	Recipe was successfully generated!
+      	</Snackbar>
+		
+		{/* Error snackbar */}
+		<Snackbar
+       		visible={errorSnackbarVisible}
+        	onDismiss={() => setErrorSnackbarVisible(false)}
+			action={{
+          		label: 'Why?',
+         	 	onPress: () => {},
+        	}}>
+			Recipe failed to generate.
+      	</Snackbar>
 	</KeyboardAvoidingView>
 	);	
 };

@@ -1,7 +1,7 @@
 import { useRoute } from "@react-navigation/native";
 import { useNavigation } from '@react-navigation/native';
 import { ScrollView, View , StyleSheet} from "react-native";
-import { Text, Button, Appbar } from "react-native-paper";
+import { Text, Button } from "react-native-paper";
 import { useUser } from "@clerk/clerk-expo";
 
 // Detailed page for a recipe that contains ingredients, instructions, etc.
@@ -84,7 +84,6 @@ export default function RecipePage() {
 	});
 
 	return (
-	<>
 		<ScrollView style={{backgroundColor: '#1D1B20'}}>
 			<View style={styles.container}>
 				<Text variant='headlineLarge'>{recipe.Title}</Text>
@@ -104,7 +103,6 @@ export default function RecipePage() {
 				>Save</Button>}
 			</View>
 		</ScrollView>
-	</>
 	);
 };
 

@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 // OpenAI API configuration
 const configuration = new Configuration({
-    apiKey: "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",
+    apiKey: "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",
 });
 const openai = new OpenAIApi(configuration);
 
@@ -23,26 +23,42 @@ export default async function generateRecipe(request, user) {
         temperature: .8
     });
 
-    // Place recipe into DB
-    const recipe = JSON.parse(completion.data.choices[0].message.content);
-    const response = await fetch(`https://oongvnk9o0.execute-api.us-east-1.amazonaws.com/test/recipes`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            creatorId: user.id,
-            recipeId: uuidv4(),
-            title: recipe.title,
-            description: recipe.description,
-            ingredients: recipe.ingredients,
-            instructions: recipe.instructions,
-            likes: 0,
-            creatorUsername: user.username,
-            creationDate: Date.now()
-        })
-    });
-    // Format and return response
-    let data = await response.json();
-    return data;
+    // Attempt to parse response
+    try{
+        const recipe = JSON.parse(completion.data.choices[0].message.content);
+        
+        // Place recipe into DB
+        const response = await fetch(`https://oongvnk9o0.execute-api.us-east-1.amazonaws.com/test/recipes`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                creatorId: user.id,
+                recipeId: uuidv4(),
+                title: recipe.title,
+                description: recipe.description,
+                ingredients: recipe.ingredients,
+                instructions: recipe.instructions,
+                likes: 0,
+                creatorUsername: user.username,
+                creationDate: Date.now()
+            })
+        });
+        // Format and return response
+        let data = await response.json();
+        return {
+            success: true,
+            recipe: data
+        };
+    }
+    
+    // If GPT responds with invalid recipe format, return error
+    catch (e) {
+        console.error(e);
+        return {
+            success: false,
+            error: e
+        }
+    }
 }
