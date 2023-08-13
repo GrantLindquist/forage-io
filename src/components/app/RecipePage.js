@@ -87,7 +87,6 @@ export default function RecipePage() {
 		<ScrollView style={{backgroundColor: '#1D1B20'}}>
 			<View style={styles.container}>
 				<Text variant='headlineLarge'>{recipe.Title}</Text>
-				<Text variant="bodySmall">{recipe.Description}</Text>
 				<Text variant='headlineSmall'>Ingredients</Text>
 				{ingredients}
 				<Text variant='headlineSmall'>Instructions</Text>

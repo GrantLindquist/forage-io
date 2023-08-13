@@ -1,3 +1,4 @@
+import env from '../../env.json';
 
 // Service for interacting with recipe objects
 const recipeService = {
@@ -5,7 +6,7 @@ const recipeService = {
     // Gets recipes that user has created
     getCreatedRecipes: async(userId) => {
         // Executes request
-        const response = await fetch(`https://oongvnk9o0.execute-api.us-east-1.amazonaws.com/test/recipes/user?creatorId=${userId}`, {
+        const response = await fetch(`${env['forageAPI-uri']}/recipes/user?creatorId=${userId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -23,7 +24,7 @@ const recipeService = {
 		if(recipeIds){
 			for(item of recipeIds){
 				// Executes request
-				const response = await fetch(`https://oongvnk9o0.execute-api.us-east-1.amazonaws.com/test/recipes/?recipeId=${item}`, {
+				const response = await fetch(`${env['forageAPI-uri']}/recipes/?recipeId=${item}`, {
 					method: 'GET',
 					headers: {
 						'Content-Type': 'application/json'
@@ -44,7 +45,7 @@ const recipeService = {
     // Gets well-liked recipes to display on communityRecipes component
     getCommunityRecipes : async(userId) => {
         // Executes request
-		const response = await fetch(`https://oongvnk9o0.execute-api.us-east-1.amazonaws.com/test/recipes/community?creatorId=${userId}`, {
+		const response = await fetch(`${env['forageAPI-uri']}/recipes/community?creatorId=${userId}`, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json'

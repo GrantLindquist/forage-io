@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { StyleSheet } from "react-native";
-import { Chip } from "react-native-paper";
+import { Chip, Text } from "react-native-paper";
 
 // A small component containing a title and icon - used for filter sorting and recipe tagging.
 export default function RecipeTag(props) {
@@ -14,13 +14,14 @@ export default function RecipeTag(props) {
 		if(!props.immutable){
 			setSelected(!selected);
 			// Use parental callback method to make specified action occur
-			props.handleSelect();
+			// props.handleSelect();
 		}
 	}
 
 	return (
 	<Chip style={styles.tag} icon={props.icon} mode={selected ? 'flat' : 'outlined'} onPress={handlePress}>
-		{props.children}
+		<Text style={{color: props.color}}># </Text>
+		{props.title}
 	</Chip>
 	);
 };
@@ -28,6 +29,7 @@ export default function RecipeTag(props) {
 const styles = StyleSheet.create({
 	tag: {
 		borderRadius: 8,
-		marginRight: 5
+		marginRight: 5,
+		flexDirection: 'row'
 	}
 });

@@ -62,7 +62,7 @@ export default function CreateRecipeModal() {
 		// Set loading state to true
 		setGeneratingRecipe(true);
 		// Confirm recipe completion and change state back to false once recipe is complete
-		let response = await generateRecipe(recipeDescription, user);
+		let response = await generateRecipe(recipeDescription, "", user);
 		setGeneratingRecipe(false);
 
 		// Display snackbar depending on service response
