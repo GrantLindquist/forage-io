@@ -1,14 +1,13 @@
 import { useState } from 'react';
 import { BottomNavigation } from 'react-native-paper';
-import UserRecipes from './UserRecipes';
-import CommunityRecipes from './CommunityRecipes';
 import Profile from './Profile';
 import CreateRecipe from './CreateRecipe';
+import RecipeMenu from './RecipeMenu';
 
 // Routes that lead to various components
-const UserRecipesRoute = () => <UserRecipes/>;
-const CommunityRecipesRoute = () => <CommunityRecipes/>;
+const RecipeMenuRoute = () => <RecipeMenu/>;
 const CreateRecipeRoute = () => <CreateRecipe/>;
+const ProfileRoute = () => <Profile/>;
 
 // Handles app navigation within app stack
 export default function AppNavigation() {
@@ -18,21 +17,16 @@ export default function AppNavigation() {
 	
 	// Configures bottom navigation routes 
 	const routes = [
-		{ key: 'userRecipes', focusedIcon: 'home'},
+		{ key: 'recipeMenu', focusedIcon: 'home'},
 		{ key: 'createRecipe', focusedIcon: 'plus' },
-		{ key: 'communityRecipes', focusedIcon: 'album' },
+		{ key: 'profile', focusedIcon: 'album' },
 	];
-
-	const handleIndexChange = (index) => {
-		console.log(index);
-		setIndex(index);
-	}
 	
 	// Maps routes to components
 	const renderScene = BottomNavigation.SceneMap({
-		userRecipes: UserRecipesRoute,
+		recipeMenu: RecipeMenuRoute,
 		createRecipe: CreateRecipeRoute,
-		communityRecipes: CommunityRecipesRoute
+		profile: ProfileRoute
 	});
 
 	return (

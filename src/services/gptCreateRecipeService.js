@@ -12,7 +12,7 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 // Generates a recipe with GPT using the request parameter.
-export default async function generateRecipe(request, recipeTags, user) {
+export default async function generateRecipe(request, user) {
 
     // Make GPT request
     const completion = await openai.createChatCompletion({
@@ -29,7 +29,7 @@ export default async function generateRecipe(request, recipeTags, user) {
         const recipe = JSON.parse(completion.data.choices[0].message.content);
         
         // Place recipe into DB
-        const response = await fetch(`https://oongvnk9o0.execute-api.us-east-1.amazonaws.com/test/recipes`, {
+        const response = await fetch(`${env['forageAPI-uri']}/recipes`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -41,24 +41,19 @@ export default async function generateRecipe(request, recipeTags, user) {
                 ingredients: recipe.ingredients,
                 instructions: recipe.instructions,
                 likes: 0,
-                tags: recipeTags,
                 creatorUsername: user.username,
                 creationDate: Date.now()
             })
         });
-        // Format and return response
-        let data = await response.json();
-        return {
-            success: true,
-            recipe: data
-        };
+        // Return response
+        return(response)
     }
     
     // If GPT responds with invalid recipe format, return error
     catch (e) {
         console.error(e);
         return {
-            success: false,
+            ok: false,
             error: e
         }
     }

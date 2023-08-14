@@ -3,6 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import { ScrollView, View , StyleSheet} from "react-native";
 import { Text, Button } from "react-native-paper";
 import { useUser } from "@clerk/clerk-expo";
+import env from '../../../env.json';
 
 // Detailed page for a recipe that contains ingredients, instructions, etc.
 export default function RecipePage() {
@@ -18,7 +19,7 @@ export default function RecipePage() {
 	// Deletes recipe from DB
 	const handleDeleteRecipe = async() => {
 		// Executes request
-		const response = await fetch(`https://oongvnk9o0.execute-api.us-east-1.amazonaws.com/test/recipes/?recipeId=${item}`, {
+		const response = await fetch(`${env['forageAPI-uri']}/recipes/?recipeId=${recipe.RecipeId}`, {
 			method: 'DELETE',
 			headers: {
 				'Content-Type': 'application/json'

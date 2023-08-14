@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { SafeAreaView, View , StyleSheet} from "react-native";
 import { Text, Avatar, IconButton, Button, Divider, Portal, Dialog } from "react-native-paper";
 import { useUser, useClerk } from "@clerk/clerk-expo";
-import env from '../../env.json'
+import env from '../../../env.json'
 
 // Contains information about the user and various modifiable settings/configurations
 export default function Profile(props) {
@@ -45,12 +45,7 @@ export default function Profile(props) {
 
 	return (
 	<>
-		<SafeAreaView style={{backgroundColor: '#101010'}}>
-			<IconButton
-				icon="close"
-				size={20}
-				onPress={props.closeDrawer}
-			/>
+		<SafeAreaView>
 			<View style={styles.container}>
 				<Avatar.Image source={{uri: user.imageUrl}} size={120} style={{marginBottom: 20}}/>
 				<Text variant='headlineLarge'>{user.username}</Text>

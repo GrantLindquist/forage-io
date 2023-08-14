@@ -10,6 +10,31 @@ export default function TagSearch(props) {
 	// State for tracking user search input
 	const [searchQuery, setSearchQuery] = useState('');
 
+    // State for tracking which tags are selected
+    const [selectedTags, setSelectedTags] = useState([]);
+
+    // Updates selected tags
+    const updateSelectedTags = (val) => {
+        // Places state into new list
+        let updatedTagList = [];
+        let removedTag = false;
+        for (let tag of selectedTags){
+            // Ensure that tag does not exist in
+            if(tag != val){
+                updatedTagList.push(tag);
+            }
+            else{
+                removedTag = true;
+            }
+        }
+        // Appends parameter tag to list if no tags were removed
+        if(!removedTag){
+            updatedTagList.push(val);
+        }
+        // Send results to parent component
+        props.updateSelectedTags(updatedTagList);
+    }
+
     // List of tags for user to select
     const tagList = tags.map((tag) => {
 
@@ -32,7 +57,7 @@ export default function TagSearch(props) {
 
         if(tag.filterTitle.toLowerCase().includes(searchQuery.toLowerCase())){
             return (
-                <RecipeTag title={tag.filterTitle} color={color}/>
+                <RecipeTag key={tag.filterTitle} title={tag.filterTitle} color={color} handlePress={updateSelectedTags}/>
             )
         }
     })

@@ -14,7 +14,7 @@ export default function RecipeTag(props) {
 		if(!props.immutable){
 			setSelected(!selected);
 			// Use parental callback method to make specified action occur
-			// props.handleSelect();
+			props.handlePress(props.title);
 		}
 	}
 

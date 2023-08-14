@@ -1,16 +1,14 @@
 import { useState, useRef } from 'react';
 import { View, ScrollView, KeyboardAvoidingView, StyleSheet } from "react-native";
 import { Text, TextInput, Button, IconButton, Checkbox, ActivityIndicator, Snackbar } from 'react-native-paper';
-import RecipeTag from './RecipeTag';
 import IngredientTag from './IngredientTag'
-import filters from '../../../filters.json'
 import BudgetSlider from './BudgetSlider';
-import FilterSelection from './FilterSelection';
+import TagSearch from './TagSearch';
 import generateRecipe from '../../services/gptCreateRecipeService';
 import { useUser } from '@clerk/clerk-expo';
 
 // Contains UI components that must be rendered on the highest z-index (modals, dialogs, etc.)
-export default function CreateRecipeModal() {
+export default function CreateRecipe(props) {
 
 	// Gets user from Clerk
 	const { user } = useUser(); 
@@ -23,10 +21,7 @@ export default function CreateRecipeModal() {
 	const [errorSnackbarVisible, setErrorSnackbarVisible] = useState(false);
 
 	// List states that track filter categories
-	const [selectedMealTypeFilters, setSelectedMealTypeFilters] = useState([]);
-	const [selectedCuisineFilters, setSelectedCuisineFilters] = useState([]);
-	const [selectedDietFilters, setSelectedDietFilters] = useState([]);
-	const [selectedFlavorFilters, setSelectedFlavorFilters] = useState([]);
+	const [selectedFilters, setSelectedFilters] = useState([]);
 	const [selectedIngredients, setSelectedIngredients] = useState([]);
 
 	// State for tracking active ingredient input
@@ -57,37 +52,27 @@ export default function CreateRecipeModal() {
 			budgetString = ' with a budget of under $' + budget.current;
 		}
 
-		// Create recipe description  
-		let recipeDescription = `${selectedFlavorFilters[0] != undefined ? selectedFlavorFilters[0] + ' ' : ''}${selectedDietFilters[0] != undefined ? selectedDietFilters[0] + ' ' : ''}${selectedCuisineFilters[0] != undefined ? selectedCuisineFilters[0] + ' ' : ''}${selectedMealTypeFilters[0] != undefined ? selectedMealTypeFilters[0] + ' ' : ''}recipe${ingredientString}${budgetString}.`; 
+		// Create recipe description
+		let recipeDescription = '';
+		for(let filter of selectedFilters){
+			recipeDescription = recipeDescription.concat(filter + " ");
+		}
+		recipeDescription = recipeDescription.concat(`recipe${ingredientString}${budgetString}`); 
+		console.log(recipeDescription);
+
 		// Set loading state to true
 		setGeneratingRecipe(true);
+		
 		// Confirm recipe completion and change state back to false once recipe is complete
-		let response = await generateRecipe(recipeDescription, "", user);
+		let response = await generateRecipe(recipeDescription, user);
 		setGeneratingRecipe(false);
 
 		// Display snackbar depending on service response
-		if(response.success){
+		if(response.ok){
 			setInfoSnackbarVisible(true);
 		}
 		else{
 			setErrorSnackbarVisible(true);
-		}
-	}
-
-	// Updates a filter using specified parameters
-	const updateFilter = (filter, filterList, setFilter) => {
-		let newFilterList = [];
-		// Checks if filter already exists in list
-		if (filterList.includes(filter)){
-			// Removes item if already exists in list
-			newFilterList = filterList.filter(item => item !== filter && item);
-			setFilter(newFilterList);
-		}
-		else{
-			// Append filter if doesn't already exist
-			newFilterList = filterList;
-			newFilterList.push(filter);
-			setFilter(newFilterList);
 		}
 	}
 
@@ -102,30 +87,6 @@ export default function CreateRecipeModal() {
 		setSelectedIngredients(newIngredientList);
 	}
 
-	// Sub-component that displays a recipe tag for each available meal-type filter
-	const mealTypeFilterTags = filters.mealTypeFilters.map((item) => {
-		return(
-			<RecipeTag key={item.title} handleSelect={()=>{updateFilter(item.title, selectedMealTypeFilters, setSelectedMealTypeFilters)}} >{item.title}</RecipeTag>
-		)
-	});
-	// Sub-component that displays a recipe tag for each available cuisine filter
-	const cuisineFilterTags = filters.cuisineFilters.map((item) => {
-		return(
-			<RecipeTag key={item.title} handleSelect={()=>{updateFilter(item.title, selectedCuisineFilters, setSelectedCuisineFilters)}} >{item.title}</RecipeTag>
-		)
-	});
-	// Sub-component that displays a recipe tag for each available dietary filter
-	const dietTags = filters.dietFilters.map((item) => {
-		return(
-			<RecipeTag key={item.title} handleSelect={()=>{updateFilter(item.title, selectedDietFilters, setSelectedDietFilters)}} >{item.title}</RecipeTag>
-		)
-	});
-	// Sub-component that displays a recipe tag for each available meal-type filter
-	const flavorTags = filters.flavorFilters.map((item) => {
-		return(
-			<RecipeTag key={item.title} handleSelect={()=>{updateFilter(item.title, selectedFlavorFilters, setSelectedFlavorFilters)}} >{item.title}</RecipeTag>
-		)
-	});
 	const ingredientTags = selectedIngredients.map((item) => {
 		return(
 			<IngredientTag key={item}>{item}</IngredientTag>
@@ -134,37 +95,29 @@ export default function CreateRecipeModal() {
 
 	return (
 	<KeyboardAvoidingView behavior='position'>
-		<View>
+		<View style={{margin: 20}}>
 			{!isGeneratingRecipe ?
 			<>
 				<ScrollView>
-					<View style={{margin: 20}}>
-						<FilterSelection title={"Meal Type"}>
-							{mealTypeFilterTags}
-						</FilterSelection>
-						<FilterSelection title={"Cuisine"}>
-							{cuisineFilterTags}
-						</FilterSelection>
-						<FilterSelection title={"Diet"}>
-							{dietTags}
-						</FilterSelection>
-						<FilterSelection title={"Flavor"}>
-							{flavorTags}
-						</FilterSelection>					
-						<Text variant='headlineSmall'>Ingredients</Text>
-						<View style={{flexDirection: 'row'}}>
-							<TextInput style={{height: 40, width: '85%'}} onChangeText={(val) => setIngredientInput(val)}/>
-							<IconButton size={20} mode={'outlined'} icon={'plus'} onPress={() => addIngredient(ingredientInput)}/>
-						</View>
-						<ScrollView style={{paddingVertical:8}} horizontal={true}>
-							{ingredientTags}
-						</ScrollView>
-						<View style={{flexDirection: 'row'}}>
-							<Text variant='headlineSmall'>Budget</Text>
-							<Checkbox.Android status={budgetActive ? 'checked' : 'unchecked'} onPress={() => setBudgetActive(!budgetActive)}/>
-						</View>
-						<BudgetSlider active={budgetActive} handleValueChange={(val) => budget.current = val}/>
+					<Text variant='headlineSmall'>Add Tags</Text>
+					<TagSearch updateSelectedTags={(tags) => setSelectedFilters(tags)} closeTagSearch={() => console.log('this is bad design. fix this.')}/>
+									
+					<Text variant='headlineSmall'>Ingredients</Text>
+					<View style={{flexDirection: 'row'}}>
+						<TextInput style={{height: 40, width: '85%'}} onChangeText={(val) => setIngredientInput(val)}/>
+						<IconButton size={20} mode={'outlined'} icon={'plus'} onPress={() => addIngredient(ingredientInput)}/>
 					</View>
+
+					<ScrollView style={{paddingVertical:8}} horizontal={true}>
+						{ingredientTags}
+					</ScrollView>
+
+					<View style={{flexDirection: 'row'}}>
+						<Text variant='headlineSmall'>Budget</Text>
+						<Checkbox.Android status={budgetActive ? 'checked' : 'unchecked'} onPress={() => setBudgetActive(!budgetActive)}/>
+					</View>
+
+					<BudgetSlider active={budgetActive} handleValueChange={(val) => budget.current = val}/>
 				</ScrollView>
 				<Button style={{marginBottom: 20}} onPress={handleCreateRecipe}>Create</Button>
 			</>

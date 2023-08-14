@@ -1,7 +1,6 @@
 import { View, StyleSheet } from "react-native";
 import { Card, Text, IconButton } from 'react-native-paper';
 import RecipeTag from "./RecipeTag";
-import { useUser } from '@clerk/clerk-expo';
 
 // Card that contains basic info about recipe. Clicking will direct user to more detailed information about recipe
 export default function RecipeCard(props) {
