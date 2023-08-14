@@ -8,6 +8,7 @@ import WelcomeScreen from './src/components/auth/WelcomeScreen';
 import AppNavigation from './src/components/app/AppNavigation';
 import Header from './src/components/app/Header';
 import env from './env.json';
+import { DarkTheme, NavigationContainer } from '@react-navigation/native';
 
 // Creates tab navigator
 const Stack = createStackNavigator();
@@ -21,8 +22,9 @@ export default function App() {
 		<PaperProvider theme={MD3DarkTheme}>
 			{/* These components display if user is signed-in with Clerk */}
 			<SignedIn>
-				<Header/>
-				<AppNavigation/>		
+				<NavigationContainer theme={DarkTheme}>
+					<AppNavigation/>	
+				</NavigationContainer>	
 			</SignedIn>
 			{/* These components display if user is not signed-in with Clerk */}
 			<SignedOut>

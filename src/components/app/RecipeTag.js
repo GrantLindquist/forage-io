@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
 	tag: {
 		borderRadius: 8,
 		marginRight: 5,
-		flexDirection: 'row'
+		flexDirection: 'row',
+		width: 150
 	}
 });

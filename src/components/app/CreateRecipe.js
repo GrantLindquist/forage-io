@@ -6,6 +6,7 @@ import BudgetSlider from './BudgetSlider';
 import TagSearch from './TagSearch';
 import generateRecipe from '../../services/gptCreateRecipeService';
 import { useUser } from '@clerk/clerk-expo';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 // Contains UI components that must be rendered on the highest z-index (modals, dialogs, etc.)
 export default function CreateRecipe(props) {
@@ -94,8 +95,8 @@ export default function CreateRecipe(props) {
 	});
 
 	return (
-	<KeyboardAvoidingView behavior='position'>
-		<View style={{margin: 20}}>
+	<>
+		<SafeAreaView style={{margin: 20}}>
 			{!isGeneratingRecipe ?
 			<>
 				<ScrollView>
@@ -124,7 +125,7 @@ export default function CreateRecipe(props) {
 			: <View style={styles.loadingScreen}>
 				<ActivityIndicator size={"large"} animating={true}></ActivityIndicator>
 			</View>}
-		</View>	
+		</SafeAreaView>	
 		
 		{/* Info snackbar */}
 		<Snackbar
@@ -147,7 +148,7 @@ export default function CreateRecipe(props) {
         	}}>
 			Recipe failed to generate.
       	</Snackbar>
-	</KeyboardAvoidingView>
+	</>
 	);	
 };
 
