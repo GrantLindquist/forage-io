@@ -19,7 +19,7 @@ export default async function generateRecipe(request, user) {
         model: "gpt-3.5-turbo",
         messages: [{ "role": "system", "content": "You are a professional chef with decades of culinary experience." }, {
             role: "user",
-            content: `generate a ${request}. place this recipe into a JSON-compatible string. the recipe name must be called \"title\", the ingredient list must be named \"ingredients\", the instructions list must be named \"instructions\"`
+            content: `generate a ${request.description}. place this recipe into a JSON-compatible string. the recipe name must be called \"title\", the ingredient list must be named \"ingredients\", the instructions list must be named \"instructions\"`
         }],
         temperature: .8
     });
@@ -41,6 +41,7 @@ export default async function generateRecipe(request, user) {
                 ingredients: recipe.ingredients,
                 instructions: recipe.instructions,
                 likes: 0,
+                tags: request.tags,
                 creatorUsername: user.username,
                 creationDate: Date.now()
             })

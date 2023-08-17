@@ -6,7 +6,7 @@ import { Chip, Text } from "react-native-paper";
 export default function RecipeTag(props) {
 
 	// State for tracking whether or not chip is selected
-	const [selected, setSelected] = useState(props.immutable ? true : false);
+	const [selected, setSelected] = useState(false);
 
 	// Function that handles user interaction with chip
 	const handlePress = () => {
@@ -31,6 +31,6 @@ const styles = StyleSheet.create({
 		borderRadius: 8,
 		marginRight: 5,
 		flexDirection: 'row',
-		width: 150
+		width: 110
 	}
 });

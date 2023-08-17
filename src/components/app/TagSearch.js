@@ -32,6 +32,7 @@ export default function TagSearch(props) {
             updatedTagList.push(val);
         }
         // Send results to parent component
+        setSelectedTags(updatedTagList);
         props.updateSelectedTags(updatedTagList);
     }
 

@@ -4,9 +4,10 @@ import { ScrollView, View , StyleSheet} from "react-native";
 import { Text, Button } from "react-native-paper";
 import { useUser } from "@clerk/clerk-expo";
 import env from '../../../env.json';
+import RecipeTag from "./RecipeTag";
 
 // Detailed page for a recipe that contains ingredients, instructions, etc.
-export default function RecipePage() {
+export default function RecipePage(props) {
 
 	// State that provides navigation property
 	const navigation = useNavigation();
@@ -28,6 +29,9 @@ export default function RecipePage() {
 		
 		// Redirects user
 		navigation.goBack();
+
+		// Refreshes createdRecipes.js
+		props.refreshCreatedRecipes();
 
 		// Returns response
 		let data = await response.json();
@@ -64,14 +68,25 @@ export default function RecipePage() {
 		const response = await user.update({
 			unsafeMetadata: { savedRecipeIds }
 		});
+
+		// Refreshes savedRecipes.js
+		props.refreshSavedRecipes();
+		
 		console.log(savedRecipeIds);
 		return response;
 	}
 
+	// Sub-component that lists a tag component for each recipe tag
+	const tags = recipe.Tags.map((tag) => {
+		return(
+			<RecipeTag key={tag} title={tag} immutable={true} color={'red'}/>
+		)
+	});
+
 	// Renders each ingredient 
 	const ingredients = recipe.Ingredients.map((ingredient) => {
 		return(
-			<Text>- {ingredient}</Text>
+			<Text key={ingredient}>- {ingredient}</Text>
 		)
 	});
 
@@ -80,7 +95,7 @@ export default function RecipePage() {
 	const instructions = recipe.Instructions.map((instruction) => {
 		stepCounter++;
 		return(
-			<Text>{stepCounter}. {instruction}</Text>
+			<Text key={"instruction" + stepCounter}>{stepCounter}. {instruction}</Text>
 		)
 	});
 
@@ -88,6 +103,9 @@ export default function RecipePage() {
 		<ScrollView style={{backgroundColor: '#1D1B20'}}>
 			<View style={styles.container}>
 				<Text variant='headlineLarge'>{recipe.Title}</Text>
+				<View style={{flexWrap: 'wrap', flexDirection: 'row'}}>
+					{tags}
+				</View>
 				<Text variant='headlineSmall'>Ingredients</Text>
 				{ingredients}
 				<Text variant='headlineSmall'>Instructions</Text>

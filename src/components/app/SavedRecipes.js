@@ -8,16 +8,13 @@ import { useUser } from '@clerk/clerk-expo';
 import recipeService from '../../services/recipeService'
 
 // Collection of recipes created or saved by the user
-export default function SavedRecipes() {
+export default function SavedRecipes(props) {
 
 	// User object
 	const { user } = useUser(); 
 
 	// State that provides navigation property
 	const navigation = useNavigation();
-
-	// State for refreshing component
-	const [refresh, setRefresh] = useState(true);
 
 	// State for listing recipes
 	const [savedRecipes, setSavedRecipes] = useState([]);
@@ -49,7 +46,7 @@ export default function SavedRecipes() {
 	useEffect(() => {
 		loadSavedRecipes();
 		console.log('loaded savedRecipes.js');
-	}, [refresh]);
+	}, [props.refreshValue]);
 
 	return (
 		<View style={{minHeight: '100%'}}>

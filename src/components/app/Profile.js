@@ -2,11 +2,10 @@ import { useState } from 'react';
 import { SafeAreaView, View , StyleSheet} from "react-native";
 import { Text, Avatar, IconButton, Button, Divider, Portal, Dialog } from "react-native-paper";
 import { useUser, useClerk } from "@clerk/clerk-expo";
-import Header from './Header';
 import env from '../../../env.json'
 
 // Contains information about the user and various modifiable settings/configurations
-export default function Profile(props) {
+export default function Profile() {
 
 	// State for tracking whether or not account deletion dialog drawer is open
 	const [warningDialogVisible, setWarningDialogVisible] = useState(false);
@@ -15,15 +14,6 @@ export default function Profile(props) {
 	const { user } = useUser(); 
 	// Clerk signOut object
 	const { signOut } = useClerk();
-
-	// Signs user out of account
-	const handleSignOut = () => {
-		// Handles signOut through Clerk
-		signOut();
-
-		// Closes profile drawer
-		props.closeDrawer();
-	}
 
 	// Deletes user's account
 	const handleDeleteAccount = async() => {
@@ -47,7 +37,6 @@ export default function Profile(props) {
 	return (
 	<>
 		<SafeAreaView>
-			<Header/>
 			<View style={styles.container}>
 				<Avatar.Image source={{uri: user.imageUrl}} size={120} style={{marginBottom: 20}}/>
 				<Text variant='headlineLarge'>{user.username}</Text>
@@ -55,7 +44,7 @@ export default function Profile(props) {
 			</View>
 			<Button mode="text">Terms of Service</Button>
 			<Divider style={{marginHorizontal: 20}}/>
-			<Button mode="text" onPress={handleSignOut}>Sign out</Button>
+			<Button mode="text" onPress={signOut}>Sign out</Button>
 			<Divider style={{marginHorizontal: 20}}/>
 			<Button mode="text" onPress={() => setWarningDialogVisible(true)}>Delete account</Button>
 		</SafeAreaView>

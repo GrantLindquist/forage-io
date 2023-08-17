@@ -53,24 +53,35 @@ export default function CreateRecipe(props) {
 			budgetString = ' with a budget of under $' + budget.current;
 		}
 
-		// Create recipe description
+		// Create recipe description & tags
 		let recipeDescription = '';
+		let recipeTags = [];
 		for(let filter of selectedFilters){
 			recipeDescription = recipeDescription.concat(filter + " ");
+			recipeTags.push(filter);
 		}
 		recipeDescription = recipeDescription.concat(`recipe${ingredientString}${budgetString}`); 
-		console.log(recipeDescription);
+
+		// DTO object for prompting GPT
+		recipeDTO = {
+			description: recipeDescription,
+			tags: recipeTags
+		}
+		console.log(recipeDTO);
 
 		// Set loading state to true
 		setGeneratingRecipe(true);
 		
 		// Confirm recipe completion and change state back to false once recipe is complete
-		let response = await generateRecipe(recipeDescription, user);
+		let response = await generateRecipe(recipeDTO, user);
 		setGeneratingRecipe(false);
 
 		// Display snackbar depending on service response
 		if(response.ok){
 			setInfoSnackbarVisible(true);
+
+			// Refreshes recipeMenu component so user can see updated recipe list
+			props.refreshCreatedRecipes();
 		}
 		else{
 			setErrorSnackbarVisible(true);

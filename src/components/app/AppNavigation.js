@@ -1,41 +1,28 @@
 import { useState } from 'react';
-import { BottomNavigation } from 'react-native-paper';
 import Profile from './Profile';
 import CreateRecipe from './CreateRecipe';
 import RecipeMenu from './RecipeMenu';
 
-// Routes that lead to various components
-const RecipeMenuRoute = () => <RecipeMenu/>;
-const CreateRecipeRoute = () => <CreateRecipe/>;
-const ProfileRoute = () => <Profile/>;
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-// Handles app navigation within app stack
+// Create tab object
+const Tab = createBottomTabNavigator();
+
+// Bottom tab navigator for app
 export default function AppNavigation() {
-	
-	// Active navigation index
-	const [index, setIndex] = useState(0);
-	
-	// Configures bottom navigation routes 
-	const routes = [
-		{ key: 'recipeMenu', focusedIcon: 'home'},
-		{ key: 'createRecipe', focusedIcon: 'plus' },
-		{ key: 'profile', focusedIcon: 'album' },
-	];
-	
-	// Maps routes to components
-	const renderScene = BottomNavigation.SceneMap({
-		recipeMenu: RecipeMenuRoute,
-		createRecipe: CreateRecipeRoute,
-		profile: ProfileRoute
-	});
 
-	return (
-			<BottomNavigation
-				navigationState={{ index, routes }}
-				onIndexChange={setIndex}
-				renderScene={renderScene}
-				sceneAnimationEnabled={true}
-				sceneAnimationType='shifting'
-			/>
-	);
-};
+	// State for refreshing createdRecipes component
+	const [refreshCreatedRecipes, setRefreshCreatedRecipes] = useState(false);
+
+  	return (
+    	<Tab.Navigator screenOptions={{header: () => <></>, lazy: false, tabBarShowLabel: false}}>
+			<Tab.Screen name="Home">
+				{() => <RecipeMenu refreshValue={refreshCreatedRecipes}/>}
+			</Tab.Screen>
+			<Tab.Screen name="Create">
+				{() => <CreateRecipe refreshCreatedRecipes={() => setRefreshCreatedRecipes(!refreshCreatedRecipes)}/>}
+			</Tab.Screen>
+			<Tab.Screen name="Profile" component={Profile} />
+    	</Tab.Navigator>
+  	);
+}

@@ -5,19 +5,15 @@ import { useNavigation } from '@react-navigation/native';
 import RecipeCard from './RecipeCard';
 import { useUser } from '@clerk/clerk-expo';
 import recipeService from '../../services/recipeService'
-import { createStackNavigator } from '@react-navigation/stack';
 
 // Collection of recipes created or saved by the user
-export default function CreatedRecipes() {
+export default function CreatedRecipes(props) {
 
 	// User object
 	const { user } = useUser(); 
 	
 	// State that provides navigation property
 	const navigation = useNavigation();
-
-	// State for refreshing component
-	const [refresh, setRefresh] = useState(true);
 
 	// State for tracking user search input
 	const [searchQuery, setSearchQuery] = useState('');
@@ -45,11 +41,11 @@ export default function CreatedRecipes() {
 		}
 	});
 
-	// Renders recipes on component load
+	// Renders recipes on component load & re-renders component when refreshValue is updated
 	useEffect(() => {
 		loadCreatedRecipes();
 		console.log('loaded createdRecipes.js');
-	}, [refresh]);
+	}, [props.refreshValue1, props.refreshValue2]);
 
 	return (
 		<View style={{minHeight: '100%'}}>
