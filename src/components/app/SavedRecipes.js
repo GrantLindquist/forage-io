@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { ScrollView, View, StyleSheet, Pressable } from "react-native";
-import { Searchbar, Button } from "react-native-paper";
-import RecipePage from './RecipePage';
+import { FlatList, View, StyleSheet, Pressable } from "react-native";
+import { Searchbar, Text } from "react-native-paper";
 import { useNavigation } from '@react-navigation/native';
 import RecipeCard from './RecipeCard';
+import RecipeCardPlaceholder from './RecipeCardPlaceholder';
 import { useUser } from '@clerk/clerk-expo';
 import recipeService from '../../services/recipeService'
 
@@ -16,30 +16,19 @@ export default function SavedRecipes(props) {
 	// State that provides navigation property
 	const navigation = useNavigation();
 
-	// State for listing recipes
+	// State for listing & refreshing recipes
 	const [savedRecipes, setSavedRecipes] = useState([]);
+	const [isLoading, setIsLoading] = useState(true);
 
 	// State for tracking user search input
 	const [searchQuery, setSearchQuery] = useState('');
-
-	// Maps recipes into RecipeCard components
-	const renderedList = savedRecipes.map((recipe) => {
-		if(recipe.Title.toLowerCase().includes(searchQuery.toLowerCase())){
-			return (
-				<Pressable key={recipe.RecipeId} onPress={() => navigation.navigate('Recipe', {
-						recipe: recipe
-					})}>
-					<RecipeCard recipe={recipe}/>
-				</Pressable>
-			)
-		}
-	});
 
 	// Gets recipes that user has saved and sets state to response
 	const loadSavedRecipes = async() => {
 		// Gets response from recipeService
 		let response = await recipeService.getSavedRecipes(user.unsafeMetadata.savedRecipeIds);
 		setSavedRecipes(response);
+		setIsLoading(false);
 	}
 
 	// Renders recipes on component load
@@ -49,9 +38,22 @@ export default function SavedRecipes(props) {
 	}, [props.refreshValue]);
 
 	return (
-		<View style={{minHeight: '100%'}}>
-			<ScrollView>
-				<View style={styles.container}>
+		<View style={styles.container}>
+			{!isLoading ?
+				<FlatList
+				data={savedRecipes}
+				renderItem={(item) => {
+					if(item.item.Title.toLowerCase().includes(searchQuery.toLowerCase())){
+						return (
+							<Pressable key={item.item.RecipeId} onPress={() => navigation.navigate('Recipe', {
+									recipe: item.item
+								})}>
+								<RecipeCard recipe={item.item}/>
+							</Pressable>
+						)
+					}
+				}}
+				ListHeaderComponent={() => 
 					<Searchbar
 						style={styles.searchbar}
 						placeholder={"search recipes"}
@@ -62,9 +64,16 @@ export default function SavedRecipes(props) {
 						onChangeText={query => setSearchQuery(query)}
 						value={searchQuery}
 					/>
-					{renderedList}
-				</View>
-			</ScrollView>
+				}
+			/> :
+			<View>
+				<RecipeCardPlaceholder/>
+				<RecipeCardPlaceholder/>
+				<RecipeCardPlaceholder/>
+				<RecipeCardPlaceholder/>
+				<RecipeCardPlaceholder/>
+			</View>
+			}
 		</View>
 	);
 };
@@ -72,6 +81,7 @@ export default function SavedRecipes(props) {
 const styles = StyleSheet.create({
 	container: {
 		margin: 20,
+		minHeight: '100%'
 	},
 	searchbar: {
 		height: 35,

@@ -1,12 +1,37 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import { Chip, Text } from "react-native-paper";
+import tags from '../../../tags.json'
 
 // A small component containing a title and icon - used for filter sorting and recipe tagging.
 export default function RecipeTag(props) {
 
 	// State for tracking whether or not chip is selected
 	const [selected, setSelected] = useState(false);
+
+	// Color for hashtag icon in tag body
+	const [color, setColor] = useState("grey");
+
+	// Assigns color to tag
+	useEffect(() => {
+		switch(tags.find((tag) => tag.filterTitle == props.title).filterTypeCode){
+            case 0:
+                setColor("red");
+                break;
+            case 1:
+                setColor("blue");
+                break;
+            case 2:
+                setColor("yellow");
+                break;
+            case 3:
+                setColor("green");
+                break;
+			default:
+				setColor("grey");
+				break;
+        }
+	}, []);
 
 	// Function that handles user interaction with chip
 	const handlePress = () => {
@@ -20,7 +45,7 @@ export default function RecipeTag(props) {
 
 	return (
 	<Chip style={styles.tag} icon={props.icon} mode={selected ? 'flat' : 'outlined'} onPress={handlePress}>
-		<Text style={{color: props.color}}># </Text>
+		<Text style={{color: color}}># </Text>
 		{props.title}
 	</Chip>
 	);

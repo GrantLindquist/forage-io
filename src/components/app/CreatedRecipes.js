@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { ScrollView, View, StyleSheet, Pressable } from "react-native";
-import { Searchbar, Button } from "react-native-paper";
+import { FlatList, View, StyleSheet, Pressable } from "react-native";
+import { Searchbar } from "react-native-paper";
 import { useNavigation } from '@react-navigation/native';
 import RecipeCard from './RecipeCard';
+import RecipeCardPlaceholder from './RecipeCardPlaceholder';
 import { useUser } from '@clerk/clerk-expo';
 import recipeService from '../../services/recipeService'
 
@@ -20,26 +21,15 @@ export default function CreatedRecipes(props) {
 
 	// States for listing recipes
 	const [createdRecipes, setCreatedRecipes] = useState([]);
+	const [isLoading, setIsLoading] = useState(true);
 
 	// Gets recipes that user has created and sets state to response
 	const loadCreatedRecipes = async() => {
 		// Gets response from recipeService
 		let response = await recipeService.getCreatedRecipes(user.id);
 		setCreatedRecipes(response);
+		setIsLoading(false);
 	}
-
-	// Maps recipes into RecipeCard components
-	const renderedList = createdRecipes.map((recipe) => {
-		if(recipe.Title.toLowerCase().includes(searchQuery.toLowerCase())){
-			return (
-				<Pressable key={recipe.RecipeId} onPress={() => navigation.navigate('Recipe', {
-						recipe: recipe
-					})}>
-					<RecipeCard recipe={recipe}/>
-				</Pressable>
-			)
-		}
-	});
 
 	// Renders recipes on component load & re-renders component when refreshValue is updated
 	useEffect(() => {
@@ -48,9 +38,22 @@ export default function CreatedRecipes(props) {
 	}, [props.refreshValue1, props.refreshValue2]);
 
 	return (
-		<View style={{minHeight: '100%'}}>
-			<ScrollView >
-				<View style={styles.container}>
+		<View style={styles.container}>
+			{!isLoading ?
+				<FlatList
+				data={createdRecipes}
+				renderItem={(item) => {
+					if(item.item.Title.toLowerCase().includes(searchQuery.toLowerCase())){
+						return (
+							<Pressable key={item.item.RecipeId} onPress={() => navigation.navigate('Recipe', {
+									recipe: item.item
+								})}>
+								<RecipeCard recipe={item.item}/>
+							</Pressable>
+						)
+					}
+				}}
+				ListHeaderComponent={() => 
 					<Searchbar
 						style={styles.searchbar}
 						placeholder={"search recipes"}
@@ -61,9 +64,16 @@ export default function CreatedRecipes(props) {
 						onChangeText={query => setSearchQuery(query)}
 						value={searchQuery}
 					/>
-					{renderedList}
-				</View>
-			</ScrollView>
+				}
+			/> :
+			<View>
+				<RecipeCardPlaceholder/>
+				<RecipeCardPlaceholder/>
+				<RecipeCardPlaceholder/>
+				<RecipeCardPlaceholder/>
+				<RecipeCardPlaceholder/>
+			</View>
+			}
 		</View>
 	);
 };
@@ -71,6 +81,7 @@ export default function CreatedRecipes(props) {
 const styles = StyleSheet.create({
 	container: {
 		margin: 20,
+		minHeight: '100%'
 	},
 	searchbar: {
 		height: 35,

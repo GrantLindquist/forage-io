@@ -1,10 +1,11 @@
 import { useRoute } from "@react-navigation/native";
 import { useNavigation } from '@react-navigation/native';
 import { ScrollView, View , StyleSheet} from "react-native";
-import { Text, Button } from "react-native-paper";
+import { Text, Button, Portal, FAB } from "react-native-paper";
 import { useUser } from "@clerk/clerk-expo";
 import env from '../../../env.json';
 import RecipeTag from "./RecipeTag";
+import { useState } from "react";
 
 // Detailed page for a recipe that contains ingredients, instructions, etc.
 export default function RecipePage(props) {
@@ -16,6 +17,9 @@ export default function RecipePage(props) {
 	const route = useRoute();
 	const { user } = useUser();
 	const { recipe } = route.params;
+
+	// State for interacting with FAB group
+	const [fabOpen, setFabOpen] = useState(false);
 
 	// Deletes recipe from DB
 	const handleDeleteRecipe = async() => {
@@ -100,27 +104,58 @@ export default function RecipePage(props) {
 	});
 
 	return (
-		<ScrollView style={{backgroundColor: '#1D1B20'}}>
-			<View style={styles.container}>
-				<Text variant='headlineLarge'>{recipe.Title}</Text>
-				<View style={{flexWrap: 'wrap', flexDirection: 'row'}}>
-					{tags}
+		<>
+			<ScrollView style={{backgroundColor: '#1D1B20'}}>
+				<View style={styles.container}>
+					<Text variant='headlineLarge'>{recipe.Title}</Text>
+					<View style={{flexWrap: 'wrap', flexDirection: 'row'}}>
+						{tags}
+					</View>
+					<Text variant='headlineSmall'>Ingredients</Text>
+					{ingredients}
+					<Text variant='headlineSmall'>Instructions</Text>
+					{instructions}
+					{/* Displays recipe options if user is the creator of recipe */}
+					{user.id == recipe.CreatorId ? 
+					<Button 
+						textColor="red"
+						onPress={handleDeleteRecipe}
+					>Delete</Button> : 
+					<Button 
+						onPress={handleSaveRecipe}
+					>Save</Button>}
 				</View>
-				<Text variant='headlineSmall'>Ingredients</Text>
-				{ingredients}
-				<Text variant='headlineSmall'>Instructions</Text>
-				{instructions}
-				{/* Displays recipe options if user is the creator of recipe */}
-				{user.id == recipe.CreatorId ? 
-				<Button 
-					textColor="red"
-					onPress={handleDeleteRecipe}
-				>Delete</Button> : 
-				<Button 
-					onPress={handleSaveRecipe}
-				>Save</Button>}
-			</View>
-		</ScrollView>
+			</ScrollView>
+			<FAB.Group
+				open={fabOpen}
+				visible
+				icon={fabOpen ? 'calendar-today' : 'plus'}
+				actions={[
+					{ icon: 'plus', onPress: () => console.log('Pressed add') },
+					{
+					icon: 'star',
+					label: 'Star',
+					onPress: () => console.log('Pressed star'),
+					},
+					{
+					icon: 'email',
+					label: 'Email',
+					onPress: () => console.log('Pressed email'),
+					},
+					{
+					icon: 'bell',
+					label: 'Remind',
+					onPress: () => console.log('Pressed notifications'),
+					},
+				]}
+				onStateChange={() => setFabOpen(!fabOpen)}
+				onPress={() => {
+					if (fabOpen) {
+					// do something if the speed dial is open
+					}
+				}}
+			/>
+		</>
 	);
 };
 

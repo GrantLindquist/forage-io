@@ -38,27 +38,9 @@ export default function TagSearch(props) {
 
     // List of tags for user to select
     const tagList = tags.map((tag) => {
-
-        // Assign color to tag
-        let color = "";
-        switch(tag.filterTypeCode){
-            case 0:
-                color = "red";
-                break;
-            case 1:
-                color = "blue";
-                break;
-            case 2:
-                color = "green";
-                break;
-            case 3:
-                color = "yellow";
-                break;
-        }
-
         if(tag.filterTitle.toLowerCase().includes(searchQuery.toLowerCase())){
             return (
-                <RecipeTag key={tag.filterTitle} title={tag.filterTitle} color={color} handlePress={updateSelectedTags}/>
+                <RecipeTag key={tag.filterTitle} title={tag.filterTitle} handlePress={updateSelectedTags}/>
             )
         }
     })

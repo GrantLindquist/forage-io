@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ScrollView, View, StyleSheet, Pressable } from "react-native";
+import { FlatList, View, StyleSheet, Pressable } from "react-native";
 import { Searchbar, Button } from "react-native-paper";
 import TagSearch from './TagSearch';
 import { useNavigation } from '@react-navigation/native';
@@ -19,10 +19,7 @@ export default function CommunityRecipes() {
 	// State for handling modal visibility
 	const [communityRecipes, setCommunityRecipes] = useState([]);
 
-	// State for refreshing component
-	const [refresh, setRefresh] = useState(true);
-
-	// State that handles filter display
+	// States that handle filter management
 	const [filtersVisible, setFiltersVisible] = useState(false);
 
 	// State for tracking user search input
@@ -35,59 +32,60 @@ export default function CommunityRecipes() {
 		setCommunityRecipes(response);
 	}
 
-	// Maps recipes into RecipeCard components
-	const renderedList = communityRecipes.map((recipe) => {
-		if(recipe.Title.toLowerCase().includes(searchQuery.toLowerCase())){
-			return (
-				<Pressable key={recipe.RecipeId} onPress={() => navigation.navigate('Recipe', {
-						recipe: recipe
-					})}>
-					<RecipeCard recipe={recipe}/>
-				</Pressable>
-			)
-		}
-	});
-
 	// Renders recipes on component load
 	useEffect(() => {
 		loadCommunityRecipes();
 		console.log('loaded communityRecipes.js');
-	}, [refresh]);
+	}, []);
 
 	return (
-		<ScrollView>
-			<View style={styles.container}>
-				{/* Recipe list */}
-				{filtersVisible ? 
-					<TagSearch closeTagSearch={() => setFiltersVisible(false)}/>
-				: 
-				<View style={{flexDirection:'row'}}>
-					<Searchbar
-						style={styles.searchbar}
-						placeholder={"search recipes"}
-						placeholderTextColor={"grey"}
-						inputStyle={{paddingLeft: 0, alignSelf: 'center'}}
-						showDivider={false}
-						mode={'view'}
-						onChangeText={query => setSearchQuery(query)}
-						value={searchQuery}
-					/>
-					<Button 
-						style={{width: '25%'}}
-						contentStyle={{paddingTop: 3}}
-						onPress={() => setFiltersVisible(!filtersVisible)}
-					>Filters</Button>
-				</View>
+		<View style={styles.container}>
+			<FlatList
+				data={communityRecipes}
+				renderItem={(item) => {
+					if(item.item.Title.toLowerCase().includes(searchQuery.toLowerCase())){
+						return (
+							<Pressable key={item.item.RecipeId} onPress={() => navigation.navigate('Recipe', {
+									recipe: item.item
+								})}>
+								<RecipeCard recipe={item.item}/>
+							</Pressable>
+						)
+					}
+				}}
+				ListHeaderComponent={() => 
+					<View>
+						{filtersVisible ? 
+							<TagSearch closeTagSearch={() => setFiltersVisible(false)}/>
+						: 
+						<View style={{flexDirection:'row'}}>
+							<Searchbar
+								style={styles.searchbar}
+								placeholder={"search recipes"}
+								placeholderTextColor={"grey"}
+								inputStyle={{paddingLeft: 0, alignSelf: 'center'}}
+								showDivider={false}
+								mode={'view'}
+								onChangeText={query => setSearchQuery(query)}
+								value={searchQuery}
+							/>
+							<Button 
+								style={{width: '25%'}}
+								contentStyle={{paddingTop: 3}}
+								onPress={() => setFiltersVisible(!filtersVisible)}
+							>Filters</Button>
+						</View>}
+					</View>
 				}
-				{renderedList}
-			</View>
-		</ScrollView>
+			/>
+		</View>
 	);
 };
 
 const styles = StyleSheet.create({
 	container: {
 		margin: 20,
+		minHeight: '100%'
 	},
 	searchbar: {
 		height: 35,
