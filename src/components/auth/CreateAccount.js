@@ -7,7 +7,7 @@ import { HelperText, Button, TextInput } from "react-native-paper";
 export default function CreateAccount() {
 
 	// Clerk SignUp states for user management
-	const { isLoaded, signUp } = useSignUp();
+	const { isLoaded, setActive, signUp } = useSignUp();
 
 	// Form states for updating input display
 	const [username, setUsername] = useState("");
@@ -32,10 +32,11 @@ export default function CreateAccount() {
 
 			// Sends user input to Clerk
 			try {
-				await signUp.create({
+				const completeSignUp = await signUp.create({
 					username,
 					password,
 				});
+				await setActive({ session: completeSignUp.createdSessionId });
 			} 
 			// If account creation fails, return error from Clerk
 			catch (err) {

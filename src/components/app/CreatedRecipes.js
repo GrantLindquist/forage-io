@@ -39,6 +39,16 @@ export default function CreatedRecipes(props) {
 
 	return (
 		<View style={styles.container}>
+			<Searchbar
+				style={styles.searchbar}
+				placeholder={"search recipes"}
+				placeholderTextColor={"grey"}
+				inputStyle={{paddingLeft: 0, alignSelf: 'center'}}
+				showDivider={false}
+				mode={'view'}
+				onChangeText={query => setSearchQuery(query)}
+				value={searchQuery}
+			/>
 			{!isLoading ?
 				<FlatList
 				data={createdRecipes}
@@ -53,18 +63,6 @@ export default function CreatedRecipes(props) {
 						)
 					}
 				}}
-				ListHeaderComponent={() => 
-					<Searchbar
-						style={styles.searchbar}
-						placeholder={"search recipes"}
-						placeholderTextColor={"grey"}
-						inputStyle={{paddingLeft: 0, alignSelf: 'center'}}
-						showDivider={false}
-						mode={'view'}
-						onChangeText={query => setSearchQuery(query)}
-						value={searchQuery}
-					/>
-				}
 			/> :
 			<View>
 				<RecipeCardPlaceholder/>

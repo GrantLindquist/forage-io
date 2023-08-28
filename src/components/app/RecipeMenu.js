@@ -2,8 +2,6 @@ import CreatedRecipes from './CreatedRecipes';
 import CommunityRecipes from './CommunityRecipes';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import SavedRecipes from './SavedRecipes';
-import Header from './Header';
-
 import { createStackNavigator } from '@react-navigation/stack';
 import RecipePage from './RecipePage';
 import { useEffect, useState } from 'react';
@@ -20,7 +18,7 @@ export default function RecipeMenu(props) {
     const [refreshSavedRecipes, setRefreshSavedRecipes] = useState(false);
 
 	return (
-        <Stack.Navigator screenOptions={{header: () => <Header/>}}>
+        <Stack.Navigator screenOptions={{header: () => <></>}}>
             {/* Stack for displaying recipe menu & nested recipe tabs */}
             <Stack.Screen name="Menu">
                 {() => <Tab.Navigator>

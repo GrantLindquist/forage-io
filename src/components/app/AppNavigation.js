@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Profile from './Profile';
 import CreateRecipe from './CreateRecipe';
 import RecipeMenu from './RecipeMenu';
+import Header from './Header';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
@@ -15,7 +16,7 @@ export default function AppNavigation() {
 	const [refreshCreatedRecipes, setRefreshCreatedRecipes] = useState(false);
 
   	return (
-    	<Tab.Navigator screenOptions={{header: () => <></>, tabBarShowLabel: false}}>
+    	<Tab.Navigator screenOptions={{header: () => <Header/>, tabBarShowLabel: false}}>
 			<Tab.Screen name="Home" options={{
 				tabBarIcon: ({color}) => (
 					<MaterialCommunityIcons name="text-search" color={color} size={30} />

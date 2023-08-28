@@ -51,17 +51,17 @@ export default function Profile() {
 
 		{/* Account deletion warning dialog */}
 		<Portal>
-          <Dialog visible={warningDialogVisible} onDismiss={() => setWarningDialogVisible(false)}>
-            <Dialog.Title>Alert</Dialog.Title>
-            <Dialog.Content>
-              <Text variant="bodyMedium">Are you sure you want to delete your account?</Text>
-			  <Text variant="bodyMedium">This action is irreversible.</Text>
-            </Dialog.Content>
-            <Dialog.Actions>
-              <Button onPress={() => setWarningDialogVisible(false)}>No way!</Button>
-			  <Button onPress={handleDeleteAccount}>Yes, delete my account.</Button>
-            </Dialog.Actions>
-          </Dialog>
+			<Dialog visible={warningDialogVisible} onDismiss={() => setWarningDialogVisible(false)}>
+				<Dialog.Title>Alert</Dialog.Title>
+				<Dialog.Content>
+					<Text variant="bodyMedium">Are you sure you want to delete your account?</Text>
+					<Text variant="bodyMedium">This action is irreversible.</Text>
+				</Dialog.Content>
+				<Dialog.Actions>
+					<Button onPress={() => setWarningDialogVisible(false)}>No way!</Button>
+					<Button onPress={handleDeleteAccount}>Yes, delete my account.</Button>
+				</Dialog.Actions>
+			</Dialog>
         </Portal>
 	</>
 	);	

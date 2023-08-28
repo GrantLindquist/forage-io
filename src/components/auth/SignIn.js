@@ -14,7 +14,7 @@ export default function SignIn() {
 	const [password, setPassword] = useState("");
 	const [usernameHelperText, setUsernameHelperText] = useState("");
 	const [passwordHelperText, setPasswordHelperText] = useState("");
-
+ 
 	// Attempts to sign-in user
 	const handleSignIn = async () => {
 

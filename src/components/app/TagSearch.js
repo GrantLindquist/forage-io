@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
-import { Searchbar, Text, Button } from "react-native-paper";
+import { Searchbar, Text, IconButton } from "react-native-paper";
 import RecipeTag from "./RecipeTag";
 import tags from '../../../tags.json'
 
@@ -33,6 +33,7 @@ export default function TagSearch(props) {
         }
         // Send results to parent component
         setSelectedTags(updatedTagList);
+        console.log(updatedTagList);
         props.updateSelectedTags(updatedTagList);
     }
 
@@ -58,11 +59,10 @@ export default function TagSearch(props) {
                     onChangeText={query => setSearchQuery(query)}
                     value={searchQuery}
                 />
-                <Button 
-					style={{width: '25%'}}
-					contentStyle={{paddingTop: 3}}
+                <IconButton 
+                    icon="close"
 					onPress={() => props.closeTagSearch()}
-				>Search</Button>
+				/>
             </View>
             {searchQuery == "" ? <Text variant='bodySmall'>Popular Tags:</Text> : <></>}
             <ScrollView style={{paddingVertical:8}} horizontal={true}>
@@ -75,7 +75,7 @@ export default function TagSearch(props) {
 const styles = StyleSheet.create({
 	searchbarShort: {
 		height: 35,
-		width: '75%',
+		width: '85%',
 		marginVertical: 5
 	},
 });

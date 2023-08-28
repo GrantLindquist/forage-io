@@ -14,8 +14,8 @@ export default function Header(props) {
 	return (
 		<Appbar.Header>
 			{/* Displays back arrow if user is viewing a recipe */}
-			{navigation.canGoBack() ? <><Appbar.BackAction onPress={() => navigation.goBack()} /></> 
-			: <Appbar.Action></Appbar.Action>}
+			{/* {navigation.canGoBack() ? <><Appbar.BackAction onPress={() => navigation.goBack()} /></> 
+			: <Appbar.Action></Appbar.Action>} */}
 		</Appbar.Header>
 		);	
 	};
