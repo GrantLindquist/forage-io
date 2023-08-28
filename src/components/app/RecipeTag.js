@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import { Chip, Text } from "react-native-paper";
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import tags from '../../../tags.json'
 
 // A small component containing a title and icon - used for filter sorting and recipe tagging.
@@ -9,27 +10,29 @@ export default function RecipeTag(props) {
 	// State for tracking whether or not chip is selected
 	const [selected, setSelected] = useState(false);
 
-	// Color for hashtag icon in tag body
+	// States for styling tags
 	const [color, setColor] = useState("grey");
+	const [icon, setIcon] = useState("");
 
 	// Assigns color to tag
 	useEffect(() => {
 		switch(tags.find((tag) => tag.filterTitle == props.title).filterTypeCode){
             case 0:
                 setColor("red");
+				setIcon(() => <></>);
                 break;
             case 1:
                 setColor("blue");
+				setIcon(() => <></>);
                 break;
             case 2:
                 setColor("yellow");
+				setIcon(() => <></>);
                 break;
             case 3:
                 setColor("green");
+				setIcon(() => <></>);
                 break;
-			default:
-				setColor("grey");
-				break;
         }
 	}, []);
 
@@ -44,18 +47,20 @@ export default function RecipeTag(props) {
 	}
 
 	return (
-	<Chip style={styles.tag} icon={props.icon} mode={selected ? 'flat' : 'outlined'} onPress={handlePress}>
-		<Text style={{color: color}}># </Text>
-		{props.title}
-	</Chip>
+		<Chip style={selected ? styles.tagSelected : styles.tagUnselected} icon={icon} onPress={handlePress}>
+			<Text style={{color: color}}>{props.title}</Text>
+		</Chip>
 	);
 };
 
 const styles = StyleSheet.create({
-	tag: {
+	tagUnselected: {
 		borderRadius: 8,
 		marginRight: 5,
-		flexDirection: 'row',
-		width: 110
+		backgroundColor: '#2A2A2A'
+	},
+	tagSelected: {
+		borderRadius: 8,
+		marginRight: 5,
 	}
 });

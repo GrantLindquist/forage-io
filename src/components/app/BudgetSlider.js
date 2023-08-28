@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import React, { useState } from 'react';
 import { Text } from 'react-native-paper';
 import Slider from '@react-native-community/slider';
@@ -7,13 +7,18 @@ import Slider from '@react-native-community/slider';
 export default function BudgetSlider (props) {
 
 	// Budget value for slider display and setting budget
-	const [budget, setBudget] = useState(7.50);
+	const [budget, setBudget] = useState(.75);
 	
 	// Updates budget value to parent component
 	const handleValueChange = (val) => {
 		
 		// Send new slider value to parent
-		props.handleValueChange(val);
+		if(val == .75){
+			props.handleValueChange(-1);
+		}
+		else{
+			props.handleValueChange(val);
+		}
 
 		// Updates visual budget state
 		setBudget(val);
@@ -21,14 +26,13 @@ export default function BudgetSlider (props) {
 
     return (
 		<View>
-			<Text style={{alignSelf:'center'}} variant='headlineSmall'>${budget.toFixed(2)}</Text>
+			<Text variant='bodyLarge'>Budget: {budget != .75 ? "$" + budget.toFixed(2) : "-"} </Text>
 			<Slider
 				onValueChange={val => handleValueChange(val)}
-				minimumValue={1}
+				minimumValue={.75}
 				maximumValue={15}
 				step={.25}
 				value={budget}
-				disabled={!props.active}
 			/>
 		</View>
     );

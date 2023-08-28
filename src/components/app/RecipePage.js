@@ -1,11 +1,12 @@
 import { useRoute } from "@react-navigation/native";
 import { useNavigation } from '@react-navigation/native';
 import { ScrollView, View , StyleSheet} from "react-native";
-import { Text, Button, Portal, FAB } from "react-native-paper";
+import { Text, Snackbar, Appbar, FAB } from "react-native-paper";
 import { useUser } from "@clerk/clerk-expo";
 import env from '../../../env.json';
 import RecipeTag from "./RecipeTag";
 import { useState } from "react";
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // Detailed page for a recipe that contains ingredients, instructions, etc.
 export default function RecipePage(props) {
@@ -20,6 +21,40 @@ export default function RecipePage(props) {
 
 	// State for interacting with FAB group
 	const [fabOpen, setFabOpen] = useState(false);
+
+	// State that tracks snackbar status
+	const [snackbarVisible, setSnackbarVisible] = useState(false);
+
+	// Method for determining user action in FAB group
+	const determineUserAction = () => {
+		// If user has created recipe, display delete action
+		if (user.id == recipe.CreatorId){
+			return {
+				icon: 'delete',
+				label: 'Delete',
+				onPress: () => handleDeleteRecipe(),
+			}
+		}
+		// If user did not create recipe but has recipe saved, display unsave action
+		else if (user.unsafeMetadata.savedRecipeIds.includes(recipe.RecipeId)){
+			return {
+				icon: 'bookmark',
+				label: 'Unsave',
+				onPress: () => handleSaveRecipe(),
+			}
+		}
+		// Otherwise, display save action
+		else {
+			return {
+				icon: 'bookmark',
+				label: 'Save',
+				onPress: () => handleSaveRecipe(),
+			}
+		}
+	}
+
+	// User action that depends on state of recipe
+	const [userAction, setUserAction] = useState(determineUserAction());
 
 	// Deletes recipe from DB
 	const handleDeleteRecipe = async() => {
@@ -36,6 +71,9 @@ export default function RecipePage(props) {
 
 		// Refreshes createdRecipes.js
 		props.refreshCreatedRecipes();
+
+		// Updates FAB display
+		setUserAction(determineUserAction());
 
 		// Returns response
 		let data = await response.json();
@@ -75,6 +113,12 @@ export default function RecipePage(props) {
 
 		// Refreshes savedRecipes.js
 		props.refreshSavedRecipes();
+
+		// Updates FAB display
+		setUserAction(determineUserAction());
+
+		// Displays Snackbar
+		setSnackbarVisible(true);
 		
 		console.log(savedRecipeIds);
 		return response;
@@ -90,7 +134,7 @@ export default function RecipePage(props) {
 	// Renders each ingredient 
 	const ingredients = recipe.Ingredients.map((ingredient) => {
 		return(
-			<Text key={ingredient}>- {ingredient}</Text>
+			<Text variant='bodyLarge' style={{marginVertical: 5}} key={ingredient}><Text style={{color: 'red'}}>-</Text> {ingredient}</Text>
 		)
 	});
 
@@ -99,62 +143,73 @@ export default function RecipePage(props) {
 	const instructions = recipe.Instructions.map((instruction) => {
 		stepCounter++;
 		return(
-			<Text key={"instruction" + stepCounter}>{stepCounter}. {instruction}</Text>
+			<Text variant='bodyLarge' style={{marginVertical: 10}} key={"instruction" + stepCounter}><Text style={{color: 'red'}}>{stepCounter}. </Text>{instruction}</Text>
 		)
 	});
 
 	return (
 		<>
+			{/* Custom recipePage header */}
+			<Appbar.Header>
+				<Appbar.BackAction onPress={() => navigation.goBack()}/>
+				<Appbar.Content></Appbar.Content>
+				<Appbar.Action icon={'dots-vertical'} onPress={() => setFabOpen(true)} />
+			</Appbar.Header>
 			<ScrollView style={{backgroundColor: '#1D1B20'}}>
 				<View style={styles.container}>
-					<Text variant='headlineLarge'>{recipe.Title}</Text>
-					<View style={{flexWrap: 'wrap', flexDirection: 'row'}}>
+					<Text variant="bodySmall"><MaterialCommunityIcons name="account" size={13} /> {recipe.CreatorUsername.toUpperCase()}</Text>
+					<Text style={styles.recipeTitle}>{recipe.Title}</Text>
+					<View style={{ marginTop: 15,  flexDirection: 'row'}}>
+						<View style={{alignItems: 'center', width: '33%'}}>
+							<Text variant="bodyLarge">Serves</Text>
+							<Text variant="headlineLarge">-</Text>
+						</View>
+						<View style={{alignItems: 'center' , borderColor: 'red', borderLeftWidth: '1', borderRightWidth: '1', width: '33%'}}>
+							<Text variant="bodyLarge">Time</Text>
+							<Text variant="headlineLarge">-</Text>
+						</View>
+						<View style={{alignItems: 'center', width: '33%'}}>
+							<Text variant="bodyLarge">Budget</Text>
+							<Text variant="headlineLarge">-</Text>
+						</View>
+					</View>
+					<View style={{ marginTop: 15, flexWrap: 'wrap', flexDirection: 'row'}}>
 						{tags}
 					</View>
-					<Text variant='headlineSmall'>Ingredients</Text>
+					<Text style={styles.categoryTitle}>Ingredients</Text>
 					{ingredients}
-					<Text variant='headlineSmall'>Instructions</Text>
+					<Text style={styles.categoryTitle}>Instructions</Text>
 					{instructions}
-					{/* Displays recipe options if user is the creator of recipe */}
-					{user.id == recipe.CreatorId ? 
-					<Button 
-						textColor="red"
-						onPress={handleDeleteRecipe}
-					>Delete</Button> : 
-					<Button 
-						onPress={handleSaveRecipe}
-					>Save</Button>}
 				</View>
 			</ScrollView>
 			<FAB.Group
 				open={fabOpen}
-				visible
-				icon={fabOpen ? 'calendar-today' : 'plus'}
+				visible={false}
+				style={{bottom: -100}}
 				actions={[
-					{ icon: 'plus', onPress: () => console.log('Pressed add') },
+					userAction,
 					{
-					icon: 'star',
-					label: 'Star',
-					onPress: () => console.log('Pressed star'),
+						icon: 'email',
+						label: 'Remix',
+						onPress: () => console.log('Pressed remix'),
 					},
 					{
-					icon: 'email',
-					label: 'Email',
-					onPress: () => console.log('Pressed email'),
-					},
-					{
-					icon: 'bell',
-					label: 'Remind',
-					onPress: () => console.log('Pressed notifications'),
+						icon: 'bell',
+						label: 'Share',
+						onPress: () => console.log('Pressed share'),
 					},
 				]}
 				onStateChange={() => setFabOpen(!fabOpen)}
-				onPress={() => {
-					if (fabOpen) {
-					// do something if the speed dial is open
-					}
-				}}
 			/>
+			<Snackbar
+				visible={snackbarVisible}
+				onDismiss={() => setSnackbarVisible(false)}
+				action={{
+					label: 'OK',
+					onPress: () => {},
+				}}>
+				{userAction.label == 'Save' ? "Recipe has been unsaved!" : "Recipe has been saved!"}
+			</Snackbar>
 		</>
 	);
 };
@@ -164,4 +219,15 @@ const styles = StyleSheet.create({
 		margin: 20,
 		marginTop: 0
 	},
+	recipeTitle: {
+		// fontFamily: 'Roboto',
+		fontSize: 36,
+		fontWeight: 700
+	},
+	categoryTitle: {
+		// fontFamily: 'Roboto',
+		fontSize: 24,
+		fontWeight: 700,
+		marginVertical: 15
+	}
 });

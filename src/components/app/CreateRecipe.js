@@ -6,7 +6,7 @@ import BudgetSlider from './BudgetSlider';
 import TagSearch from './TagSearch';
 import generateRecipe from '../../services/gptCreateRecipeService';
 import { useUser } from '@clerk/clerk-expo';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import TimeSlider from './TimeSlider';
 
 // Contains UI components that must be rendered on the highest z-index (modals, dialogs, etc.)
 export default function CreateRecipe(props) {
@@ -28,8 +28,7 @@ export default function CreateRecipe(props) {
 	// State for tracking active ingredient input
 	const [ingredientInput, setIngredientInput] = useState('');
 
-	// States for tracking whether or not to apply a budget to a recipe
-	const [budgetActive, setBudgetActive] = useState(false);
+	// State for tracking budget
 	const budget = useRef(-1);
 
 	// Creates a recipe using user-specified filters
@@ -49,7 +48,7 @@ export default function CreateRecipe(props) {
 
 		// String for describing recipe budget
 		let budgetString = '';
-		if(budgetActive && budget.current != -1){
+		if(budget.current != -1){
 			budgetString = ' with a budget of under $' + budget.current;
 		}
 
@@ -79,6 +78,7 @@ export default function CreateRecipe(props) {
 		// Display snackbar depending on service response
 		if(response.ok){
 			setInfoSnackbarVisible(true);
+			setSelectedIngredients([]);
 
 			// Refreshes recipeMenu component so user can see updated recipe list
 			props.refreshCreatedRecipes();
@@ -97,8 +97,10 @@ export default function CreateRecipe(props) {
 		}
 		newIngredientList.push(value);
 		setSelectedIngredients(newIngredientList);
+		setIngredientInput('');
 	}
 
+	// List of ingredients that user wants to add to recipe
 	const ingredientTags = selectedIngredients.map((item) => {
 		return(
 			<IngredientTag key={item}>{item}</IngredientTag>
@@ -107,36 +109,34 @@ export default function CreateRecipe(props) {
 
 	return (
 	<>
-		<SafeAreaView style={{margin: 20}}>
+		<View style={{margin: 20}}>
 			{!isGeneratingRecipe ?
 			<>
 				<ScrollView>
-					<Text variant='headlineSmall'>Add Tags</Text>
+					<Text style={styles.categoryTitle}>Add some tags!</Text>
 					<TagSearch updateSelectedTags={(tags) => setSelectedFilters(tags)} closeTagSearch={() => console.log('this is bad design. fix this.')}/>
 									
-					<Text variant='headlineSmall'>Ingredients</Text>
+					<Text style={styles.categoryTitle}>Add some ingredients!<Text style={styles.categorySubtitle}> (optional)</Text></Text>
 					<View style={{flexDirection: 'row'}}>
-						<TextInput style={{height: 40, width: '85%'}} onChangeText={(val) => setIngredientInput(val)}/>
-						<IconButton size={20} mode={'outlined'} icon={'plus'} onPress={() => addIngredient(ingredientInput)}/>
+						<TextInput style={styles.addIngredients} value={ingredientInput} mode='outlined' onChangeText={(val) => setIngredientInput(val)}/>
+						<IconButton style={styles.addIngredientButton} size={20} mode={'outlined'} icon={'plus'} onPress={() => addIngredient(ingredientInput)}/>
 					</View>
 
 					<ScrollView style={{paddingVertical:8}} horizontal={true}>
 						{ingredientTags}
 					</ScrollView>
 
-					<View style={{flexDirection: 'row'}}>
-						<Text variant='headlineSmall'>Budget</Text>
-						<Checkbox.Android status={budgetActive ? 'checked' : 'unchecked'} onPress={() => setBudgetActive(!budgetActive)}/>
-					</View>
-
-					<BudgetSlider active={budgetActive} handleValueChange={(val) => budget.current = val}/>
+					<Text style={styles.categoryTitle}>Misc.<Text style={styles.categorySubtitle}> (optional)</Text></Text>
+					<BudgetSlider handleValueChange={(val) => budget.current = val}/>
+					<TimeSlider handleValueChange={() => console.log('ok')}/>
+				
 				</ScrollView>
-				<Button style={{marginBottom: 20}} onPress={handleCreateRecipe}>Create</Button>
+				<Button onPress={handleCreateRecipe}>GENERATE RECIPE</Button>
 			</>
 			: <View style={styles.loadingScreen}>
 				<ActivityIndicator size={"large"} animating={true}></ActivityIndicator>
 			</View>}
-		</SafeAreaView>	
+		</View>	
 		
 		{/* Info snackbar */}
 		<Snackbar
@@ -164,12 +164,33 @@ export default function CreateRecipe(props) {
 };
 
 const styles = StyleSheet.create({
-	container: {
-		margin: 30,
+	categoryTitle: {
+		// fontFamily: 'Roboto',
+		fontSize: 22,
+		fontWeight: 700,
+		marginVertical: 15
+	},
+	categorySubtitle: {
+		// fontFamily: 'Roboto',
+		fontSize: 12,
+		fontWeight: 700,
+		color: '#666666'
 	},
 	loadingScreen:{
 		flex: 1,
 		alignItems: "center",
 		justifyContent: "center",
-	}
+	},
+	addIngredients: {
+		height: 35,
+		width: '85%',
+	},
+	addIngredientButton: {
+		borderRadius: '5',
+		borderWidth: 0,
+		backgroundColor: 'red',
+		marginBottom: 0,
+		marginRight: 0,
+		marginLeft: 10
+	},
 });

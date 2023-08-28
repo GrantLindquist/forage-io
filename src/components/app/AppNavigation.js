@@ -18,6 +18,7 @@ export default function AppNavigation() {
   	return (
     	<Tab.Navigator screenOptions={{header: () => <Header/>, tabBarShowLabel: false}}>
 			<Tab.Screen name="Home" options={{
+				header: () => <></>,
 				tabBarIcon: ({color}) => (
 					<MaterialCommunityIcons name="text-search" color={color} size={30} />
 				)

@@ -45,6 +45,7 @@ export default function CommunityRecipes() {
 				<TagSearch 
 					updateSelectedTags={(tags) => setActiveFilters(tags)} 
 					closeTagSearch={() => setFiltersVisible(false)}
+					canExit={true}
 				/>
 			: 
 			<View style={{flexDirection:'row'}}>
