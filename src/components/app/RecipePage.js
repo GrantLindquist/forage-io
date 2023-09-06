@@ -134,7 +134,7 @@ export default function RecipePage(props) {
 	// Renders each ingredient 
 	const ingredients = recipe.Ingredients.map((ingredient) => {
 		return(
-			<Text variant='bodyLarge' style={{marginVertical: 5}} key={ingredient}><Text style={{color: 'red'}}>-</Text> {ingredient}</Text>
+			<Text variant='bodyLarge' style={{marginVertical: 5}} key={ingredient}><Text style={{color: '#7A5DE1'}}>-</Text> {ingredient}</Text>
 		)
 	});
 
@@ -143,7 +143,7 @@ export default function RecipePage(props) {
 	const instructions = recipe.Instructions.map((instruction) => {
 		stepCounter++;
 		return(
-			<Text variant='bodyLarge' style={{marginVertical: 10}} key={"instruction" + stepCounter}><Text style={{color: 'red'}}>{stepCounter}. </Text>{instruction}</Text>
+			<Text variant='bodyLarge' style={{marginVertical: 10}} key={"instruction" + stepCounter}><Text style={{color: '#7A5DE1'}}>{stepCounter}. </Text>{instruction}</Text>
 		)
 	});
 
@@ -157,14 +157,14 @@ export default function RecipePage(props) {
 			</Appbar.Header>
 			<ScrollView style={{backgroundColor: '#1D1B20'}}>
 				<View style={styles.container}>
-					<Text variant="bodySmall"><MaterialCommunityIcons name="account" size={13} /> {recipe.CreatorUsername.toUpperCase()}</Text>
+					<Text variant="bodySmall"><MaterialCommunityIcons name="account" size={14} /> {recipe.CreatorUsername.toUpperCase()}</Text>
 					<Text style={styles.recipeTitle}>{recipe.Title}</Text>
 					<View style={{ marginTop: 15,  flexDirection: 'row'}}>
 						<View style={{alignItems: 'center', width: '33%'}}>
 							<Text variant="bodyLarge">Serves</Text>
 							<Text variant="headlineLarge">-</Text>
 						</View>
-						<View style={{alignItems: 'center' , borderColor: 'red', borderLeftWidth: '1', borderRightWidth: '1', width: '33%'}}>
+						<View style={{alignItems: 'center' , borderColor: '#7A5DE1', borderLeftWidth: '1', borderRightWidth: '1', width: '33%'}}>
 							<Text variant="bodyLarge">Time</Text>
 							<Text variant="headlineLarge">-</Text>
 						</View>

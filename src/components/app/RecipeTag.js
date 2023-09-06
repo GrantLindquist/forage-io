@@ -18,19 +18,19 @@ export default function RecipeTag(props) {
 	useEffect(() => {
 		switch(tags.find((tag) => tag.filterTitle == props.title).filterTypeCode){
             case 0:
-                setColor("red");
+                setColor("#E07C60");
 				setIcon(() => <></>);
                 break;
             case 1:
-                setColor("blue");
+                setColor("#49C1E1");
 				setIcon(() => <></>);
                 break;
             case 2:
-                setColor("yellow");
+                setColor("#E0B131");
 				setIcon(() => <></>);
                 break;
             case 3:
-                setColor("green");
+                setColor("#3DE0A7");
 				setIcon(() => <></>);
                 break;
         }

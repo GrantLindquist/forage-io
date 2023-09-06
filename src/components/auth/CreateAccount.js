@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { View } from "react-native";
-import { useSignUp } from "@clerk/clerk-expo";
+import { useSignUp, useUser } from "@clerk/clerk-expo";
 import { HelperText, Button, TextInput } from "react-native-paper";
 
 // Input fields for users to create their accounts
@@ -8,6 +8,7 @@ export default function CreateAccount() {
 
 	// Clerk SignUp states for user management
 	const { isLoaded, setActive, signUp } = useSignUp();
+	const { user } = useUser();
 
 	// Form states for updating input display
 	const [username, setUsername] = useState("");
@@ -35,6 +36,9 @@ export default function CreateAccount() {
 				const completeSignUp = await signUp.create({
 					username,
 					password,
+					unsafeMetadata: {
+						savedRecipeIds: []
+					}
 				});
 				await setActive({ session: completeSignUp.createdSessionId });
 			} 

@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
 	addIngredientButton: {
 		borderRadius: '5',
 		borderWidth: 0,
-		backgroundColor: 'red',
+		backgroundColor: '#7A5DE1',
 		marginBottom: 0,
 		marginRight: 0,
 		marginLeft: 10

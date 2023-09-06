@@ -51,6 +51,7 @@ export default function SavedRecipes(props) {
 			/>
 			{!isLoading ?
 				<FlatList
+				style={{maxHeight: '90%'}}
 				data={savedRecipes}
 				renderItem={(item) => {
 					if(item.item.Title.toLowerCase().includes(searchQuery.toLowerCase())){

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { FlatList, View, StyleSheet, Pressable } from "react-native";
-import { Searchbar, IconButton } from "react-native-paper";
+import { Searchbar, IconButton, Text } from "react-native-paper";
 import TagSearch from './TagSearch';
 import { useNavigation } from '@react-navigation/native';
 import RecipeCard from './RecipeCard';
@@ -65,6 +65,7 @@ export default function CommunityRecipes() {
 				/>
 			</View>}
 			<FlatList
+				style={{maxHeight: '80%'}}
 				data={communityRecipes}
 				renderItem={(item) => {
 					if(item.item.Title.toLowerCase().includes(searchQuery.toLowerCase()) 
@@ -79,6 +80,7 @@ export default function CommunityRecipes() {
 					}
 				}}
 			/>
+			
 		</View>
 	);
 };
@@ -86,7 +88,6 @@ export default function CommunityRecipes() {
 const styles = StyleSheet.create({
 	container: {
 		margin: 20,
-		minHeight: '100%'
 	},
 	searchbar: {
 		height: 35,

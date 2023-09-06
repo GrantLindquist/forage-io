@@ -39,7 +39,7 @@ export default function SignIn() {
 
 			// Update helper text state
 			for(e of err.errors){
-				if(e.meta.paramName == "username"){
+				if(e.meta.paramName == "identifier"){
 					setUsernameHelperText(e.message);
 				}
 				else if(e.meta.paramName == "password"){
