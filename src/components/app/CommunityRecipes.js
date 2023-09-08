@@ -23,21 +23,94 @@ export default function CommunityRecipes() {
 	const [filtersVisible, setFiltersVisible] = useState(false);
 	const [activeFilters, setActiveFilters] = useState([]);
 
+	// State for handling pagination
+	const [pageNumber, setPageNumber] = useState(1);
+	const [endNumber, setEndNumber] = useState(1);
+
 	// State for tracking user search input
+	const [searchText, setSearchText] = useState('');
 	const [searchQuery, setSearchQuery] = useState('');
 
-	// Gets a collection of 50 recipes that the user has not created
+	// Gets a collection of up to 400 (20x20 matrix) recipes that the user has not created
 	const loadCommunityRecipes = async() => {
-		// Gets response from recipeService
-		let response = await recipeService.getCommunityRecipes(user.id);
+		// Get response from recipeService
+		let response = await recipeService.getCommunityRecipes(user.id, searchQuery, activeFilters);
 		setCommunityRecipes(response);
+		setEndNumber(response.length);
 	}
 
 	// Renders recipes on component load
 	useEffect(() => {
 		loadCommunityRecipes();
 		console.log('loaded communityRecipes.js');
-	}, []);
+	}, [searchQuery, activeFilters]);
+
+	// Sub-component for rendering pagination 
+	const paginationButtons = () => {
+		
+		// Determines which page numbers to display on buttons
+		var paginationButtons = [];
+		if(pageNumber == 1){
+			// If user is on first page, add first page button
+			paginationButtons.push(1);
+			// Add page 2 if applicable
+			if(endNumber >= 2){
+				paginationButtons.push(2);
+				
+				// Add page 3 if applicable
+				if(endNumber >= 3){
+					paginationButtons.push(3);
+				}
+			}
+		}
+		else if(endNumber == pageNumber){
+			// Add third-to-last if applicable
+			if(endNumber-2 > 0){
+				paginationButtons.push(endNumber-2);
+			}
+			// Add second-to-last page if applicable
+			if(endNumber-1 > 0){
+				paginationButtons.push(endNumber-1);	
+			}
+			// If user is on last page, add last page button
+			paginationButtons.push(endNumber);
+		}
+		else{
+			// If user is somewhere in-between, add appropriate buttons
+			paginationButtons.push(pageNumber-1);
+			paginationButtons.push(pageNumber);
+			paginationButtons.push(pageNumber+1);
+		}
+
+		// Returns pagination view with predetermined pagination button array
+		return(
+			<View style={{flexDirection: 'row', marginTop: 10, width: '100%'}}>
+				<IconButton 
+					style={styles.paginationButton} 
+					size={20} 
+					icon={() => <Text>-</Text>}
+					onPress={() => setPageNumber(1)}
+				/>
+				{paginationButtons.map((page) => {
+					return(
+						<IconButton
+							key={page}
+							size={20} 
+							icon={() => <Text>{page}</Text>}
+							style={pageNumber == page ? styles.paginationButtonSelected: styles.paginationButton}
+							onPress={() => setPageNumber(page)}
+						/>
+					)
+				})}
+				<IconButton 
+					style={styles.paginationButton} 
+					size={20} 
+					icon={() => <Text>-</Text>}
+					onPress={() => setPageNumber(endNumber)}
+				/>
+			</View>
+		)
+	};
 
 	return (
 		<View style={styles.container}>
@@ -56,8 +129,9 @@ export default function CommunityRecipes() {
 					inputStyle={{paddingLeft: 0, alignSelf: 'center'}}
 					showDivider={false}
 					mode={'view'}
-					onChangeText={query => setSearchQuery(query)}
-					value={searchQuery}
+					onChangeText={query => setSearchText(query)}
+					onIconPress={() => setSearchQuery(searchText)}
+					value={searchText}
 				/>
 				<IconButton 
 					icon="format-list-bulleted"
@@ -65,22 +139,20 @@ export default function CommunityRecipes() {
 				/>
 			</View>}
 			<FlatList
-				style={{maxHeight: '80%'}}
-				data={communityRecipes}
+				style={{maxHeight: '82%'}}
+				data={communityRecipes[pageNumber-1]}
 				renderItem={(item) => {
-					if(item.item.Title.toLowerCase().includes(searchQuery.toLowerCase()) 
-					&& activeFilters.every(tag => item.item.Tags.includes(tag))){
-						return (
-							<Pressable key={item.item.RecipeId} onPress={() => navigation.navigate('Recipe', {
-									recipe: item.item
-								})}>
-								<RecipeCard recipe={item.item}/>
-							</Pressable>
-						)
-					}
+					return (
+						<Pressable key={item.item.RecipeId} onPress={() => navigation.navigate('Recipe', {
+								recipe: item.item
+							})}>
+							<RecipeCard recipe={item.item}/>
+						</Pressable>
+					)
 				}}
 			/>
-			
+			{/* {endNumber != 1 ? paginationButtons() : <></>} */}
+			{paginationButtons()}
 		</View>
 	);
 };
@@ -88,10 +160,19 @@ export default function CommunityRecipes() {
 const styles = StyleSheet.create({
 	container: {
 		margin: 20,
+		minHeight: '95%'
 	},
 	searchbar: {
 		height: 35,
 		width: '85%',
 		marginVertical: 5
 	},
+	paginationButton: {
+		borderRadius: 5,
+		backgroundColor: '#2F2F2F',
+	},
+	paginationButtonSelected: {
+		borderRadius: 5,
+		backgroundColor: '#FF5454',
+	}
 });

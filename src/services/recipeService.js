@@ -43,9 +43,9 @@ const recipeService = {
     },
 
     // Gets well-liked recipes to display on communityRecipes component
-    getCommunityRecipes : async(userId) => {
+    getCommunityRecipes : async(userId, searchTerm, tags) => {
         // Executes request
-		const response = await fetch(`${env['forageAPI-uri']}/recipes/community?creatorId=${userId}`, {
+		const response = await fetch(`${env['forageAPI-uri']}/recipes/community?creatorId=${userId}&searchTerm=${searchTerm}&tags=${tags}`, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json'
@@ -53,8 +53,9 @@ const recipeService = {
 		});
 		// Returns recipe JSON
 		let data = await response.json();
+		console.log(data.Items);
 		return data.Items;
-    }
+	}
 }
 
 export default recipeService;
