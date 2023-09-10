@@ -19,7 +19,7 @@ export default async function generateRecipe(request, user) {
         model: "gpt-3.5-turbo",
         messages: [{ "role": "system", "content": "You are a professional chef with decades of culinary experience." }, {
             role: "user",
-            content: `generate a ${request.description}. place this recipe into a JSON-compatible string. the recipe name must be called \"title\", the ingredient list must be named \"ingredients\", the instructions list must be named \"instructions\"`
+            content: `generate a ${request.description}. place this recipe into a JSON-compatible string. the recipe name must be called \"title\", the ingredient list must be named \"ingredients\", the instructions list must be named \"instructions\", the time it takes to make (in xh xxm format) must be named \"creationTime\", the number of servings it creates must be named \"servings\", and the recipe budget in USD format must be named \"budget\".`
         }],
         temperature: .8
     });
@@ -40,14 +40,15 @@ export default async function generateRecipe(request, user) {
                 title: recipe.title,
                 ingredients: recipe.ingredients,
                 instructions: recipe.instructions,
-                likes: 0,
                 tags: request.tags,
                 creatorUsername: user.username,
-                creationDate: Date.now()
+                budget: recipe.budget,
+                creationTime: recipe.creationTime,
+                servings: recipe.servings
             })
         });
         // Return response
-        return(response)
+        return(response);
     }
     
     // If GPT responds with invalid recipe format, return error

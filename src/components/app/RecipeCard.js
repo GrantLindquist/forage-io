@@ -14,9 +14,9 @@ export default function RecipeCard(props) {
 					</View>
 				</View>
 				<View style={{flexDirection: 'row'}}>
-					<Text style={styles.recipeSubtext}><MaterialCommunityIcons name="account" size={14} />4</Text>
-					<Text style={styles.recipeSubtext}><MaterialCommunityIcons name="account" size={14} />30m</Text>
-					<Text style={styles.recipeSubtext}><MaterialCommunityIcons name="account" size={14} />$5.50</Text>
+					<Text style={styles.recipeSubtext}><MaterialCommunityIcons name="account" size={14} />{props.recipe.Servings}</Text>
+					<Text style={styles.recipeSubtext}><MaterialCommunityIcons name="account" size={14} />{props.recipe.CreationTime}</Text>
+					<Text style={styles.recipeSubtext}><MaterialCommunityIcons name="account" size={14} />{props.recipe.Budget}</Text>
 				</View>
 			</Card.Content>
 	  	</Card>

@@ -25,17 +25,17 @@ export default function TimeSlider (props) {
 		setTimeMinutes(val);
 
         // Updates local timeString
-            let hours = Math.floor(timeMinutes / 60);
-            let minutes = timeMinutes % 60;
-            if(minutes == 0){
-                setTimeString(`${hours}h`);
-            }
-            else if (hours == 0){
-                setTimeString(`${minutes}m`);
-            }
-            else{
-                setTimeString(`${hours}h ${minutes}m`);
-            } 
+        let hours = Math.floor(timeMinutes / 60);
+        let minutes = timeMinutes % 60;
+        if(minutes == 0){
+            setTimeString(`${hours}h`);
+        }
+        else if (hours == 0){
+            setTimeString(`${minutes}m`);
+        }
+        else{
+            setTimeString(`${hours}h ${minutes}m`);
+        } 
 	}
 
     return (

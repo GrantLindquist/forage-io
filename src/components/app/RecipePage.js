@@ -162,15 +162,15 @@ export default function RecipePage(props) {
 					<View style={{ marginTop: 15,  flexDirection: 'row'}}>
 						<View style={{alignItems: 'center', width: '33%'}}>
 							<Text variant="bodyLarge">Serves</Text>
-							<Text variant="headlineLarge">-</Text>
+							<Text variant="headlineLarge">{recipe.Servings}</Text>
 						</View>
 						<View style={{alignItems: 'center' , borderColor: '#7A5DE1', borderLeftWidth: '1', borderRightWidth: '1', width: '33%'}}>
 							<Text variant="bodyLarge">Time</Text>
-							<Text variant="headlineLarge">-</Text>
+							<Text variant="headlineLarge">{recipe.CreationTime}</Text>
 						</View>
 						<View style={{alignItems: 'center', width: '33%'}}>
 							<Text variant="bodyLarge">Budget</Text>
-							<Text variant="headlineLarge">-</Text>
+							<Text variant="headlineLarge">{recipe.Budget}</Text>
 						</View>
 					</View>
 					<View style={{ marginTop: 15, flexWrap: 'wrap', flexDirection: 'row'}}>

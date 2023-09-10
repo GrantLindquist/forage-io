@@ -30,6 +30,8 @@ export default function CreateRecipe(props) {
 
 	// State for tracking budget
 	const budget = useRef(-1);
+	// State for tracking time needed to create recipe
+	const time = useRef(-1);
 
 	// Creates a recipe using user-specified filters
 	const handleCreateRecipe = async() => {
@@ -52,6 +54,22 @@ export default function CreateRecipe(props) {
 			budgetString = ' with a budget of under $' + budget.current;
 		}
 
+		// String for describing amount of time needed to make recipe
+		let timeString = '';
+		if(time.current != -1){
+			let hours = Math.floor(time.current / 60);
+			let minutes = time.current % 60;
+			if(minutes == 0){
+				timeString = ` that takes ${hours} hours to make`;
+			}
+			else if (hours == 0){
+				timeString = ` that takes ${minutes} minutes to make`;
+			}
+			else{
+				timeString = ` that takes ${hours} hours & ${minutes} minutes to make`;
+			} 
+		}
+
 		// Create recipe description & tags
 		let recipeDescription = '';
 		let recipeTags = [];
@@ -59,7 +77,7 @@ export default function CreateRecipe(props) {
 			recipeDescription = recipeDescription.concat(filter + " ");
 			recipeTags.push(filter);
 		}
-		recipeDescription = recipeDescription.concat(`recipe${ingredientString}${budgetString}`); 
+		recipeDescription = recipeDescription.concat(`recipe${ingredientString}${budgetString}${timeString}`); 
 
 		// DTO object for prompting GPT
 		recipeDTO = {
@@ -128,7 +146,7 @@ export default function CreateRecipe(props) {
 
 					<Text style={styles.categoryTitle}>Misc.<Text style={styles.categorySubtitle}> (optional)</Text></Text>
 					<BudgetSlider handleValueChange={(val) => budget.current = val}/>
-					<TimeSlider handleValueChange={() => console.log('ok')}/>
+					<TimeSlider handleValueChange={(val) => time.current = val}/>
 				
 				</ScrollView>
 				<Button onPress={handleCreateRecipe}>GENERATE RECIPE</Button>
