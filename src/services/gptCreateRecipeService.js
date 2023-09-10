@@ -37,6 +37,7 @@ export default async function generateRecipe(request, user) {
             body: JSON.stringify({
                 creatorId: user.id,
                 recipeId: uuidv4(),
+                isPublic: request.isPublic,
                 title: recipe.title,
                 ingredients: recipe.ingredients,
                 instructions: recipe.instructions,

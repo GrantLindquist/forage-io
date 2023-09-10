@@ -6,7 +6,6 @@ import BudgetSlider from './BudgetSlider';
 import TagSearch from './TagSearch';
 import generateRecipe from '../../services/gptCreateRecipeService';
 import { useUser } from '@clerk/clerk-expo';
-import TimeSlider from './TimeSlider';
 
 // Contains UI components that must be rendered on the highest z-index (modals, dialogs, etc.)
 export default function CreateRecipe(props) {
@@ -30,8 +29,9 @@ export default function CreateRecipe(props) {
 
 	// State for tracking budget
 	const budget = useRef(-1);
-	// State for tracking time needed to create recipe
-	const time = useRef(-1);
+
+	// State for tracking checkbox status
+	const [isPublicChecked, setPublicChecked] = useState(true);
 
 	// Creates a recipe using user-specified filters
 	const handleCreateRecipe = async() => {
@@ -54,22 +54,6 @@ export default function CreateRecipe(props) {
 			budgetString = ' with a budget of under $' + budget.current;
 		}
 
-		// String for describing amount of time needed to make recipe
-		let timeString = '';
-		if(time.current != -1){
-			let hours = Math.floor(time.current / 60);
-			let minutes = time.current % 60;
-			if(minutes == 0){
-				timeString = ` that takes ${hours} hours to make`;
-			}
-			else if (hours == 0){
-				timeString = ` that takes ${minutes} minutes to make`;
-			}
-			else{
-				timeString = ` that takes ${hours} hours & ${minutes} minutes to make`;
-			} 
-		}
-
 		// Create recipe description & tags
 		let recipeDescription = '';
 		let recipeTags = [];
@@ -77,12 +61,13 @@ export default function CreateRecipe(props) {
 			recipeDescription = recipeDescription.concat(filter + " ");
 			recipeTags.push(filter);
 		}
-		recipeDescription = recipeDescription.concat(`recipe${ingredientString}${budgetString}${timeString}`); 
+		recipeDescription = recipeDescription.concat(`recipe${ingredientString}${budgetString}`); 
 
 		// DTO object for prompting GPT
 		recipeDTO = {
 			description: recipeDescription,
-			tags: recipeTags
+			tags: recipeTags,
+			isPublic: isPublicChecked ? 1 : 0
 		}
 		console.log(recipeDTO);
 
@@ -146,8 +131,17 @@ export default function CreateRecipe(props) {
 
 					<Text style={styles.categoryTitle}>Misc.<Text style={styles.categorySubtitle}> (optional)</Text></Text>
 					<BudgetSlider handleValueChange={(val) => budget.current = val}/>
-					<TimeSlider handleValueChange={(val) => time.current = val}/>
-				
+
+					<View style={{flexDirection: 'row'}}>
+						<Text variant='bodyLarge'>Make recipe public</Text>
+						<Checkbox.Android 
+							status={isPublicChecked ? "checked" : "unchecked"}
+							onPress={() => {
+								setPublicChecked(!isPublicChecked);
+							}}
+						/>
+					</View>
+
 				</ScrollView>
 				<Button onPress={handleCreateRecipe}>GENERATE RECIPE</Button>
 			</>

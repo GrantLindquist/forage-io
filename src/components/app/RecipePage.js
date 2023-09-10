@@ -59,7 +59,7 @@ export default function RecipePage(props) {
 	// Deletes recipe from DB
 	const handleDeleteRecipe = async() => {
 		// Executes request
-		const response = await fetch(`${env['forageAPI-uri']}/recipes/?recipeId=${recipe.RecipeId}`, {
+		const response = await fetch(`${env['forageAPI-uri']}/recipes/?creatorId=${user.id}&recipeId=${recipe.RecipeId}`, {
 			method: 'DELETE',
 			headers: {
 				'Content-Type': 'application/json'
