@@ -38,13 +38,23 @@ export default function TagSearch(props) {
     }
 
     // List of tags for user to select
-    const tagList = tags.map((tag) => {
+    const tagList = tags.sort((a, b) => {
+        if(a.popularity < b.popularity){
+            return 1;
+        }
+        else if(a.popularity > b.popularity){
+            return -1;
+        }
+        else{
+            return 0;
+        }
+    }).map((tag) => {
         if(tag.filterTitle.toLowerCase().includes(searchQuery.toLowerCase())){
             return (
                 <RecipeTag key={tag.filterTitle} title={tag.filterTitle} handlePress={updateSelectedTags}/>
             )
         }
-    })
+    });
 
 	return (
         <View>

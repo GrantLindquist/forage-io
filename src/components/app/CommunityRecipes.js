@@ -5,7 +5,8 @@ import TagSearch from './TagSearch';
 import { useNavigation } from '@react-navigation/native';
 import RecipeCard from './RecipeCard';
 import { useUser } from '@clerk/clerk-expo';
-import recipeService from '../../services/recipeService'
+import recipeService from '../../services/recipeService';
+import EmptyList from './EmptyList';
 
 // Collection of recipes created by other users
 export default function CommunityRecipes() {
@@ -150,6 +151,7 @@ export default function CommunityRecipes() {
 						</Pressable>
 					)
 				}}
+				ListEmptyComponent={() => <EmptyList/>}
 			/>
 			{/* {endNumber != 1 ? paginationButtons() : <></>} */}
 			{paginationButtons()}

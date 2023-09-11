@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Profile from './Profile';
-import CreateRecipe from './CreateRecipe';
+import CreateRecipeModal from './CreateRecipeModal';
 import RecipeMenu from './RecipeMenu';
 import Header from './Header';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -30,7 +30,7 @@ export default function AppNavigation() {
 					<MaterialCommunityIcons name="plus" color={color} size={30} />
 				) 
 			}}>
-				{() => <CreateRecipe refreshCreatedRecipes={() => setRefreshCreatedRecipes(!refreshCreatedRecipes)}/>}
+				{() => <CreateRecipeModal refreshCreatedRecipes={() => setRefreshCreatedRecipes(!refreshCreatedRecipes)}/>}
 			</Tab.Screen>
 			<Tab.Screen name="Profile" options={{
 				tabBarIcon: ({color}) => (

@@ -6,6 +6,7 @@ import RecipeCard from './RecipeCard';
 import RecipeCardPlaceholder from './RecipeCardPlaceholder';
 import { useUser } from '@clerk/clerk-expo';
 import recipeService from '../../services/recipeService'
+import EmptyList from './EmptyList';
 
 // Collection of recipes created or saved by the user
 export default function CreatedRecipes(props) {
@@ -64,6 +65,7 @@ export default function CreatedRecipes(props) {
 						)
 					}
 				}}
+				ListEmptyComponent={() => <EmptyList/>}
 			/> :
 			<View>
 				<RecipeCardPlaceholder/>

@@ -8,7 +8,7 @@ import generateRecipe from '../../services/gptCreateRecipeService';
 import { useUser } from '@clerk/clerk-expo';
 
 // Contains UI components that must be rendered on the highest z-index (modals, dialogs, etc.)
-export default function CreateRecipe(props) {
+export default function CreateRecipeModal(props) {
 
 	// Gets user from Clerk
 	const { user } = useUser(); 
@@ -88,6 +88,9 @@ export default function CreateRecipe(props) {
 		}
 		else{
 			setErrorSnackbarVisible(true);
+
+			// Clear ingredients state of faulty input
+			setSelectedIngredients([]);
 		}
 	}
 
