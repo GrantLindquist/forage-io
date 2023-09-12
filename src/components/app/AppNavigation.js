@@ -6,6 +6,7 @@ import Header from './Header';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Modal } from "react-native";
+import colors from '../../../colors.json';
 
 // Create tab object
 const Tab = createBottomTabNavigator();
@@ -21,7 +22,15 @@ export default function AppNavigation() {
 
   	return (
 		<>
-			<Tab.Navigator screenOptions={{header: () => <Header/>, tabBarShowLabel: false}}>
+			<Tab.Navigator 
+				screenOptions={{
+					header: () => <Header/>,
+					tabBarShowLabel: false,
+					tabBarActiveTintColor: colors['pink'],
+					tabBarStyle: { backgroundColor: colors['background1'] }
+				}}
+				sceneContainerStyle={{ backgroundColor: colors['background2'] }}
+			>
 				<Tab.Screen name="Home" options={{
 					header: () => <></>,
 					tabBarIcon: ({color}) => (

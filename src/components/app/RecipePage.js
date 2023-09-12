@@ -8,6 +8,7 @@ import RemixRecipeModal from './RemixRecipeModal';
 import { useState } from "react";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import recipeService from "../../services/recipeService";
+import colors from "../../../colors.json";
 
 // Detailed page for a recipe that contains ingredients, instructions, etc.
 export default function RecipePage(props) {
@@ -132,7 +133,7 @@ export default function RecipePage(props) {
 	// Renders each ingredient 
 	const ingredients = recipe.Ingredients.map((ingredient) => {
 		return(
-			<Text variant='bodyLarge' style={{marginVertical: 5}} key={ingredient}><Text style={{color: '#7A5DE1'}}>-</Text> {ingredient}</Text>
+			<Text variant='bodyLarge' style={{marginVertical: 5}} key={ingredient}><Text style={{color: colors['primary']}}>-</Text> {ingredient}</Text>
 		)
 	});
 
@@ -141,19 +142,20 @@ export default function RecipePage(props) {
 	const instructions = recipe.Instructions.map((instruction) => {
 		stepCounter++;
 		return(
-			<Text variant='bodyLarge' style={{marginVertical: 10}} key={"instruction" + stepCounter}><Text style={{color: '#7A5DE1'}}>{stepCounter}. </Text>{instruction}</Text>
+			<Text variant='bodyLarge' style={{marginVertical: 10}} key={"instruction" + stepCounter}><Text style={{color: colors['primary']}}>{stepCounter}. </Text>{instruction}</Text>
 		)
 	});
 
 	return (
 		<>
 			{/* Custom recipePage header */}
-			<Appbar.Header>
+			<Appbar.Header style={{backgroundColor: colors['background2']}}>
 				<Appbar.BackAction onPress={() => navigation.goBack()}/>
 				<Appbar.Content></Appbar.Content>
 				<Appbar.Action icon={'dots-vertical'} onPress={() => setFabOpen(true)} />
 			</Appbar.Header>
-			<ScrollView style={{backgroundColor: '#1D1B20'}}>
+
+			<ScrollView style={{backgroundColor: colors['background2']}}>
 				<View style={styles.container}>
 					<Text variant="bodySmall"><MaterialCommunityIcons name="account" size={14} /> {recipe.CreatorUsername.toUpperCase()}</Text>
 					<Text style={styles.recipeTitle}>{recipe.Title}</Text>
@@ -162,7 +164,7 @@ export default function RecipePage(props) {
 							<Text variant="bodyLarge">Serves</Text>
 							<Text variant="headlineLarge">{recipe.Servings}</Text>
 						</View>
-						<View style={{alignItems: 'center' , borderColor: '#7A5DE1', borderLeftWidth: '1', borderRightWidth: '1', width: '33%'}}>
+						<View style={{alignItems: 'center' , borderColor: colors['primary'], borderLeftWidth: '1', borderRightWidth: '1', width: '33%'}}>
 							<Text variant="bodyLarge">Time</Text>
 							<Text variant="headlineLarge">{recipe.CreationTime}</Text>
 						</View>

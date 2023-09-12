@@ -66,7 +66,7 @@ export default function RemixRecipeModal(props) {
 		recipeDescription = recipeDescription.concat(`recipe${ingredientString}${budgetString} that is similar to ${props.recipe.Title}`); 
 
 		// DTO object for prompting GPT
-		recipeDTO = {
+		let recipeDTO = {
 			description: recipeDescription,
 			tags: recipeTags,
 			isPublic: isPublicChecked ? 1 : 0,

@@ -1,11 +1,12 @@
 import { useState, useRef } from 'react';
-import { View, ScrollView, KeyboardAvoidingView, StyleSheet } from "react-native";
+import { View, ScrollView, StyleSheet } from "react-native";
 import { Text, TextInput, Button, IconButton, Checkbox, ActivityIndicator, Snackbar } from 'react-native-paper';
 import IngredientTag from './IngredientTag'
 import BudgetSlider from './BudgetSlider';
 import TagSearch from './TagSearch';
 import generateRecipe from '../../services/recipeService';
 import { useUser } from '@clerk/clerk-expo';
+import colors from '../../../colors.json';
 
 // Contains UI components that must be rendered on the highest z-index (modals, dialogs, etc.)
 export default function CreateRecipeModal(props) {
@@ -64,7 +65,7 @@ export default function CreateRecipeModal(props) {
 		recipeDescription = recipeDescription.concat(`recipe${ingredientString}${budgetString}`); 
 
 		// DTO object for prompting GPT
-		recipeDTO = {
+		let recipeDTO = {
 			description: recipeDescription,
 			tags: recipeTags,
 			isPublic: isPublicChecked ? 1 : 0
@@ -75,7 +76,7 @@ export default function CreateRecipeModal(props) {
 		setGeneratingRecipe(true);
 		
 		// Confirm recipe completion and change state back to false once recipe is complete
-		let response = await generateRecipe(recipeDTO, user);
+		const response = await generateRecipe(recipeDTO, user);
 		setGeneratingRecipe(false);
 
 		// Display snackbar depending on service response
@@ -114,7 +115,7 @@ export default function CreateRecipeModal(props) {
 	});
 
 	return (
-	<View style={{backgroundColor: '#1e1e1e', height: '100%'}}>
+	<View style={{backgroundColor: colors['background2'], height: '100%'}}>
 		<View style={{margin: 20}}>
 			{!isGeneratingRecipe ?
 			<>

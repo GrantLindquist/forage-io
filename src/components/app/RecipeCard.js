@@ -1,6 +1,6 @@
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Image } from "react-native";
 import { Card, Text, IconButton } from 'react-native-paper';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import colors from "../../../colors.json";
 
 // Card that contains basic info about recipe. Clicking will direct user to more detailed information about recipe
 export default function RecipeCard(props) {
@@ -14,9 +14,20 @@ export default function RecipeCard(props) {
 					</View>
 				</View>
 				<View style={{flexDirection: 'row'}}>
-					<Text style={styles.recipeSubtext}><MaterialCommunityIcons name="account" size={14} />{props.recipe.Servings}</Text>
-					<Text style={styles.recipeSubtext}><MaterialCommunityIcons name="account" size={14} />{props.recipe.CreationTime}</Text>
-					<Text style={styles.recipeSubtext}><MaterialCommunityIcons name="account" size={14} />{props.recipe.Budget}</Text>
+					<Text style={styles.recipeSubtext}><Image 
+						source={require('../../../assets/icons/servings.png')}
+						style={{width: 14, height: 14}}
+					/>{props.recipe.Servings}</Text>
+					<Text style={styles.recipeSubtext}><Image 
+						source={require('../../../assets/icons/time.png')}
+						style={{width: 14, height: 14}}
+					/>{props.recipe.CreationTime}</Text>
+					<Text style={styles.recipeSubtext}>
+					{/* <Image 
+						source={require('../../../assets/icons/budget.png')}
+						style={{width: 14, height: 14}}
+					/> */}
+					{props.recipe.Budget}</Text>
 				</View>
 			</Card.Content>
 	  	</Card>
@@ -27,6 +38,7 @@ const styles = StyleSheet.create({
 	card: {
 		marginVertical: 5,
 		height: 120,
+		backgroundColor: colors['background1']
 	},
 	recipeTitle: {
 		// fontFamily: 'Roboto',

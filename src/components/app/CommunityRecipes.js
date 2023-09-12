@@ -7,6 +7,8 @@ import RecipeCard from './RecipeCard';
 import { useUser } from '@clerk/clerk-expo';
 import recipeService from '../../services/recipeService';
 import EmptyList from './EmptyList';
+import colors from '../../../colors.json';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // Collection of recipes created by other users
 export default function CommunityRecipes() {
@@ -89,7 +91,7 @@ export default function CommunityRecipes() {
 				<IconButton 
 					style={styles.paginationButton} 
 					size={20} 
-					icon={() => <Text>-</Text>}
+					icon={() => <MaterialCommunityIcons name="arrow-left" color={'white'} size={20}/>}
 					onPress={() => setPageNumber(1)}
 				/>
 				{paginationButtons.map((page) => {
@@ -106,7 +108,7 @@ export default function CommunityRecipes() {
 				<IconButton 
 					style={styles.paginationButton} 
 					size={20} 
-					icon={() => <Text>-</Text>}
+					icon={() => <MaterialCommunityIcons name="arrow-right" color={'white'} size={20}/>}
 					onPress={() => setPageNumber(endNumber)}
 				/>
 			</View>
@@ -167,14 +169,15 @@ const styles = StyleSheet.create({
 	searchbar: {
 		height: 35,
 		width: '85%',
-		marginVertical: 5
+		marginVertical: 5,
+		backgroundColor: colors['background2']
 	},
 	paginationButton: {
 		borderRadius: 5,
-		backgroundColor: '#2F2F2F',
+		backgroundColor: colors['background1'],
 	},
 	paginationButtonSelected: {
 		borderRadius: 5,
-		backgroundColor: '#FF5454',
+		backgroundColor: colors['pink'],
 	}
 });

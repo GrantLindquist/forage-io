@@ -2,7 +2,9 @@ import { useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { Searchbar, Text, IconButton } from "react-native-paper";
 import RecipeTag from "./RecipeTag";
-import tags from '../../../tags.json'
+import tags from '../../../tags.json';
+import colors from '../../../colors.json';
+
 
 // Expandable horizontal scroll view for viewing items
 export default function TagSearch(props) {
@@ -86,6 +88,7 @@ const styles = StyleSheet.create({
 	searchbarShort: {
 		height: 35,
 		width: '85%',
-		marginVertical: 5
+		marginVertical: 5,
+        backgroundColor: colors['background2']
 	},
 });

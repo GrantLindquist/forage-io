@@ -7,6 +7,7 @@ import RecipeCardPlaceholder from './RecipeCardPlaceholder';
 import { useUser } from '@clerk/clerk-expo';
 import recipeService from '../../services/recipeService'
 import EmptyList from './EmptyList';
+import colors from '../../../colors.json';
 
 // Collection of recipes created or saved by the user
 export default function SavedRecipes(props) {
@@ -87,6 +88,7 @@ const styles = StyleSheet.create({
 	searchbar: {
 		height: 35,
 		width: '100%',
-		marginVertical: 5
+		marginVertical: 5,
+		backgroundColor: colors['background2']
 	},
 });

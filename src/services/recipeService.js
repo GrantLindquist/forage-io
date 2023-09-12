@@ -15,11 +15,16 @@ const openai = new OpenAIApi(configuration);
 const recipeService = {
     
     // Generates a recipe with GPT using the request parameter.
-    generateRecipe: async () => {
+    generateRecipe: async (request, user) => {
         // Make GPT request
         const completion = await openai.createChatCompletion({
             model: "gpt-3.5-turbo",
-            messages: [{ "role": "system", "content": "You are a professional chef with decades of culinary experience." }, {
+            messages: [
+            { 
+                role: "system", 
+                content: "You are a professional chef with decades of culinary experience." 
+            },
+            {
                 role: "user",
                 content: `generate a ${request.description}. place this recipe into a JSON-compatible string. the recipe name must be called \"title\", the ingredient list must be named \"ingredients\", the instructions list must be named \"instructions\", the time it takes to make (in xh xxm format) must be named \"creationTime\", the number of servings it creates must be named \"servings\", and the recipe budget in USD format must be named \"budget\".`
             }],
