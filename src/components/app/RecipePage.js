@@ -1,10 +1,11 @@
 import { useRoute } from "@react-navigation/native";
 import { useNavigation } from '@react-navigation/native';
-import { ScrollView, View , StyleSheet} from "react-native";
+import { ScrollView, View , StyleSheet, Modal } from "react-native";
 import { Text, Snackbar, Appbar, FAB } from "react-native-paper";
 import { useUser } from "@clerk/clerk-expo";
 import env from '../../../env.json';
 import RecipeTag from "./RecipeTag";
+import RemixRecipeModal from './RemixRecipeModal';
 import { useState } from "react";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -21,6 +22,9 @@ export default function RecipePage(props) {
 
 	// State for interacting with FAB group
 	const [fabOpen, setFabOpen] = useState(false);
+
+	// State for interacting with RemixRecipeModal component
+	const [remixModalVisible, setRemixModalVisible] = useState(false);
 
 	// State that tracks snackbar status
 	const [snackbarVisible, setSnackbarVisible] = useState(false);
@@ -125,9 +129,9 @@ export default function RecipePage(props) {
 	}
 
 	// Sub-component that lists a tag component for each recipe tag
-	const tags = recipe.Tags.map((tag) => {
+	const recipeTags = recipe.Tags.map((tag) => {
 		return(
-			<RecipeTag key={tag} title={tag} immutable={true} color={'red'}/>
+			<RecipeTag key={tag} title={tag} immutable={true}/>
 		)
 	});
 
@@ -174,7 +178,7 @@ export default function RecipePage(props) {
 						</View>
 					</View>
 					<View style={{ marginTop: 15, flexWrap: 'wrap', flexDirection: 'row'}}>
-						{tags}
+						{recipeTags}
 					</View>
 					<Text style={styles.categoryTitle}>Ingredients</Text>
 					{ingredients}
@@ -191,7 +195,7 @@ export default function RecipePage(props) {
 					{
 						icon: 'email',
 						label: 'Remix',
-						onPress: () => console.log('Pressed remix'),
+						onPress: () => setRemixModalVisible(true),
 					},
 					{
 						icon: 'bell',
@@ -210,6 +214,18 @@ export default function RecipePage(props) {
 				}}>
 				{userAction.label == 'Save' ? "Recipe has been unsaved!" : "Recipe has been saved!"}
 			</Snackbar>
+
+			{/* Remix recipe modal */}
+			<Modal
+				animationType="slide"
+				visible={remixModalVisible}
+				presentationStyle={"pageSheet"}
+				onRequestClose={() => {
+					setRemixModalVisible(!remixModalVisible);
+				}}
+			>
+				<RemixRecipeModal recipe={recipe} refreshCreatedRecipes={() => props.refreshCreatedRecipes()} closeModal={() => setRemixModalVisible(false)}/>
+			</Modal>
 		</>
 	);
 };

@@ -1,14 +1,16 @@
 import { useState, useRef } from 'react';
-import { View, ScrollView, KeyboardAvoidingView, StyleSheet } from "react-native";
+import { View, ScrollView, StyleSheet } from "react-native";
 import { Text, TextInput, Button, IconButton, Checkbox, ActivityIndicator, Snackbar } from 'react-native-paper';
 import IngredientTag from './IngredientTag'
 import BudgetSlider from './BudgetSlider';
 import TagSearch from './TagSearch';
 import generateRecipe from '../../services/gptCreateRecipeService';
 import { useUser } from '@clerk/clerk-expo';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import RecipeTag from "./RecipeTag";
 
 // Contains UI components that must be rendered on the highest z-index (modals, dialogs, etc.)
-export default function CreateRecipeModal(props) {
+export default function RemixRecipeModal(props) {
 
 	// Gets user from Clerk
 	const { user } = useUser(); 
@@ -21,20 +23,20 @@ export default function CreateRecipeModal(props) {
 	const [errorSnackbarVisible, setErrorSnackbarVisible] = useState(false);
 
 	// List states that track filter categories
-	const [selectedFilters, setSelectedFilters] = useState([]);
+	const [selectedFilters, setSelectedFilters] = useState(props.recipe.Tags);
 	const [selectedIngredients, setSelectedIngredients] = useState([]);
 
 	// State for tracking active ingredient input
 	const [ingredientInput, setIngredientInput] = useState('');
 
 	// State for tracking budget
-	const budget = useRef(-1);
+	const budget = useRef(props.recipe.Budget);
 
 	// State for tracking checkbox status
 	const [isPublicChecked, setPublicChecked] = useState(true);
 
-	// Creates a recipe using user-specified filters
-	const handleCreateRecipe = async() => {
+	// Creates a recipe based off of a different recipe
+	const handleRemixRecipe = async() => {
 		// String for describing ingredients for recipe
 		let ingredientString = '';
 		let i = 0;
@@ -61,13 +63,14 @@ export default function CreateRecipeModal(props) {
 			recipeDescription = recipeDescription.concat(filter + " ");
 			recipeTags.push(filter);
 		}
-		recipeDescription = recipeDescription.concat(`recipe${ingredientString}${budgetString}`); 
+		recipeDescription = recipeDescription.concat(`recipe${ingredientString}${budgetString} that is similar to ${props.recipe.Title}`); 
 
 		// DTO object for prompting GPT
 		recipeDTO = {
 			description: recipeDescription,
 			tags: recipeTags,
-			isPublic: isPublicChecked ? 1 : 0
+			isPublic: isPublicChecked ? 1 : 0,
+			baseRecipeId: props.recipe.RecipeId
 		}
 		console.log(recipeDTO);
 
@@ -85,6 +88,7 @@ export default function CreateRecipeModal(props) {
 
 			// Refreshes recipeMenu component so user can see updated recipe list
 			props.refreshCreatedRecipes();
+			props.closeModal();
 		}
 		else{
 			setErrorSnackbarVisible(true);
@@ -113,16 +117,42 @@ export default function CreateRecipeModal(props) {
 		)
 	});
 
+	// Sub-component that lists a tag component for each recipe tag
+	const recipeTags = props.recipe.Tags.map((tag) => {
+		return(
+			<RecipeTag key={tag} title={tag} immutable={true} />
+		)
+	});
+
 	return (
 	<View style={{backgroundColor: '#1e1e1e', height: '100%'}}>
-		<View style={{margin: 20}}>
+		<View style={styles.container}>
 			{!isGeneratingRecipe ?
 			<>
 				<ScrollView>
-					<Text style={styles.categoryTitle}>Add some tags!</Text>
+					<Text variant="bodySmall"><MaterialCommunityIcons name="account" size={14} /> {props.recipe.CreatorUsername.toUpperCase()}</Text>
+					<Text style={styles.recipeTitle}>{props.recipe.Title}</Text>
+					<View style={{ marginTop: 15,  flexDirection: 'row'}}>
+						<View style={{alignItems: 'center', width: '33%'}}>
+							<Text variant="bodyLarge">Serves</Text>
+							<Text variant="headlineLarge">{props.recipe.Servings}</Text>
+						</View>
+						<View style={{alignItems: 'center' , borderColor: '#7A5DE1', borderLeftWidth: '1', borderRightWidth: '1', width: '33%'}}>
+							<Text variant="bodyLarge">Time</Text>
+							<Text variant="headlineLarge">{props.recipe.CreationTime}</Text>
+						</View>
+						<View style={{alignItems: 'center', width: '33%'}}>
+							<Text variant="bodyLarge">Budget</Text>
+							<Text variant="headlineLarge">{props.recipe.Budget}</Text>
+						</View>
+					</View>
+					<View style={{ marginTop: 15, flexWrap: 'wrap', flexDirection: 'row'}}>
+						{recipeTags}
+					</View>
+
+					<Text style={styles.categoryTitle}>Remix recipe!</Text>
 					<TagSearch updateSelectedTags={(tags) => setSelectedFilters(tags)} closeTagSearch={() => console.log('this is bad design. fix this.')}/>
-									
-					<Text style={styles.categoryTitle}>Add some ingredients!<Text style={styles.categorySubtitle}> (optional)</Text></Text>
+				
 					<View style={{flexDirection: 'row'}}>
 						<TextInput style={styles.addIngredients} value={ingredientInput} mode='outlined' onChangeText={(val) => setIngredientInput(val)}/>
 						<IconButton style={styles.addIngredientButton} size={20} mode={'outlined'} icon={'plus'} onPress={() => addIngredient(ingredientInput)}/>
@@ -132,7 +162,6 @@ export default function CreateRecipeModal(props) {
 						{ingredientTags}
 					</ScrollView>
 
-					<Text style={styles.categoryTitle}>Misc.<Text style={styles.categorySubtitle}> (optional)</Text></Text>
 					<BudgetSlider handleValueChange={(val) => budget.current = val}/>
 
 					<View style={{flexDirection: 'row'}}>
@@ -144,9 +173,8 @@ export default function CreateRecipeModal(props) {
 							}}
 						/>
 					</View>
-
 				</ScrollView>
-				<Button onPress={handleCreateRecipe}>GENERATE RECIPE</Button>
+				<Button onPress={handleRemixRecipe}>REMIX RECIPE</Button>
 			</>
 			: <View style={styles.loadingScreen}>
 				<ActivityIndicator size={"large"} animating={true}></ActivityIndicator>
@@ -179,6 +207,9 @@ export default function CreateRecipeModal(props) {
 };
 
 const styles = StyleSheet.create({
+	container: {
+		margin: 20,
+	},
 	categoryTitle: {
 		// fontFamily: 'Roboto',
 		fontSize: 22,
@@ -190,6 +221,11 @@ const styles = StyleSheet.create({
 		fontSize: 12,
 		fontWeight: 700,
 		color: '#666666'
+	},
+	recipeTitle: {
+		// fontFamily: 'Roboto',
+		fontSize: 36,
+		fontWeight: 700
 	},
 	loadingScreen:{
 		flex: 1,
