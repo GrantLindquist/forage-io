@@ -4,7 +4,7 @@ import { Text, TextInput, Button, IconButton, Checkbox, ActivityIndicator, Snack
 import IngredientTag from './IngredientTag'
 import BudgetSlider from './BudgetSlider';
 import TagSearch from './TagSearch';
-import generateRecipe from '../../services/gptCreateRecipeService';
+import generateRecipe from '../../services/recipeService';
 import { useUser } from '@clerk/clerk-expo';
 
 // Contains UI components that must be rendered on the highest z-index (modals, dialogs, etc.)

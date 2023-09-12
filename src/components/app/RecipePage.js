@@ -3,11 +3,11 @@ import { useNavigation } from '@react-navigation/native';
 import { ScrollView, View , StyleSheet, Modal } from "react-native";
 import { Text, Snackbar, Appbar, FAB } from "react-native-paper";
 import { useUser } from "@clerk/clerk-expo";
-import env from '../../../env.json';
 import RecipeTag from "./RecipeTag";
 import RemixRecipeModal from './RemixRecipeModal';
 import { useState } from "react";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import recipeService from "../../services/recipeService";
 
 // Detailed page for a recipe that contains ingredients, instructions, etc.
 export default function RecipePage(props) {
@@ -63,12 +63,7 @@ export default function RecipePage(props) {
 	// Deletes recipe from DB
 	const handleDeleteRecipe = async() => {
 		// Executes request
-		const response = await fetch(`${env['forageAPI-uri']}/recipes/?creatorId=${user.id}&recipeId=${recipe.RecipeId}`, {
-			method: 'DELETE',
-			headers: {
-				'Content-Type': 'application/json'
-			}
-		});
+		const response = recipeService.deleteRecipe(user.id, recipe.RecipeId);
 		
 		// Redirects user
 		navigation.goBack();
@@ -80,8 +75,7 @@ export default function RecipePage(props) {
 		setUserAction(determineUserAction());
 
 		// Returns response
-		let data = await response.json();
-		return data;
+		return response;
 	}
 
 	// Appends or removes recipe id to/from user's saved recipe ids
