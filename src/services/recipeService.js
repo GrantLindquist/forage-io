@@ -88,22 +88,20 @@ const recipeService = {
     getSavedRecipes : async(recipeIds) => {
         // Loops through each saved recipe id and fetches it from DB
 		var savedRecipeData = [];
-		if(recipeIds){
-			for(item of recipeIds){
-				// Executes request
-				const response = await fetch(`${env['forageAPI-uri']}/recipes/?recipeId=${item}`, {
-					method: 'GET',
-					headers: {
-						'Content-Type': 'application/json'
-					}
-				});
-				// Pushes recipe JSON to list
-				let data = await response.json();
-				if(data.Item){
-					savedRecipeData.push(data.Item);
+		for(item of recipeIds){
+			// Executes request
+			const response = await fetch(`${env['forageAPI-uri']}/recipes/?recipeId=${item}`, {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json'
 				}
+			});
+			// Pushes recipe JSON to list
+            let data = await response.json();
+			if(data.Items.length == 1){
+				savedRecipeData.push(data.Items[0]);
 			}
-        }
+		}
 
         // Returns completed list
         return savedRecipeData;
@@ -120,7 +118,6 @@ const recipeService = {
 		});
 		// Returns recipe JSON
 		let data = await response.json();
-		console.log(data.Items);
 		return data.Items;
 	},
 
@@ -135,8 +132,7 @@ const recipeService = {
 		});
 
         // Returns response
-        let data = await response.json();
-		return data;
+		return response;
     }
 }
 export default recipeService;

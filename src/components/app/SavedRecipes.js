@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import RecipeCard from './RecipeCard';
 import RecipeCardPlaceholder from './RecipeCardPlaceholder';
 import { useUser } from '@clerk/clerk-expo';
-import recipeService from '../../services/recipeService'
+import recipeService from '../../services/recipeService';
 import EmptyList from './EmptyList';
 import colors from '../../../colors.json';
 
@@ -28,7 +28,7 @@ export default function SavedRecipes(props) {
 	// Gets recipes that user has saved and sets state to response
 	const loadSavedRecipes = async() => {
 		// Gets response from recipeService
-		let response = await recipeService.getSavedRecipes(user.unsafeMetadata.savedRecipeIds);
+		const response = await recipeService.getSavedRecipes(user.unsafeMetadata.savedRecipeIds);
 		setSavedRecipes(response);
 		setIsLoading(false);
 	}

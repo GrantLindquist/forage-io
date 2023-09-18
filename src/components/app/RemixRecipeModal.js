@@ -4,16 +4,21 @@ import { Text, TextInput, Button, IconButton, Checkbox, ActivityIndicator, Snack
 import IngredientTag from './IngredientTag'
 import BudgetSlider from './BudgetSlider';
 import TagSearch from './TagSearch';
-import generateRecipe from '../../services/recipeService';
+import recipeService from '../../services/recipeService';
 import { useUser } from '@clerk/clerk-expo';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import RecipeTag from "./RecipeTag";
+import colors from '../../../colors.json';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 // Contains UI components that must be rendered on the highest z-index (modals, dialogs, etc.)
 export default function RemixRecipeModal(props) {
 
-	// Gets user from Clerk
-	const { user } = useUser(); 
+	// States for tracking parameters passed to route
+	const route = useRoute();
+	const { user } = useUser();
+	const { recipe } = route.params;
+	const navigation = useNavigation()
 
 	// State that tracks whether or not recipe is being actively generated
 	const [isGeneratingRecipe, setGeneratingRecipe] = useState(false);
@@ -23,14 +28,14 @@ export default function RemixRecipeModal(props) {
 	const [errorSnackbarVisible, setErrorSnackbarVisible] = useState(false);
 
 	// List states that track filter categories
-	const [selectedFilters, setSelectedFilters] = useState(props.recipe.Tags);
+	const [selectedFilters, setSelectedFilters] = useState(recipe.Tags);
 	const [selectedIngredients, setSelectedIngredients] = useState([]);
 
 	// State for tracking active ingredient input
 	const [ingredientInput, setIngredientInput] = useState('');
 
 	// State for tracking budget
-	const budget = useRef(props.recipe.Budget);
+	const budget = useRef(recipe.Budget);
 
 	// State for tracking checkbox status
 	const [isPublicChecked, setPublicChecked] = useState(true);
@@ -63,22 +68,21 @@ export default function RemixRecipeModal(props) {
 			recipeDescription = recipeDescription.concat(filter + " ");
 			recipeTags.push(filter);
 		}
-		recipeDescription = recipeDescription.concat(`recipe${ingredientString}${budgetString} that is similar to ${props.recipe.Title}`); 
+		recipeDescription = recipeDescription.concat(`recipe${ingredientString}${budgetString} that is similar to ${recipe.Title}`); 
 
 		// DTO object for prompting GPT
 		let recipeDTO = {
 			description: recipeDescription,
 			tags: recipeTags,
 			isPublic: isPublicChecked ? 1 : 0,
-			baseRecipeId: props.recipe.RecipeId
+			baseRecipeId: recipe.RecipeId
 		}
-		console.log(recipeDTO);
 
 		// Set loading state to true
 		setGeneratingRecipe(true);
 		
 		// Confirm recipe completion and change state back to false once recipe is complete
-		let response = await generateRecipe(recipeDTO, user);
+		const response = await recipeService.generateRecipe(recipeDTO, user);
 		setGeneratingRecipe(false);
 
 		// Display snackbar depending on service response
@@ -88,7 +92,7 @@ export default function RemixRecipeModal(props) {
 
 			// Refreshes recipeMenu component so user can see updated recipe list
 			props.refreshCreatedRecipes();
-			props.closeModal();
+			navigation.navigate("Menu");
 		}
 		else{
 			setErrorSnackbarVisible(true);
@@ -118,32 +122,32 @@ export default function RemixRecipeModal(props) {
 	});
 
 	// Sub-component that lists a tag component for each recipe tag
-	const recipeTags = props.recipe.Tags.map((tag) => {
+	const recipeTags = recipe.Tags.map((tag) => {
 		return(
 			<RecipeTag key={tag} title={tag} immutable={true} />
 		)
 	});
 
 	return (
-	<View style={{backgroundColor: '#1e1e1e', height: '100%'}}>
+	<View style={{backgroundColor: colors['background2'], height: '100%'}}>
 		<View style={styles.container}>
 			{!isGeneratingRecipe ?
 			<>
 				<ScrollView>
-					<Text variant="bodySmall"><MaterialCommunityIcons name="account" size={14} /> {props.recipe.CreatorUsername.toUpperCase()}</Text>
-					<Text style={styles.recipeTitle}>{props.recipe.Title}</Text>
+					<Text variant="bodySmall"><MaterialCommunityIcons name="account" size={14} /> {recipe.CreatorUsername.toUpperCase()}</Text>
+					<Text style={styles.recipeTitle}>{recipe.Title}</Text>
 					<View style={{ marginTop: 15,  flexDirection: 'row'}}>
 						<View style={{alignItems: 'center', width: '33%'}}>
 							<Text variant="bodyLarge">Serves</Text>
-							<Text variant="headlineLarge">{props.recipe.Servings}</Text>
+							<Text variant="headlineLarge">{recipe.Servings}</Text>
 						</View>
 						<View style={{alignItems: 'center' , borderColor: '#7A5DE1', borderLeftWidth: '1', borderRightWidth: '1', width: '33%'}}>
 							<Text variant="bodyLarge">Time</Text>
-							<Text variant="headlineLarge">{props.recipe.CreationTime}</Text>
+							<Text variant="headlineLarge">{recipe.CreationTime}</Text>
 						</View>
 						<View style={{alignItems: 'center', width: '33%'}}>
 							<Text variant="bodyLarge">Budget</Text>
-							<Text variant="headlineLarge">{props.recipe.Budget}</Text>
+							<Text variant="headlineLarge">{recipe.Budget}</Text>
 						</View>
 					</View>
 					<View style={{ marginTop: 15, flexWrap: 'wrap', flexDirection: 'row'}}>

@@ -43,7 +43,10 @@ export default function RecipeMenu(props) {
             </Stack.Screen>
             {/* Stack for individual recipe display */}
             <Stack.Screen name="Recipe"
-                options={{header: () => <></>}}
+                options={{
+                    header: () => <></>,
+                    gestureResponseDistance: 75
+                }}
             >
                 {() => <RecipePage 
                     refreshCreatedRecipes={() => setRefreshCreatedRecipes(!refreshCreatedRecipes)}

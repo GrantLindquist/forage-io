@@ -37,7 +37,7 @@ export default function CommunityRecipes() {
 	// Gets a collection of up to 400 (20x20 matrix) recipes that the user has not created
 	const loadCommunityRecipes = async() => {
 		// Get response from recipeService
-		let response = await recipeService.getCommunityRecipes(user.id, searchQuery, activeFilters);
+		const response = await recipeService.getCommunityRecipes(user.id, searchQuery, activeFilters);
 		setCommunityRecipes(response);
 		setEndNumber(response.length);
 	}

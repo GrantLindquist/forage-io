@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { FlatList, View, StyleSheet, Pressable } from "react-native";
 import { Searchbar } from "react-native-paper";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import RecipeCard from './RecipeCard';
 import RecipeCardPlaceholder from './RecipeCardPlaceholder';
 import { useUser } from '@clerk/clerk-expo';
-import recipeService from '../../services/recipeService'
+import recipeService from '../../services/recipeService';
 import EmptyList from './EmptyList';
 import colors from '../../../colors.json';
 
@@ -14,6 +14,10 @@ export default function CreatedRecipes(props) {
 
 	// User object
 	const { user } = useUser(); 
+	const route = useRoute();
+
+	// State that removes deleted recipe from UI
+	const [removeRecipeId, setRemoveRecipeId] = useState('');
 	
 	// State that provides navigation property
 	const navigation = useNavigation();
@@ -28,13 +32,20 @@ export default function CreatedRecipes(props) {
 	// Gets recipes that user has created and sets state to response
 	const loadCreatedRecipes = async() => {
 		// Gets response from recipeService
-		let response = await recipeService.getCreatedRecipes(user.id);
+		const response = await recipeService.getCreatedRecipes(user.id);
 		setCreatedRecipes(response);
 		setIsLoading(false);
 	}
 
 	// Renders recipes on component load & re-renders component when refreshValue is updated
 	useEffect(() => {
+		// Remove deleted recipe from UI if necessary
+		console.log(route.params);
+		if(route.params){
+			const { removeId } = route.params; 
+			setRemoveRecipeId(removeId);
+		}
+
 		loadCreatedRecipes();
 		console.log('loaded createdRecipes.js');
 	}, [props.refreshValue1, props.refreshValue2]);
@@ -56,7 +67,7 @@ export default function CreatedRecipes(props) {
 				style={{maxHeight: '90%'}}
 				data={createdRecipes}
 				renderItem={(item) => {
-					if(item.item.Title.toLowerCase().includes(searchQuery.toLowerCase())){
+					if(item.item.Title.toLowerCase().includes(searchQuery.toLowerCase()) && item.item.RecipeId != removeRecipeId){
 						return (
 							<Pressable key={item.item.RecipeId} onPress={() => navigation.navigate('Recipe', {
 									recipe: item.item

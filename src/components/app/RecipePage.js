@@ -24,9 +24,6 @@ export default function RecipePage(props) {
 	// State for interacting with FAB group
 	const [fabOpen, setFabOpen] = useState(false);
 
-	// State for interacting with RemixRecipeModal component
-	const [remixModalVisible, setRemixModalVisible] = useState(false);
-
 	// State that tracks snackbar status
 	const [snackbarVisible, setSnackbarVisible] = useState(false);
 
@@ -65,15 +62,17 @@ export default function RecipePage(props) {
 	const handleDeleteRecipe = async() => {
 		// Executes request
 		const response = recipeService.deleteRecipe(user.id, recipe.RecipeId);
-		
-		// Redirects user
-		navigation.goBack();
 
 		// Refreshes createdRecipes.js
 		props.refreshCreatedRecipes();
 
 		// Updates FAB display
 		setUserAction(determineUserAction());
+
+		// Redirects user
+		navigation.navigate("Created", {
+			removeRecipeId: recipe.RecipeId
+		});
 
 		// Returns response
 		return response;
@@ -191,7 +190,9 @@ export default function RecipePage(props) {
 					{
 						icon: 'email',
 						label: 'Remix',
-						onPress: () => setRemixModalVisible(true),
+						onPress: () => navigation.navigate('remixRecipeModal', {
+							recipe: recipe
+						}),
 					},
 					{
 						icon: 'bell',
@@ -210,18 +211,6 @@ export default function RecipePage(props) {
 				}}>
 				{userAction.label == 'Save' ? "Recipe has been unsaved!" : "Recipe has been saved!"}
 			</Snackbar>
-
-			{/* Remix recipe modal */}
-			<Modal
-				animationType="slide"
-				visible={remixModalVisible}
-				presentationStyle={"pageSheet"}
-				onRequestClose={() => {
-					setRemixModalVisible(!remixModalVisible);
-				}}
-			>
-				<RemixRecipeModal recipe={recipe} refreshCreatedRecipes={() => props.refreshCreatedRecipes()} closeModal={() => setRemixModalVisible(false)}/>
-			</Modal>
 		</>
 	);
 };

@@ -4,7 +4,7 @@ import { Text, TextInput, Button, IconButton, Checkbox, ActivityIndicator, Snack
 import IngredientTag from './IngredientTag'
 import BudgetSlider from './BudgetSlider';
 import TagSearch from './TagSearch';
-import generateRecipe from '../../services/recipeService';
+import recipeService from '../../services/recipeService';
 import { useUser } from '@clerk/clerk-expo';
 import colors from '../../../colors.json';
 
@@ -76,7 +76,7 @@ export default function CreateRecipeModal(props) {
 		setGeneratingRecipe(true);
 		
 		// Confirm recipe completion and change state back to false once recipe is complete
-		const response = await generateRecipe(recipeDTO, user);
+		const response = await recipeService.generateRecipe(recipeDTO, user);
 		setGeneratingRecipe(false);
 
 		// Display snackbar depending on service response
@@ -119,7 +119,6 @@ export default function CreateRecipeModal(props) {
 		<View style={{margin: 20}}>
 			{!isGeneratingRecipe ?
 			<>
-				<ScrollView>
 					<Text style={styles.categoryTitle}>Add some tags!</Text>
 					<TagSearch updateSelectedTags={(tags) => setSelectedFilters(tags)} closeTagSearch={() => console.log('this is bad design. fix this.')}/>
 									
@@ -145,8 +144,6 @@ export default function CreateRecipeModal(props) {
 							}}
 						/>
 					</View>
-
-				</ScrollView>
 				<Button onPress={handleCreateRecipe}>GENERATE RECIPE</Button>
 			</>
 			: <View style={styles.loadingScreen}>
