@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { View } from "react-native";
-import { useSignIn } from "@clerk/clerk-expo";
+import { useSignIn, useUser } from "@clerk/clerk-expo";
 import { Text, Button, TextInput, HelperText } from "react-native-paper";
 
 // Input fields for users to sign into their accounts
@@ -8,6 +8,7 @@ export default function SignIn() {
 
 	// Clerk SignIn states for user management
 	const { signIn, setActive, isLoaded } = useSignIn();
+	const { user } = useUser();
 
 	// Form states for updating input display
 	const [username, setUsername] = useState("");
@@ -29,8 +30,30 @@ export default function SignIn() {
 				identifier: username,
 				password,
 			});
+
 			// Creates user session and indicates successful sign-in
-			await setActive({ session: completeSignIn.createdSessionId });
+			await setActive({ 
+				session: completeSignIn.createdSessionId 
+			});
+
+			// Check for outdated charges
+			var recipeCharges = user.unsafeMetadata.recipeCharges;
+			for(item of recipeCharges){
+				// If an hour has passed since its addition, remove charge
+				if(Date.now() - item > 3600000){
+					recipeCharges.shift();
+				}
+				else{
+					break;
+				}
+			}
+			// Update user obj
+			await user.update({
+				unsafeMetadata: { 
+					savedRecipeIds: user.unsafeMetadata.savedRecipeIds,
+					recipeCharges: recipeCharges
+				}
+			});
 		} 
 		// If sign-in fails, return error from Clerk
 		catch (err) {

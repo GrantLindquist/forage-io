@@ -8,7 +8,7 @@ import colors from "../../../colors.json";
 export default function RecipeTag(props) {
 
 	// State for tracking whether or not chip is selected
-	const [selected, setSelected] = useState(props.immutable);
+	const [selected, setSelected] = useState(false);
 
 	// States for styling tags
 	const [color, setColor] = useState("grey");
@@ -46,22 +46,25 @@ export default function RecipeTag(props) {
 		}
 	}
 
+	const styles = StyleSheet.create({
+		tagUnselected: {
+			borderRadius: 8,
+			marginRight: 5,
+			backgroundColor: '#1F212F'
+		},
+		tagSelected: {
+			borderRadius: 8,
+			marginRight: 5,
+			backgroundColor: '#1F212F',
+			borderBottomWidth: 3,
+			borderBottomColor: color,
+			marginBottom: -3
+		}
+	});
+
 	return (
 		<Chip style={selected ? styles.tagSelected : styles.tagUnselected} icon={icon} onPress={handlePress}>
 			<Text style={{color: color}}>{props.title}</Text>
 		</Chip>
 	);
 };
-
-const styles = StyleSheet.create({
-	tagUnselected: {
-		borderRadius: 8,
-		marginRight: 5,
-		backgroundColor: '#171923'
-	},
-	tagSelected: {
-		borderRadius: 8,
-		marginRight: 5,
-		backgroundColor: '#1F212F'
-	}
-});

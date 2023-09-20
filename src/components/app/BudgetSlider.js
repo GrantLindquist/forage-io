@@ -2,6 +2,7 @@ import { View } from 'react-native';
 import React, { useState } from 'react';
 import { Text } from 'react-native-paper';
 import Slider from '@react-native-community/slider';
+import colors from '../../../colors.json';
 
 // Component for budget selection slider
 export default function BudgetSlider (props) {
@@ -31,6 +32,7 @@ export default function BudgetSlider (props) {
 				onValueChange={val => handleValueChange(val)}
 				minimumValue={.75}
 				maximumValue={15}
+				minimumTrackTintColor={colors['primary']}
 				step={.25}
 				value={budget}
 			/>

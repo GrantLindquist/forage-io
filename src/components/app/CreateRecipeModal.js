@@ -1,6 +1,6 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { View, ScrollView, StyleSheet } from "react-native";
-import { Text, TextInput, Button, IconButton, Checkbox, ActivityIndicator, Snackbar } from 'react-native-paper';
+import { Text, TextInput, Button, IconButton, Checkbox, ActivityIndicator, Snackbar, ProgressBar, Portal, Dialog } from 'react-native-paper';
 import IngredientTag from './IngredientTag'
 import BudgetSlider from './BudgetSlider';
 import TagSearch from './TagSearch';
@@ -24,6 +24,9 @@ export default function CreateRecipeModal(props) {
 	// List states that track filter categories
 	const [selectedFilters, setSelectedFilters] = useState([]);
 	const [selectedIngredients, setSelectedIngredients] = useState([]);
+
+	// State for tracking recipe charge progress bar
+	const [recipeCharges, setRecipeCharges] = useState(10 - user.unsafeMetadata.recipeCharges.length);
 
 	// State for tracking active ingredient input
 	const [ingredientInput, setIngredientInput] = useState('');
@@ -74,6 +77,19 @@ export default function CreateRecipeModal(props) {
 
 		// Set loading state to true
 		setGeneratingRecipe(true);
+
+		// Add charge to user object
+		var recipeCharges = user.unsafeMetadata.recipeCharges;
+		recipeCharges.push(Date.now());
+		await user.update({
+			unsafeMetadata: { 
+				savedRecipeIds: user.unsafeMetadata.savedRecipeIds,
+				recipeCharges: recipeCharges,
+			}
+		});
+
+		// Update charge in UI
+		setRecipeCharges(10 - user.unsafeMetadata.recipeCharges.length);
 		
 		// Confirm recipe completion and change state back to false once recipe is complete
 		const response = await recipeService.generateRecipe(recipeDTO, user);
@@ -115,41 +131,62 @@ export default function CreateRecipeModal(props) {
 	});
 
 	return (
-	<View style={{backgroundColor: colors['background2'], height: '100%'}}>
-		<View style={{margin: 20}}>
+	<View style={{backgroundColor: colors['background1'], height: '100%'}}>
+		<ProgressBar progress={recipeCharges/10} color={colors['primary']} />
+		<View>
+			<View style={{ flexDirection: 'row', marginHorizontal: 20, marginTop: 10}}>
+				<Text>{recipeCharges}/10  </Text>
+				<Text style={{color: colors['primary'], fontWeight: 700}}>Get more charges</Text>
+				<Text style={{marginLeft: 'auto'}}>49:01</Text>
+			</View>
 			{!isGeneratingRecipe ?
-			<>
-					<Text style={styles.categoryTitle}>Add some tags!</Text>
-					<TagSearch updateSelectedTags={(tags) => setSelectedFilters(tags)} closeTagSearch={() => console.log('this is bad design. fix this.')}/>
+			<View style={{margin: 20}}>
+				<Text style={styles.categoryTitle}>Add some tags!</Text>
+				<TagSearch updateSelectedTags={(tags) => setSelectedFilters(tags)} closeTagSearch={() => console.log('this is bad design. fix this.')}/>
 									
-					<Text style={styles.categoryTitle}>Add some ingredients!<Text style={styles.categorySubtitle}> (optional)</Text></Text>
-					<View style={{flexDirection: 'row'}}>
-						<TextInput style={styles.addIngredients} value={ingredientInput} mode='outlined' onChangeText={(val) => setIngredientInput(val)}/>
-						<IconButton style={styles.addIngredientButton} size={20} mode={'outlined'} icon={'plus'} onPress={() => addIngredient(ingredientInput)}/>
-					</View>
+				<Text style={styles.categoryTitle}>Add some ingredients!</Text>
+				<View style={{flexDirection: 'row'}}>
+					<TextInput style={styles.addIngredients} value={ingredientInput} mode='outlined' onChangeText={(val) => setIngredientInput(val)}/>
+					<IconButton style={styles.addIngredientButton} size={20} mode={'outlined'} icon={'plus'} onPress={() => addIngredient(ingredientInput)}/>
+				</View>
 
-					<ScrollView style={{paddingVertical:8}} horizontal={true}>
-						{ingredientTags}
-					</ScrollView>
+				<ScrollView style={{paddingVertical:8}} horizontal={true}>
+					{ingredientTags}
+				</ScrollView>
 
-					<Text style={styles.categoryTitle}>Misc.<Text style={styles.categorySubtitle}> (optional)</Text></Text>
-					<BudgetSlider handleValueChange={(val) => budget.current = val}/>
+				<Text style={styles.categoryTitle}>More options</Text>
+				<BudgetSlider handleValueChange={(val) => budget.current = val}/>
 
-					<View style={{flexDirection: 'row'}}>
-						<Text variant='bodyLarge'>Make recipe public</Text>
-						<Checkbox.Android 
-							status={isPublicChecked ? "checked" : "unchecked"}
-							onPress={() => {
-								setPublicChecked(!isPublicChecked);
-							}}
-						/>
-					</View>
-				<Button onPress={handleCreateRecipe}>GENERATE RECIPE</Button>
-			</>
+				<View style={{flexDirection: 'row'}}>
+					<Text variant='bodyLarge'>Make recipe public</Text>
+					<Checkbox.Android 
+						status={isPublicChecked ? "checked" : "unchecked"}
+						onPress={() => {
+							setPublicChecked(!isPublicChecked);
+						}}
+					/>
+				</View>
+				<Button disabled={recipeCharges == 0 ? true : false} onPress={handleCreateRecipe}>GENERATE RECIPE</Button>
+			</View>
 			: <View style={styles.loadingScreen}>
 				<ActivityIndicator size={"large"} animating={true}></ActivityIndicator>
 			</View>}
 		</View>	
+
+		{/* Tags dialog */}
+		<Portal>
+			<Dialog visible={false}>
+				<Dialog.Title>Alert</Dialog.Title>
+				<Dialog.Content>
+					<Text variant="bodyMedium">Are you sure you want to delete your account?</Text>
+					<Text variant="bodyMedium">This action is irreversible.</Text>
+				</Dialog.Content>
+				<Dialog.Actions>
+					<Button>No way!</Button>
+					<Button>Yes, delete my account.</Button>
+				</Dialog.Actions>
+			</Dialog>
+        </Portal>
 		
 		{/* Info snackbar */}
 		<Snackbar
@@ -173,6 +210,7 @@ export default function CreateRecipeModal(props) {
 			Recipe failed to generate.
       	</Snackbar>
 	</View>
+	
 	);	
 };
 
@@ -181,7 +219,8 @@ const styles = StyleSheet.create({
 		// fontFamily: 'Roboto',
 		fontSize: 22,
 		fontWeight: 700,
-		marginVertical: 15
+		marginBottom: 5,
+		marginTop: 10
 	},
 	categorySubtitle: {
 		// fontFamily: 'Roboto',

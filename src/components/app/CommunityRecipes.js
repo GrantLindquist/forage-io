@@ -155,8 +155,7 @@ export default function CommunityRecipes() {
 				}}
 				ListEmptyComponent={() => <EmptyList/>}
 			/>
-			{/* {endNumber != 1 ? paginationButtons() : <></>} */}
-			{paginationButtons()}
+			{endNumber != 1 ? paginationButtons() : <></>}
 		</View>
 	);
 };

@@ -121,10 +121,25 @@ const recipeService = {
 		return data.Items;
 	},
 
+    // Adds or removes a "star" from a recipe
+    updateRecipeStars: async(userId, recipeId, value) => {
+        // Executes request
+		const response = await fetch(`${env['forageAPI-uri']}/recipes?creatorId=${userId}&recipeId=${recipeId}&value=${value}`, {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+
+        // Return response
+        let data = await response.json();
+        return data;
+    },
+
     // Deletes recipe from user's catalog
     deleteRecipe: async(userId, recipeId) => {
         // Executes request
-		const response = await fetch(`${env['forageAPI-uri']}/recipes/?creatorId=${userId}&recipeId=${recipeId}`, {
+		const response = await fetch(`${env['forageAPI-uri']}/recipes?creatorId=${userId}&recipeId=${recipeId}`, {
 			method: 'DELETE',
 			headers: {
 				'Content-Type': 'application/json'

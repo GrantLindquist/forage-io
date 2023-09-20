@@ -37,8 +37,11 @@ export default function CreateAccount() {
 					username,
 					password,
 					unsafeMetadata: {
-						savedRecipeIds: []
-					}
+						// List of recipeIds that user has "starred"
+						savedRecipeIds: [],
+						// Millisecond values of when recipes are created
+						recipeCharges: []
+					},
 				});
 				await setActive({ session: completeSignUp.createdSessionId });
 			} 

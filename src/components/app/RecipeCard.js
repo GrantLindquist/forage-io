@@ -13,7 +13,7 @@ export default function RecipeCard(props) {
 						<Text style={styles.recipeTitle}>{props.recipe.Title}</Text>
 					</View>
 				</View>
-				<View style={{flexDirection: 'row'}}>
+				<View style={{flexDirection: 'row', width: '100%'}}>
 					<Text style={styles.recipeSubtext}><Image 
 						source={require('../../../assets/icons/servings.png')}
 						style={{width: 14, height: 14}}
@@ -28,6 +28,12 @@ export default function RecipeCard(props) {
 						style={{width: 14, height: 14}}
 					/> */}
 					{props.recipe.Budget}</Text>
+					<View style={{marginLeft: 'auto'}}>
+						<Text style={styles.recipeSubtext}>{props.recipe.Stars} <Image 
+							source={require('../../../assets/icons/star-filled.png')}
+							style={{width: 14, height: 14}}
+						/></Text>
+					</View>
 				</View>
 			</Card.Content>
 	  	</Card>

@@ -1,10 +1,9 @@
 import { useRoute } from "@react-navigation/native";
 import { useNavigation } from '@react-navigation/native';
-import { ScrollView, View , StyleSheet, Modal } from "react-native";
+import { ScrollView, View , StyleSheet, Image } from "react-native";
 import { Text, Snackbar, Appbar, FAB } from "react-native-paper";
 import { useUser } from "@clerk/clerk-expo";
 import RecipeTag from "./RecipeTag";
-import RemixRecipeModal from './RemixRecipeModal';
 import { useState } from "react";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import recipeService from "../../services/recipeService";
@@ -21,9 +20,6 @@ export default function RecipePage(props) {
 	const { user } = useUser();
 	const { recipe } = route.params;
 
-	// State for interacting with FAB group
-	const [fabOpen, setFabOpen] = useState(false);
-
 	// State that tracks snackbar status
 	const [snackbarVisible, setSnackbarVisible] = useState(false);
 
@@ -31,27 +27,21 @@ export default function RecipePage(props) {
 	const determineUserAction = () => {
 		// If user has created recipe, display delete action
 		if (user.id == recipe.CreatorId){
-			return {
-				icon: 'delete',
-				label: 'Delete',
-				onPress: () => handleDeleteRecipe(),
-			}
+			return (
+				<Appbar.Action icon={'delete'} size={24} onPress={() => handleDeleteRecipe()} />
+			)
 		}
 		// If user did not create recipe but has recipe saved, display unsave action
 		else if (user.unsafeMetadata.savedRecipeIds.includes(recipe.RecipeId)){
-			return {
-				icon: 'bookmark',
-				label: 'Unsave',
-				onPress: () => handleSaveRecipe(),
-			}
+			return (
+				<Appbar.Action icon={'star'} size={24} onPress={() => handleSaveRecipe()} />
+			)
 		}
 		// Otherwise, display save action
 		else {
-			return {
-				icon: 'bookmark',
-				label: 'Save',
-				onPress: () => handleSaveRecipe(),
-			}
+			return (
+				<Appbar.Action icon={'star'} size={24} onPress={() => handleSaveRecipe()} />
+			)
 		}
 	}
 
@@ -102,11 +92,22 @@ export default function RecipePage(props) {
 		// Place newly handled recipe id into list if recipe id hasn't already been removed
 		if(savingRecipe){
 			savedRecipeIds.push(recipe.RecipeId);
+
+			// Execute service request
+			let response = await recipeService.updateRecipeStars(user.id, recipe.RecipeId, 1);
+			console.log(response);
+		}
+		else{
+			let response = await recipeService.updateRecipeStars(user.id, recipe.RecipeId ,-1);
+			console.log(response);
 		}
 
 		// Update user with new list of ids
 		const response = await user.update({
-			unsafeMetadata: { savedRecipeIds }
+			unsafeMetadata: { 
+				savedRecipeIds: savedRecipeIds,
+				recipeCharges: user.unsafeMetadata.recipeCharges,
+			}
 		});
 
 		// Refreshes savedRecipes.js
@@ -151,12 +152,19 @@ export default function RecipePage(props) {
 			<Appbar.Header style={{backgroundColor: colors['background2']}}>
 				<Appbar.BackAction onPress={() => navigation.goBack()}/>
 				<Appbar.Content></Appbar.Content>
-				<Appbar.Action icon={'dots-vertical'} onPress={() => setFabOpen(true)} />
+				<Appbar.Action icon={'bell'} size={24} />
+				<Appbar.Action icon={() => <Image 
+					source={require('../../../assets/icons/remix-action.png')}
+					style={{height: 24, width: 24}} />} 
+					onPress={() => navigation.navigate('remixRecipeModal', {
+							recipe: recipe
+				})}/>
+				{userAction}
 			</Appbar.Header>
 
 			<ScrollView style={{backgroundColor: colors['background2']}}>
 				<View style={styles.container}>
-					<Text variant="bodySmall"><MaterialCommunityIcons name="account" size={14} /> {recipe.CreatorUsername.toUpperCase()}</Text>
+					<Text style={styles.subtext}><MaterialCommunityIcons name="account" size={14} /> {recipe.CreatorUsername.toUpperCase()}</Text>
 					<Text style={styles.recipeTitle}>{recipe.Title}</Text>
 					<View style={{ marginTop: 15,  flexDirection: 'row'}}>
 						<View style={{alignItems: 'center', width: '33%'}}>
@@ -181,27 +189,6 @@ export default function RecipePage(props) {
 					{instructions}
 				</View>
 			</ScrollView>
-			<FAB.Group
-				open={fabOpen}
-				visible={false}
-				style={{bottom: -100}}
-				actions={[
-					userAction,
-					{
-						icon: 'email',
-						label: 'Remix',
-						onPress: () => navigation.navigate('remixRecipeModal', {
-							recipe: recipe
-						}),
-					},
-					{
-						icon: 'bell',
-						label: 'Share',
-						onPress: () => console.log('Pressed share'),
-					},
-				]}
-				onStateChange={() => setFabOpen(!fabOpen)}
-			/>
 			<Snackbar
 				visible={snackbarVisible}
 				onDismiss={() => setSnackbarVisible(false)}
@@ -230,5 +217,9 @@ const styles = StyleSheet.create({
 		fontSize: 24,
 		fontWeight: 700,
 		marginVertical: 15
+	},
+	subtext: {
+		color: 'grey',
+		fontSize: 13
 	}
 });

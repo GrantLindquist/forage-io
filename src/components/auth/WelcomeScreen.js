@@ -12,12 +12,12 @@ export default function WelcomeScreen() {
 
 	return (
 	<View style={styles.container}>
-		{/* <Image 
-			source={require('../../../assets/layered-waves.png')} 
+		<Image 
+			source={require('../../../assets/login-bg.jpg')} 
 			style={{width: '100%', height: '100%', zIndex: -3, position: 'absolute'}}
-		/> */}
+		/>
 
-		<Text style={styles.title}>forage-io</Text>
+		<Text style={styles.title}>forage.io</Text>
 		
 		{/* Either sign-in or create account components are displayed, depending on which option user selects */}
 		<KeyboardAvoidingView behavior="padding" style={{width: "80%", position: 'absolute', bottom: "16%"}}>
@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
 	},
 	title: {
 		fontSize: 50,
+		fontWeight: 700,
 		color: "white", 
 		position: 'absolute', 
 		top: "20%"
