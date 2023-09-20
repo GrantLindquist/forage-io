@@ -9,6 +9,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import colors from '../../../colors.json';
 import { createStackNavigator } from '@react-navigation/stack';
+import { Vibration } from 'react-native';
 
 // Create tab object
 const Tab = createBottomTabNavigator();
@@ -36,7 +37,7 @@ export default function AppNavigation() {
 						screenOptions={{
 							header: () => <Header/>,
 							tabBarShowLabel: false,
-							tabBarActiveTintColor: colors['pink'],
+							tabBarActiveTintColor: colors['blue'],
 							tabBarStyle: { backgroundColor: colors['background1'] }
 						}}
 						sceneContainerStyle={{ backgroundColor: colors['background2'] }}

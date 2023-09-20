@@ -106,6 +106,8 @@ export default function CreateRecipeModal(props) {
 		else{
 			setErrorSnackbarVisible(true);
 
+			console.log(response);
+
 			// Clear ingredients state of faulty input
 			setSelectedIngredients([]);
 		}
@@ -132,15 +134,15 @@ export default function CreateRecipeModal(props) {
 
 	return (
 	<View style={{backgroundColor: colors['background1'], height: '100%'}}>
-		<ProgressBar progress={recipeCharges/10} color={colors['primary']} />
+		<ProgressBar progress={recipeCharges/10} color={colors['pink']} />
 		<View>
 			<View style={{ flexDirection: 'row', marginHorizontal: 20, marginTop: 10}}>
-				<Text>{recipeCharges}/10  </Text>
-				<Text style={{color: colors['primary'], fontWeight: 700}}>Get more charges</Text>
-				<Text style={{marginLeft: 'auto'}}>49:01</Text>
+				<Text style={{color: 'grey'}}>{recipeCharges}/10  </Text>
+				<Text style={{color: colors['pink'], fontWeight: 700}}>Get more charges</Text>
+				<IconButton style={{marginLeft: 'auto', margin: 0}} icon={"information-outline"}></IconButton>
 			</View>
 			{!isGeneratingRecipe ?
-			<View style={{margin: 20}}>
+			<View style={{margin: 20, marginTop: 0}}>
 				<Text style={styles.categoryTitle}>Add some tags!</Text>
 				<TagSearch updateSelectedTags={(tags) => setSelectedFilters(tags)} closeTagSearch={() => console.log('this is bad design. fix this.')}/>
 									
@@ -160,13 +162,14 @@ export default function CreateRecipeModal(props) {
 				<View style={{flexDirection: 'row'}}>
 					<Text variant='bodyLarge'>Make recipe public</Text>
 					<Checkbox.Android 
+						color={colors['blue']}
 						status={isPublicChecked ? "checked" : "unchecked"}
 						onPress={() => {
 							setPublicChecked(!isPublicChecked);
 						}}
 					/>
 				</View>
-				<Button disabled={recipeCharges == 0 ? true : false} onPress={handleCreateRecipe}>GENERATE RECIPE</Button>
+				<Button disabled={recipeCharges == 0 ? true : false} textColor={colors['pink']} onPress={handleCreateRecipe}>GENERATE RECIPE</Button>
 			</View>
 			: <View style={styles.loadingScreen}>
 				<ActivityIndicator size={"large"} animating={true}></ActivityIndicator>
@@ -240,7 +243,7 @@ const styles = StyleSheet.create({
 	addIngredientButton: {
 		borderRadius: '5',
 		borderWidth: 0,
-		backgroundColor: '#7A5DE1',
+		backgroundColor: colors['green'],
 		marginBottom: 0,
 		marginRight: 0,
 		marginLeft: 10

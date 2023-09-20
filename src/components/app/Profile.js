@@ -43,19 +43,19 @@ export default function Profile() {
 			<Text style={styles.subtext}>Created on {user.createdAt.toLocaleString().split(',')[0]}</Text>
 		</View>
 		<View style={{position: 'absolute', bottom: 20, width: '100%'}}>
-			<Button mode="text">Terms of Service</Button>
+			<Button mode="text" textColor={colors['pink']}>Terms of Service</Button>
 			<Divider style={{marginHorizontal: 20}}/>
-			<Button mode="text" onPress={signOut}>Sign out</Button>
+			<Button mode="text" textColor={colors['pink']} onPress={signOut}>Sign out</Button>
 			<Divider style={{marginHorizontal: 20}}/>
-			<Button mode="text" onPress={() => setWarningDialogVisible(true)}>Delete account</Button>
+			<Button mode="text" textColor={colors['pink']} onPress={() => setWarningDialogVisible(true)}>Delete account</Button>
 		</View>
 		<View style={{ marginTop: 15,  flexDirection: 'row'}}>
 			<View style={{alignItems: 'center', width: '50%'}}>
-				<Text variant="bodyLarge">Created Recipes</Text>
+				<Text  style={styles.subtext}>Created Recipes</Text>
 				<Text variant="headlineLarge">40</Text>
 			</View>
-			<View style={{alignItems: 'center' , borderColor: colors['primary'], borderLeftWidth: '1', width: '50%'}}>
-				<Text variant="bodyLarge">Total Stars</Text>
+			<View style={{alignItems: 'center' , borderColor: colors['blue'], borderLeftWidth: '2', width: '50%'}}>
+				<Text style={styles.subtext}>Total Stars</Text>
 				<Text variant="headlineLarge">100</Text>
 			</View>
 		</View>
@@ -63,7 +63,7 @@ export default function Profile() {
 		{/* Account deletion warning dialog */}
 		<Portal>
 			<Dialog visible={warningDialogVisible} onDismiss={() => setWarningDialogVisible(false)}>
-				<Dialog.Title>Alert</Dialog.Title>
+				<Dialog.Title style={{fontWeight: 700}}>Woah, there!</Dialog.Title>
 				<Dialog.Content>
 					<Text variant="bodyMedium">Are you sure you want to delete your account?</Text>
 					<Text variant="bodyMedium">This action is irreversible.</Text>

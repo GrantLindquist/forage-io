@@ -32,7 +32,7 @@ export default function BudgetSlider (props) {
 				onValueChange={val => handleValueChange(val)}
 				minimumValue={.75}
 				maximumValue={15}
-				minimumTrackTintColor={colors['primary']}
+				minimumTrackTintColor={colors['blue']}
 				step={.25}
 				value={budget}
 			/>

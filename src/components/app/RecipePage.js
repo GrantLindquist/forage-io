@@ -133,7 +133,7 @@ export default function RecipePage(props) {
 	// Renders each ingredient 
 	const ingredients = recipe.Ingredients.map((ingredient) => {
 		return(
-			<Text variant='bodyLarge' style={{marginVertical: 5}} key={ingredient}><Text style={{color: colors['primary']}}>-</Text> {ingredient}</Text>
+			<Text variant='bodyLarge' style={{marginVertical: 5}} key={ingredient}><Text style={{fontWeight: 700, color: colors['green']}}>-</Text> {ingredient}</Text>
 		)
 	});
 
@@ -142,7 +142,7 @@ export default function RecipePage(props) {
 	const instructions = recipe.Instructions.map((instruction) => {
 		stepCounter++;
 		return(
-			<Text variant='bodyLarge' style={{marginVertical: 10}} key={"instruction" + stepCounter}><Text style={{color: colors['primary']}}>{stepCounter}. </Text>{instruction}</Text>
+			<Text variant='bodyLarge' style={{marginVertical: 10}} key={"instruction" + stepCounter}><Text style={{fontWeight: 700, color: colors['pink']}}>{stepCounter}. </Text>{instruction}</Text>
 		)
 	});
 
@@ -167,26 +167,27 @@ export default function RecipePage(props) {
 					<Text style={styles.subtext}><MaterialCommunityIcons name="account" size={14} /> {recipe.CreatorUsername.toUpperCase()}</Text>
 					<Text style={styles.recipeTitle}>{recipe.Title}</Text>
 					<View style={{ marginTop: 15,  flexDirection: 'row'}}>
-						<View style={{alignItems: 'center', width: '33%'}}>
-							<Text variant="bodyLarge">Serves</Text>
-							<Text variant="headlineLarge">{recipe.Servings}</Text>
+						<View style={{alignItems: 'center', width: '20%'}}>
+							<Text style={styles.subtext}>Serves</Text>
+							<Text variant="headlineMedium">{recipe.Servings}</Text>
 						</View>
-						<View style={{alignItems: 'center' , borderColor: colors['primary'], borderLeftWidth: '1', borderRightWidth: '1', width: '33%'}}>
-							<Text variant="bodyLarge">Time</Text>
-							<Text variant="headlineLarge">{recipe.CreationTime}</Text>
+						<View style={{alignItems: 'center', borderColor: colors['blue'], borderLeftWidth: '2', borderRightWidth: '2', width: '40%'}}>
+							<Text  style={styles.subtext}>Budget</Text>
+							<Text variant="headlineMedium">{recipe.Budget}</Text>
 						</View>
-						<View style={{alignItems: 'center', width: '33%'}}>
-							<Text variant="bodyLarge">Budget</Text>
-							<Text variant="headlineLarge">{recipe.Budget}</Text>
+						<View style={{alignItems: 'center' , width: '40%'}}>
+							<Text style={styles.subtext}>Time</Text>
+							<Text variant="headlineMedium">{recipe.CreationTime}</Text>
 						</View>
 					</View>
-					<View style={{ marginTop: 15, flexWrap: 'wrap', flexDirection: 'row'}}>
+					<Text style={[styles.categoryTitle, {color: colors['green']}]}>Ingredients:</Text>
+					{ingredients}
+					<Text style={[styles.categoryTitle, {color: colors['pink']}]}>Instructions:</Text>
+					{instructions}
+					<Text style={[styles.categoryTitle, {color: colors['yellow']}]}>Tags:</Text>
+					<View style={{ flexWrap: 'wrap', flexDirection: 'row'}}>
 						{recipeTags}
 					</View>
-					<Text style={styles.categoryTitle}>Ingredients</Text>
-					{ingredients}
-					<Text style={styles.categoryTitle}>Instructions</Text>
-					{instructions}
 				</View>
 			</ScrollView>
 			<Snackbar
@@ -216,7 +217,7 @@ const styles = StyleSheet.create({
 		// fontFamily: 'Roboto',
 		fontSize: 24,
 		fontWeight: 700,
-		marginVertical: 15
+		marginVertical: 15,
 	},
 	subtext: {
 		color: 'grey',
