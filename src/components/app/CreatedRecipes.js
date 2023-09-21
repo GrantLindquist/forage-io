@@ -40,7 +40,6 @@ export default function CreatedRecipes(props) {
 	// Renders recipes on component load & re-renders component when refreshValue is updated
 	useEffect(() => {
 		// Remove deleted recipe from UI if necessary
-		console.log(route.params);
 		if(route.params){
 			const { removeId } = route.params; 
 			setRemoveRecipeId(removeId);

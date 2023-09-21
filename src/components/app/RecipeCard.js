@@ -1,5 +1,5 @@
 import { View, StyleSheet, Image } from "react-native";
-import { Card, Text, IconButton } from 'react-native-paper';
+import { Card, Text } from 'react-native-paper';
 import colors from "../../../colors.json";
 
 // Card that contains basic info about recipe. Clicking will direct user to more detailed information about recipe
@@ -23,11 +23,7 @@ export default function RecipeCard(props) {
 						style={{width: 14, height: 14}}
 					/>{props.recipe.CreationTime}</Text>
 					<Text style={styles.recipeSubtext}>
-					{/* <Image 
-						source={require('../../../assets/icons/budget.png')}
-						style={{width: 14, height: 14}}
-					/> */}
-					{props.recipe.Budget}</Text>
+					${props.recipe.Budget}</Text>
 					<View style={{marginLeft: 'auto'}}>
 						{/* Make liked recipes have yellow number */}
 						<Text style={styles.recipeSubtext}>{props.recipe.Stars} <Image 

@@ -22,17 +22,30 @@ const recipeService = {
             messages: [
             { 
                 role: "system", 
-                content: "You are a professional chef with decades of culinary experience." 
+                content: "You are an assistant that generates recipes in JSON format. You may only respond in JSON format." 
+            },
+            { 
+                role: "assistant", 
+                content: `Generate recipes in JSON format using the following model: 
+                {
+                    title: a creative name for the recipe,
+                    servings: the number of servings this recipe will create,
+                    ingredients: an array of each ingredient for the recipe,
+                    instructions: an array of each step to make the recipe,
+                    creationTime: the amount of time it takes to create the recipe (in xh xxm format),
+                    budget: sum of approximate cost of ingredients (in xx.xx format)
+                }`
             },
             {
                 role: "user",
-                content: `generate a ${request.description}. place this recipe into a JSON-compatible string. the recipe name must be called \"title\", the ingredient list must be named \"ingredients\", the instructions list must be named \"instructions\", the time it takes to make (in xh xxm format) must be named \"creationTime\", the number of servings it creates must be named \"servings\", and the recipe budget in USD format must be named \"budget\".`
+                content: `generate a ${request.description}.`
             }],
             temperature: .8
         });
-
+        
         // Attempt to parse response
         try{
+            // console.log(completion.data.choices[0].message.content)
             const recipe = JSON.parse(completion.data.choices[0].message.content);
             
             // Place recipe into DB

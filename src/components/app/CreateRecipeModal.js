@@ -106,8 +106,6 @@ export default function CreateRecipeModal(props) {
 		else{
 			setErrorSnackbarVisible(true);
 
-			console.log(response);
-
 			// Clear ingredients state of faulty input
 			setSelectedIngredients([]);
 		}

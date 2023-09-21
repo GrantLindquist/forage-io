@@ -173,7 +173,7 @@ export default function RecipePage(props) {
 						</View>
 						<View style={{alignItems: 'center', borderColor: colors['blue'], borderLeftWidth: '2', borderRightWidth: '2', width: '40%'}}>
 							<Text  style={styles.subtext}>Budget</Text>
-							<Text variant="headlineMedium">{recipe.Budget}</Text>
+							<Text variant="headlineMedium">${recipe.Budget}</Text>
 						</View>
 						<View style={{alignItems: 'center' , width: '40%'}}>
 							<Text style={styles.subtext}>Time</Text>
