@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Profile from './Profile';
 import CreateRecipeModal from './CreateRecipeModal';
 import RemixRecipeModal from './RemixRecipeModal';
@@ -9,7 +9,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import colors from '../../../colors.json';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Vibration } from 'react-native';
+import { useUser } from '@clerk/clerk-expo';
 
 // Create tab object
 const Tab = createBottomTabNavigator();
@@ -20,9 +20,35 @@ export default function AppNavigation() {
 
 	// State that provides navigation property
 	const navigation = useNavigation();
+	const { user } = useUser();
 
 	// State for refreshing createdRecipes component
 	const [refreshCreatedRecipes, setRefreshCreatedRecipes] = useState(false);
+
+	// Restores user charges when app loads
+	useEffect(() => {
+		async function updateUserCharges() {
+			// Check for outdated charges
+			var recipeCharges = user.unsafeMetadata.recipeCharges;
+			for(let item of recipeCharges){
+				// If an hour has passed since its addition, remove charge
+				if(Date.now() - item > 3600000){
+					recipeCharges.shift();
+				}
+				else{
+					break;
+				}
+			}
+			// Update user obj
+			await user.update({
+				unsafeMetadata: { 
+					savedRecipeIds: user.unsafeMetadata.savedRecipeIds,
+					recipeCharges: recipeCharges
+				}
+			});
+		}
+		updateUserCharges();
+	}, []);
 
   	return (
 		/* ModalStack.Navigator contains all of app navigation alongside CreateRecipeModal */

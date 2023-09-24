@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FlatList, View, StyleSheet, Pressable } from "react-native";
 import { Searchbar, IconButton, Text } from "react-native-paper";
 import TagSearch from './TagSearch';
@@ -149,9 +149,10 @@ export default function CommunityRecipes() {
 						<Pressable key={item.item.RecipeId} onPress={() => navigation.navigate('Recipe', {
 								recipe: item.item
 							})}>
-							<RecipeCard recipe={item.item}/>
-						</Pressable>
+						<RecipeCard recipe={item.item}/>
+							</Pressable>
 					)
+					
 				}}
 				ListEmptyComponent={() => <EmptyList/>}
 			/>

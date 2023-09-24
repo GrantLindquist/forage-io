@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { View, ScrollView, StyleSheet } from "react-native";
+import { View, ScrollView, StyleSheet, Image } from "react-native";
 import { Text, TextInput, Button, IconButton, Checkbox, ActivityIndicator, Snackbar, ProgressBar, Portal, Dialog } from 'react-native-paper';
 import IngredientTag from './IngredientTag'
 import BudgetSlider from './BudgetSlider';
@@ -7,12 +7,16 @@ import TagSearch from './TagSearch';
 import recipeService from '../../services/recipeService';
 import { useUser } from '@clerk/clerk-expo';
 import colors from '../../../colors.json';
+import { useNavigation } from '@react-navigation/native';
 
 // Contains UI components that must be rendered on the highest z-index (modals, dialogs, etc.)
 export default function CreateRecipeModal(props) {
 
 	// Gets user from Clerk
 	const { user } = useUser(); 
+
+	// Navigation object
+	const navigation = useNavigation();
 
 	// State that tracks whether or not recipe is being actively generated
 	const [isGeneratingRecipe, setGeneratingRecipe] = useState(false);
@@ -27,6 +31,10 @@ export default function CreateRecipeModal(props) {
 
 	// State for tracking recipe charge progress bar
 	const [recipeCharges, setRecipeCharges] = useState(10 - user.unsafeMetadata.recipeCharges.length);
+
+	// State for tracking dialogs
+	const [errorDialogVisible, setErrorDialogVisible] = useState(false);
+	const [errorDialogContent, setErrorDialogContent] = useState("");
 
 	// State for tracking active ingredient input
 	const [ingredientInput, setIngredientInput] = useState('');
@@ -104,7 +112,9 @@ export default function CreateRecipeModal(props) {
 			props.refreshCreatedRecipes();
 		}
 		else{
+			// Display error UI components
 			setErrorSnackbarVisible(true);
+			setErrorDialogContent(response.message);
 
 			// Clear ingredients state of faulty input
 			setSelectedIngredients([]);
@@ -135,6 +145,10 @@ export default function CreateRecipeModal(props) {
 		<ProgressBar progress={recipeCharges/10} color={colors['pink']} />
 		<View>
 			<View style={{ flexDirection: 'row', marginHorizontal: 20, marginTop: 10}}>
+				<Image 
+					source={require('../../../assets/icons/charge.png')}
+					style={{width: 18, height: 18}}
+				/>
 				<Text style={{color: 'grey'}}>{recipeCharges}/10  </Text>
 				<Text style={{color: colors['pink'], fontWeight: 700}}>Get more charges</Text>
 				<IconButton style={{marginLeft: 'auto', margin: 0}} icon={"information-outline"}></IconButton>
@@ -174,8 +188,8 @@ export default function CreateRecipeModal(props) {
 			</View>}
 		</View>	
 
-		{/* Tags dialog */}
 		<Portal>
+			{/* Info dialog */}
 			<Dialog visible={false}>
 				<Dialog.Title>Alert</Dialog.Title>
 				<Dialog.Content>
@@ -187,6 +201,16 @@ export default function CreateRecipeModal(props) {
 					<Button>Yes, delete my account.</Button>
 				</Dialog.Actions>
 			</Dialog>
+
+			{/* Warning dialog */}
+			<Dialog visible={errorDialogVisible} onDismiss={() => setErrorDialogVisible(false)}>
+				<Dialog.Content>
+					<Text variant="bodyMedium">{errorDialogContent}</Text>
+				</Dialog.Content>
+				<Dialog.Actions>
+					<Button onPress={() => setErrorDialogVisible(false)}>OK</Button>
+				</Dialog.Actions>
+			</Dialog>
         </Portal>
 		
 		{/* Info snackbar */}
@@ -195,7 +219,7 @@ export default function CreateRecipeModal(props) {
         	onDismiss={() => setInfoSnackbarVisible(false)}
 			action={{
           		label: 'View',
-         	 	onPress: () => {},
+         	 	onPress: () => navigation.navigate('Main'),
         	}}>
         	Recipe was successfully generated!
       	</Snackbar>
@@ -206,7 +230,7 @@ export default function CreateRecipeModal(props) {
         	onDismiss={() => setErrorSnackbarVisible(false)}
 			action={{
           		label: 'Why?',
-         	 	onPress: () => {},
+         	 	onPress: () => setErrorDialogVisible(true),
         	}}>
 			Recipe failed to generate.
       	</Snackbar>

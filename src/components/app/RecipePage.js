@@ -124,9 +124,14 @@ export default function RecipePage(props) {
 	}
 
 	// Sub-component that lists a tag component for each recipe tag
-	const recipeTags = recipe.Tags.map((tag) => {
+	console.log(recipe.Tags)
+	const recipeTags = Object.entries(recipe.Tags).map((tag) => {
+		
+		// Parse title from JSON property to tag string
+		let title = tag[0].charAt(2).toLowerCase() + tag[0].slice(3);
+
 		return(
-			<RecipeTag key={tag} title={tag} immutable={true}/>
+			<RecipeTag key={title} title={title} immutable={true}/>
 		)
 	});
 

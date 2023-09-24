@@ -23,7 +23,7 @@ export default function RecipeCard(props) {
 						style={{width: 14, height: 14}}
 					/>{props.recipe.CreationTime}</Text>
 					<Text style={styles.recipeSubtext}>
-					${props.recipe.Budget}</Text>
+					${Number(props.recipe.Budget).toFixed(2)}</Text>
 					<View style={{marginLeft: 'auto'}}>
 						{/* Make liked recipes have yellow number */}
 						<Text style={styles.recipeSubtext}>{props.recipe.Stars} <Image 

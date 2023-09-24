@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, Image } from "react-native";
 import { Chip, Text } from "react-native-paper";
 import tags from '../../../tags.json';
 import colors from "../../../colors.json";
@@ -19,19 +19,31 @@ export default function RecipeTag(props) {
 		switch(tags.find((tag) => tag.filterTitle == props.title).filterTypeCode){
             case 0:
                 setColor(colors['pink']);
-				setIcon(() => <></>);
+				setIcon(() => <Image 
+					source={require('../../../assets/icons/meal-type.png')}
+					style={{width: 14, height: 14}}
+				/>);
                 break;
             case 1:
                 setColor(colors['blue']);
-				setIcon(() => <></>);
+				setIcon(() => <Image 
+					source={require('../../../assets/icons/cuisine-type.png')}
+					style={{width: 14, height: 14}}
+				/>);
                 break;
             case 2:
                 setColor(colors['yellow']);
-				setIcon(() => <></>);
+				setIcon(() => <Image 
+					source={require('../../../assets/icons/flavor.png')}
+					style={{width: 14, height: 14}}
+				/>);
                 break;
             case 3:
                 setColor(colors['green']);
-				setIcon(() => <></>);
+				setIcon(() => <Image 
+					source={require('../../../assets/icons/diet-type.png')}
+					style={{width: 14, height: 14}}
+				/>);
                 break;
         }
 	}, []);
@@ -63,8 +75,9 @@ export default function RecipeTag(props) {
 	});
 
 	return (
-		<Chip style={selected ? styles.tagSelected : styles.tagUnselected} icon={icon} onPress={handlePress}>
-			<Text style={{color: color}}>{props.title}</Text>
+		<Chip style={selected ? styles.tagSelected : styles.tagUnselected} onPress={handlePress}>
+			{/* If tag is a cuisine type tag, capitalize first letter of tag */}
+			<Text style={{color: color}}>{icon} {props.filterTypeCode == 1 ? props.title.charAt(0).toUpperCase() + props.title.slice(1) : props.title}</Text>
 		</Chip>
 	);
 };

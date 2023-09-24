@@ -22,7 +22,9 @@ const recipeService = {
             messages: [
             { 
                 role: "system", 
-                content: "You are an assistant that generates recipes in JSON format. You may only respond in JSON format." 
+                content: `You are an assistant that generates recipes in JSON format. 
+                You may only respond in JSON format. The only exception is if the recipe contains inedible
+                or unsafe ingredients. In this case, you must respond with a message explaining why it's unsafe to eat.` 
             },
             { 
                 role: "assistant", 
@@ -78,7 +80,8 @@ const recipeService = {
             console.error(e);
             return {
                 ok: false,
-                error: e
+                error: e,
+                message: completion.data.choices[0].message.content
             }
         }
     },
