@@ -124,7 +124,6 @@ export default function RecipePage(props) {
 	}
 
 	// Sub-component that lists a tag component for each recipe tag
-	console.log(recipe.Tags)
 	const recipeTags = Object.entries(recipe.Tags).map((tag) => {
 		
 		// Parse title from JSON property to tag string
@@ -178,7 +177,7 @@ export default function RecipePage(props) {
 						</View>
 						<View style={{alignItems: 'center', borderColor: colors['blue'], borderLeftWidth: '2', borderRightWidth: '2', width: '40%'}}>
 							<Text  style={styles.subtext}>Budget</Text>
-							<Text variant="headlineMedium">${recipe.Budget}</Text>
+							<Text variant="headlineMedium">${Number(recipe.Budget).toFixed(2)}</Text>
 						</View>
 						<View style={{alignItems: 'center' , width: '40%'}}>
 							<Text style={styles.subtext}>Time</Text>

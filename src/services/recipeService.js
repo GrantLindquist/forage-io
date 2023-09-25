@@ -16,6 +16,8 @@ const recipeService = {
     
     // Generates a recipe with GPT using the request parameter.
     generateRecipe: async (request, user) => {
+
+        console.log(request)
         // Make GPT request
         const completion = await openai.createChatCompletion({
             model: "gpt-3.5-turbo",
@@ -26,7 +28,20 @@ const recipeService = {
                 You may only respond in JSON format. The only exception is if the recipe contains inedible
                 or unsafe ingredients. In this case, you must respond with a message explaining why it's unsafe to eat.` 
             },
-            { 
+            // If a baseRecipe is included in the request, then "remix" the recipe. Otherwise, generate new recipe
+            request.baseRecipe ? { 
+                role: "assistant", 
+                content: `Generate a recipe in JSON format that is similar to this recipe and follows the same structure: 
+                {
+                    title: ${request.baseRecipe.Title},
+                    servings: ${request.baseRecipe.Servings},
+                    ingredients: ${request.baseRecipe.Ingredients},
+                    instructions: ${request.baseRecipe.Instructions},
+                    creationTime: ${request.baseRecipe.CreationTime},
+                    budget: ${request.baseRecipe.Budget},
+                }
+                Make sure that the ingredients and instructions values are simple arrays.`
+            } : {
                 role: "assistant", 
                 content: `Generate recipes in JSON format using the following model: 
                 {
@@ -59,7 +74,7 @@ const recipeService = {
                 body: JSON.stringify({
                     creatorId: user.id,
                     recipeId: uuidv4(),
-                    baseRecipeId: request.baseRecipeId ? request.baseRecipeId : null,
+                    baseRecipeId: request.baseRecipe ? request.baseRecipe.RecipeId : null,
                     isPublic: request.isPublic,
                     title: recipe.title,
                     ingredients: recipe.ingredients,

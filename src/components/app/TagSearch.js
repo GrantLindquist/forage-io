@@ -5,15 +5,14 @@ import RecipeTag from "./RecipeTag";
 import tags from '../../../tags.json';
 import colors from '../../../colors.json';
 
-
 // Expandable horizontal scroll view for viewing items
 export default function TagSearch(props) {
 
 	// State for tracking user search input
 	const [searchQuery, setSearchQuery] = useState('');
 
-    // State for tracking which tags are selected
-    const [selectedTags, setSelectedTags] = useState([]);
+    // State for tracking which tags are selected - start with default tags if provided with them
+    const [selectedTags, setSelectedTags] = useState(props.defaultTags ? props.defaultTags : []);
 
     // Updates selected tags
     const updateSelectedTags = (title, typeCode) => {
