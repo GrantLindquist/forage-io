@@ -94,11 +94,11 @@ export default function RecipePage(props) {
 			savedRecipeIds.push(recipe.RecipeId);
 
 			// Execute service request
-			let response = await recipeService.updateRecipeStars(user.id, recipe.RecipeId, 1);
+			let response = await recipeService.updateRecipeStars(recipe.CreatorId, recipe.RecipeId, Number(recipe.Stars) + 1);
 			console.log(response);
 		}
 		else{
-			let response = await recipeService.updateRecipeStars(user.id, recipe.RecipeId ,-1);
+			let response = await recipeService.updateRecipeStars(recipe.CreatorId, recipe.RecipeId, Number(recipe.Stars) - 1);
 			console.log(response);
 		}
 

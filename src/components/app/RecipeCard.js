@@ -1,9 +1,13 @@
 import { View, StyleSheet, Image } from "react-native";
 import { Card, Text } from 'react-native-paper';
 import colors from "../../../colors.json";
+import { useUser } from "@clerk/clerk-expo";
 
 // Card that contains basic info about recipe. Clicking will direct user to more detailed information about recipe
 export default function RecipeCard(props) {
+
+	// User object
+	const { user } = useUser();
 
 	return (
 		<Card style={styles.card}>
@@ -26,7 +30,7 @@ export default function RecipeCard(props) {
 					${Number(props.recipe.Budget).toFixed(2)}</Text>
 					<View style={{marginLeft: 'auto'}}>
 						{/* Make liked recipes have yellow number */}
-						<Text style={styles.recipeSubtext}>{props.recipe.Stars} <Image 
+						<Text style={user.unsafeMetadata.savedRecipeIds.includes(props.recipe.RecipeId) ? styles.highlightedSubtext : styles.recipeSubtext}>{props.recipe.Stars} <Image 
 							source={require('../../../assets/icons/star-filled.png')}
 							style={{width: 14, height: 14}}
 						/></Text>
@@ -51,6 +55,11 @@ const styles = StyleSheet.create({
 	recipeSubtext: {
 		fontSize: 14,
 		color: 'grey',
+		marginRight: 10
+	},
+	highlightedSubtext: {
+		fontSize: 14,
+		color: colors['yellow'],
 		marginRight: 10
 	}
 });
