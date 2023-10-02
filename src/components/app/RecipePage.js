@@ -44,14 +44,14 @@ export default function RecipePage(props) {
 
 	// Deletes recipe from DB
 	const handleDeleteRecipe = async() => {
+		// Determines whether a record of recipe should be kept for other users
+		let saveRecord = recipe.Stars > 0 ? true : false
+
 		// Executes request
-		const response = recipeService.deleteRecipe(user.id, recipe.RecipeId);
+		const response = recipeService.deleteRecipe(user.id, recipe.RecipeId, saveRecord);
 
 		// Refreshes createdRecipes.js
 		props.refreshCreatedRecipes();
-
-		// Updates FAB display
-		setUserAction(determineUserAction());
 
 		// Redirects user
 		navigation.navigate("Created", {

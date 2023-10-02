@@ -47,7 +47,7 @@ export default function CreatedRecipes(props) {
 
 		loadCreatedRecipes();
 		console.log('loaded createdRecipes.js');
-		console.log(removeRecipeId);
+		console.log(console.log("remove: " + removeRecipeId));
 	}, [props.refreshValue1, props.refreshValue2]);
 
 	return (

@@ -176,9 +176,9 @@ const recipeService = {
     },
 
     // Deletes recipe from user's catalog
-    deleteRecipe: async(userId, recipeId) => {
+    deleteRecipe: async(userId, recipeId, saveRecord) => {
         // Executes request
-		const response = await fetch(`${env['forageAPI-uri']}/recipes?creatorId=${userId}&recipeId=${recipeId}`, {
+		const response = await fetch(`${env['forageAPI-uri']}/recipes?creatorId=${userId}&recipeId=${recipeId}&saveRecord=${saveRecord}`, {
 			method: 'DELETE',
 			headers: {
 				'Content-Type': 'application/json'
