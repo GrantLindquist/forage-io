@@ -117,14 +117,7 @@ export default function CommunityRecipes() {
 
 	return (
 		<View style={styles.container}>
-			{filtersVisible ? 
-				<TagSearch 
-					updateSelectedTags={(tags) => setActiveFilters(tags)} 
-					closeTagSearch={() => setFiltersVisible(false)}
-					canExit={true}
-				/>
-			: 
-			<View style={{flexDirection:'row'}}>
+			<View style={{flexDirection:'row', alignItems: 'center'}}>
 				<Searchbar
 					style={styles.searchbar}
 					placeholder={"search recipes"}
@@ -133,14 +126,19 @@ export default function CommunityRecipes() {
 					showDivider={false}
 					mode={'view'}
 					onChangeText={query => setSearchText(query)}
-					onIconPress={() => setSearchQuery(searchText)}
+					onSubmitEditing={() => setSearchQuery(searchText)}
 					value={searchText}
 				/>
 				<IconButton 
 					icon="format-list-bulleted"
+					style={{ margin: 0, marginLeft: 'auto' }}
 					onPress={() => setFiltersVisible(!filtersVisible)}
 				/>
-			</View>}
+			</View>
+			{filtersVisible ? <TagSearch 
+				dark={false}
+				updateSelectedTags={(tags) => setActiveFilters(tags)} 
+			/>: <></> }
 			<FlatList
 				style={{maxHeight: '82%'}}
 				data={communityRecipes[pageNumber-1]}
@@ -163,13 +161,12 @@ export default function CommunityRecipes() {
 
 const styles = StyleSheet.create({
 	container: {
-		margin: 20,
+		margin: 15,
 		minHeight: '95%'
 	},
 	searchbar: {
 		height: 35,
-		width: '85%',
-		marginVertical: 5,
+		width: '90%',
 		backgroundColor: colors['background2']
 	},
 	paginationButton: {

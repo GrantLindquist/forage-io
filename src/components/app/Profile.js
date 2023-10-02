@@ -49,7 +49,7 @@ export default function Profile() {
 			<Divider style={{marginHorizontal: 20}}/>
 			<Button mode="text" textColor={colors['pink']} onPress={() => setWarningDialogVisible(true)}>Delete account</Button>
 		</View>
-		<View style={{ marginTop: 15,  flexDirection: 'row'}}>
+		{/* <View style={{ marginTop: 15,  flexDirection: 'row'}}>
 			<View style={{alignItems: 'center', width: '50%'}}>
 				<Text  style={styles.subtext}>Created Recipes</Text>
 				<Text variant="headlineLarge">40</Text>
@@ -58,7 +58,7 @@ export default function Profile() {
 				<Text style={styles.subtext}>Total Stars</Text>
 				<Text variant="headlineLarge">100</Text>
 			</View>
-		</View>
+		</View> */}
 
 		{/* Account deletion warning dialog */}
 		<Portal>

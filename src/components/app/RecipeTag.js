@@ -8,15 +8,23 @@ import colors from "../../../colors.json";
 export default function RecipeTag(props) {
 
 	// State for tracking whether or not chip is selected
-	const [selected, setSelected] = useState(false);
+	const [selected, setSelected] = useState(props.immutable);
+
+	// State for tracking tag object information
+	const tagObject = getTagObject(props.title);
 
 	// States for styling tags
 	const [color, setColor] = useState("grey");
 	const [icon, setIcon] = useState("");
 
-	// Assigns color to tag
+	// Finds type code by tag title
+	function getTagObject(title){
+		return tags.find((tag) => tag.title === title);
+	}
+
+	// Assigns visual properties to tag
 	useEffect(() => {
-		switch(tags.find((tag) => tag.filterTitle == props.title).filterTypeCode){
+		switch(tagObject.typeCode){
             case 0:
                 setColor(colors['pink']);
 				setIcon(() => <Image 
@@ -54,30 +62,33 @@ export default function RecipeTag(props) {
 		if(!props.immutable){
 			setSelected(!selected);
 			// Use parental callback method to make specified action occur
-			props.handlePress(props.title);
+			props.handlePress(props.tag);
 		}
 	}
 
 	const styles = StyleSheet.create({
 		tagUnselected: {
-			borderRadius: 8,
 			marginRight: 5,
-			backgroundColor: '#1F212F'
+			marginBottom: 5,
+			backgroundColor: colors['background1'],
+			borderColor: 'white',
+			borderRadius: 8,
+			borderWidth: 1,
 		},
 		tagSelected: {
-			borderRadius: 8,
 			marginRight: 5,
-			backgroundColor: '#1F212F',
-			borderBottomWidth: 3,
-			borderBottomColor: color,
-			marginBottom: -3
+			marginBottom: 5,
+			backgroundColor: colors['background1'],
+			borderWidth: 1,
+			borderRadius: 8,
+			borderColor: color,
 		}
 	});
 
 	return (
 		<Chip style={selected ? styles.tagSelected : styles.tagUnselected} onPress={handlePress}>
 			{/* If tag is a cuisine type tag, capitalize first letter of tag */}
-			<Text style={{color: color}}>{icon} {props.filterTypeCode == 1 ? props.title.charAt(0).toUpperCase() + props.title.slice(1) : props.title}</Text>
+			<Text style={selected ? {color:color} : {color:'white'}} >{props.title}</Text>
 		</Chip>
 	);
 };

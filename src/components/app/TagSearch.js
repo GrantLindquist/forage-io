@@ -1,74 +1,71 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { Searchbar, Text, IconButton } from "react-native-paper";
 import RecipeTag from "./RecipeTag";
 import tags from '../../../tags.json';
-import colors from '../../../colors.json';
-
 // Expandable horizontal scroll view for viewing items
 export default function TagSearch(props) {
-
-	// State for tracking user search input
-	const [searchQuery, setSearchQuery] = useState('');
 
     // State for tracking which tags are selected - start with default tags if provided with them
     const [selectedTags, setSelectedTags] = useState(props.defaultTags ? props.defaultTags : []);
 
-    // Updates selected tags
-    const updateSelectedTags = (title, typeCode) => {
-        // Places state into new list
-        let updatedTagList = [];
-        let removedTag = false;
-        for (let tag of selectedTags){
-            // Ensure that tag does not exist in
-            if(tag != title){
-                updatedTagList.push(tag);
-            }
-            else{
-                removedTag = true;
-            }
+    // State that handles which type of tag to display
+    const [displayTypeCode, setDisplayTypeCode] = useState(0);
+    const [displayTypeTitle, setDisplayTypeTitle] = useState("");
+
+    // Set display title of tag group
+    useEffect(() => {
+        console.log('loaded tagSearch.js')
+        switch (displayTypeCode){
+            case 0:
+                setDisplayTypeTitle("meal");
+                break;
+            case 1:
+                setDisplayTypeTitle("cuisine");
+                break;
+            case 2:
+                setDisplayTypeTitle("diet");
+                break;
+            case 3:
+                setDisplayTypeTitle("flavor");
+                break;
+        }
+    }, [displayTypeCode, selectedTags])
+
+    // Updates selected tags - only gives tag title strings to upper layer
+    const updateSelectedTags = (tag) => {
+
+        // Finds type code by tag title
+        function getTypeCode(title){
+            return tags.find((tag) => tag.title === title).typeCode;
         }
 
-        // Appends parameter tag to list if no tags were removed
-        if(!removedTag){
-            updatedTagList.push(title);
+        // Convert selectedTags to an array of tag objects
+        let selectedTagObjects = selectedTags.map(title => ({ title, typeCode: getTypeCode(title) }));
 
-            // This code doesn't do anything because it attempts to manipulate tag objects instead of strings 
+        // Gets tags of the same type
+        let shallowList = selectedTagObjects.filter(item => item.typeCode === tag.typeCode);
 
-            // Limits number of specific tags
-            // let shallowList;
-            // switch (typeCode){
-            //     case 0: 
-            //         // If there is more than one "mealType" tag, then remove first tag and return new tag
-            //         shallowList = updatedTagList.filter((tag) => tag.filterTypeCode == 0);
-            //         if(shallowList.length > 1){
-            //             shallowList.push(updatedTagList.filter((tag) => tag.filterTypeCode != 0)).shift();
-            //         }
-            //         break;
-            //     case 1:
-            //         // If there is more than one "cuisineType" tag, then remove first tag and return new tag
-            //         shallowList = updatedTagList.filter((tag) => tag.filterTypeCode == 1);
-            //         if(shallowList.length > 1){
-            //             shallowList.push(updatedTagList.filter((tag) => tag.filterTypeCode != 1)).shift();
-            //         }
-            //         break;
-            //     case 2:
-            //         // If there is more than two "diet" tags, then remove first tag and return new tags
-            //         shallowList = updatedTagList.filter((tag) => tag.filterTypeCode == 2);
-            //         if(shallowList.length > 2){
-            //             shallowList.push(updatedTagList.filter((tag) => tag.filterTypeCode != 2)).shift();
-            //         }
-            //         break;
-            //     case 3:
-            //         // If there is more than two "flavor" tags, then remove first tag and return new tags
-            //         shallowList = updatedTagList.filter((tag) => tag.filterTypeCode == 3);
-            //         if(shallowList.length > 2){
-            //             shallowList.push(updatedTagList.filter((tag) => tag.filterTypeCode != 3)).shift();
-            //         }
-            //         break;
-            // }
-            // updatedTagList = shallowList;
+        // If tag does not already exist in list, add it
+        if (!selectedTags.includes(tag.title)) {
+            shallowList.push(tag);
+
+            // If user has selected more than two tags of any type, then remove one tag
+            if (shallowList.length > 2) {
+                shallowList.shift();
+            }
         }
+        // Otherwise, remove tag from list
+        else {
+            shallowList = shallowList.filter(item => item.title !== tag.title);
+        }
+
+        // Convert back to array of strings
+        shallowList = shallowList.map(item => item.title);
+
+        // Join array with other tags
+        updatedTagList = selectedTags.filter(title => getTypeCode(title) !== tag.typeCode);
+        updatedTagList = [...updatedTagList, ...shallowList];
 
         // Send results to parent component
         setSelectedTags(updatedTagList);
@@ -76,56 +73,43 @@ export default function TagSearch(props) {
         props.updateSelectedTags(updatedTagList);
     }
 
-    // List of tags for user to select
-    const tagList = tags.sort((a, b) => {
-        if(a.popularity < b.popularity){
-            return 1;
+    // Updates type of tag being displayed
+    const updateDisplayTypeCode = (increment) => {
+        let typeCode = displayTypeCode + increment;
+        if(typeCode < 0){
+            setDisplayTypeCode(3);
         }
-        else if(a.popularity > b.popularity){
-            return -1;
+        else if (typeCode > 3){
+            setDisplayTypeCode(0);
         }
         else{
-            return 0;
+            setDisplayTypeCode(typeCode);
         }
-    }).map((tag) => {
-        if(tag.filterTitle.toLowerCase().includes(searchQuery.toLowerCase())){
-            return (
-                <RecipeTag key={tag.filterTitle} title={tag.filterTitle} handlePress={() => updateSelectedTags(tag.filterTitle, tag.filterTypeCode)}/>
-            )
+    }
+
+    // List of tags for user to select
+    const tagList = tags.filter((tag) => tag.typeCode == displayTypeCode).map((tag) => {
+        let selected = false;
+        if(selectedTags.includes(tag.title)){
+            selected = true;
         }
+        return (
+            <RecipeTag key={tag.title} title={tag.title} selected={selected} handlePress={() => updateSelectedTags(tag)}/>
+        )
     });
 
 	return (
-        <View>
-            <View style={{flexDirection:'row'}}>
-                <Searchbar
-                    style={styles.searchbarShort}
-                    placeholder={"search tags"}
-					placeholderTextColor={"grey"}
-                    inputStyle={{paddingLeft: 0, alignSelf: 'center'}}
-                    showDivider={false}
-                    mode={'view'}
-                    onChangeText={query => setSearchQuery(query)}
-                    value={searchQuery}
-                />
-                <IconButton 
-                    icon="close"
-					onPress={() => props.closeTagSearch()}
-				/>
-            </View>
-            {searchQuery == "" ? <Text variant='bodySmall'>Popular Tags:</Text> : <></>}
-            <ScrollView style={{paddingVertical:8}} horizontal={true}>
-			    {tagList}
+        <View style={{ alignItems: 'center' }}>
+            <ScrollView style={{ paddingTop: 8 }} horizontal={true}>
+                <View style={{ flexWrap: 'wrap', flexDirection: 'row', flex: 3 }}>
+                    {tagList}
+                </View>
 	        </ScrollView>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <IconButton style={{ margin: 0 }} size={20} icon={"arrow-left-drop-circle-outline"} onPress={() => updateDisplayTypeCode(-1)} />
+                <Text style={{ fontSize: 16, textAlign: 'center', minWidth: 80 }}>{displayTypeTitle}</Text>
+                <IconButton style={{ margin: 0 }} size={20} icon={"arrow-right-drop-circle-outline"} onPress={() => updateDisplayTypeCode(1)} />
+            </View>
         </View>
 	);
 };
-
-const styles = StyleSheet.create({
-	searchbarShort: {
-		height: 35,
-		width: '85%',
-		marginVertical: 5,
-        backgroundColor: colors['background2']
-	},
-});

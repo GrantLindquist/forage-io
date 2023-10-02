@@ -47,6 +47,7 @@ export default function CreatedRecipes(props) {
 
 		loadCreatedRecipes();
 		console.log('loaded createdRecipes.js');
+		console.log(removeRecipeId);
 	}, [props.refreshValue1, props.refreshValue2]);
 
 	return (
@@ -92,13 +93,12 @@ export default function CreatedRecipes(props) {
 
 const styles = StyleSheet.create({
 	container: {
-		margin: 20,
+		margin: 15,
 		minHeight: '100%'
 	},
 	searchbar: {
 		height: 35,
 		width: '100%',
-		marginVertical: 5,
 		backgroundColor: colors['background2']
 	},
 });

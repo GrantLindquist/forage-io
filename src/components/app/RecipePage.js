@@ -31,12 +31,6 @@ export default function RecipePage(props) {
 				<Appbar.Action icon={'delete'} size={24} onPress={() => handleDeleteRecipe()} />
 			)
 		}
-		// If user did not create recipe but has recipe saved, display unsave action
-		else if (user.unsafeMetadata.savedRecipeIds.includes(recipe.RecipeId)){
-			return (
-				<Appbar.Action icon={'star'} size={24} onPress={() => handleSaveRecipe()} />
-			)
-		}
 		// Otherwise, display save action
 		else {
 			return (
@@ -122,10 +116,9 @@ export default function RecipePage(props) {
 		console.log(savedRecipeIds);
 		return response;
 	}
-
+ 
 	// Sub-component that lists a tag component for each recipe tag
 	const recipeTags = Object.entries(recipe.Tags).map((tag) => {
-		
 		// Parse title from JSON property to tag string
 		let title = tag[0].charAt(2).toLowerCase() + tag[0].slice(3);
 
@@ -201,7 +194,7 @@ export default function RecipePage(props) {
 					label: 'OK',
 					onPress: () => {},
 				}}>
-				{userAction.label == 'Save' ? "Recipe has been unsaved!" : "Recipe has been saved!"}
+				{!user.unsafeMetadata.savedRecipeIds.includes(recipe.RecipeId) ? "Recipe has been unsaved!" : "Recipe has been saved!"}
 			</Snackbar>
 		</>
 	);

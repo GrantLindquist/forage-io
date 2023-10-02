@@ -8,6 +8,7 @@ import recipeService from '../../services/recipeService';
 import { useUser } from '@clerk/clerk-expo';
 import colors from '../../../colors.json';
 import { useNavigation } from '@react-navigation/native';
+import RecipeTag from './RecipeTag';
 
 // Contains UI components that must be rendered on the highest z-index (modals, dialogs, etc.)
 export default function CreateRecipeModal(props) {
@@ -35,6 +36,8 @@ export default function CreateRecipeModal(props) {
 	// State for tracking dialogs
 	const [errorDialogVisible, setErrorDialogVisible] = useState(false);
 	const [errorDialogContent, setErrorDialogContent] = useState("");
+	const [infoDialogVisible, setInfoDialogVisible] = useState(false);
+	const [infoDialogPageNumber, setInfoDialogPageNumber] = useState(0);
 
 	// State for tracking active ingredient input
 	const [ingredientInput, setIngredientInput] = useState('');
@@ -44,6 +47,55 @@ export default function CreateRecipeModal(props) {
 
 	// State for tracking checkbox status
 	const [isPublicChecked, setPublicChecked] = useState(true);
+
+	// List of dialog content options for the recipe modal
+	const infoDialogContent = [
+		<>
+			<Dialog.Title>Recipe Tags</Dialog.Title>
+			<Dialog.Content>
+				<Text  pointerEvents='none'>
+					A "tag" is an adjective used for describing the recipes you want to generate.
+					For example, if you want to generate a Mexican recipe that is spicy, you should
+					select the <RecipeTag title={'mexican'} immutable={true}/> and <RecipeTag title={'spicy'} 
+					immutable={true}/> tags. There are four types of tag: <Text style={{color: colors['pink']}}>meal</Text>, 
+					<Text style={{color: colors['blue']}}>cuisine</Text>, <Text style={{color: colors['yellow']}}>
+					diet</Text>, and <Text style={{color: colors['green']}}>flavor</Text>. You can 
+					only select a few of each tag. 
+				</Text>
+			</Dialog.Content>
+		</>,
+		<>
+			<Dialog.Title>Adding Ingredients</Dialog.Title>
+			<Dialog.Content>
+				<Text>
+					Additionally, you can specify up to five ingredients you would like to see in the recipe.
+					Any input that isn't an edible food item will cause a failed recipe generation.
+				</Text>
+				<Text>Yes:</Text>
+				<View pointerEvents='none' style={{flexDirection: 'row'}}>
+					<IngredientTag>Spinach</IngredientTag>
+					<IngredientTag>Eggs</IngredientTag>
+					<IngredientTag>Milk</IngredientTag>
+				</View>
+				<Text>No:</Text>
+				<View  pointerEvents='none' style={{flexDirection: 'row'}}>
+					<IngredientTag>Dirt</IngredientTag>
+					<IngredientTag>Antifreeze</IngredientTag>
+					<IngredientTag>Etc.</IngredientTag>
+				</View>
+			</Dialog.Content>
+		</>,
+		<>
+			<Dialog.Title>Recipe Charges</Dialog.Title>
+			<Dialog.Content>
+				<Text>
+					A "charge" is a unit that allows you to generate a recipe. One charge will replenish every
+					hour and you can hold a maximum of 10 charges at a time. If you'd like to replenish charges
+					without waiting, press on <Text style={{color: colors['pink'], fontWeight: 700}}>Get more charges </Text>.
+				</Text>
+			</Dialog.Content>
+		</>,
+	]
 
 	// Creates a recipe using user-specified filters
 	const handleCreateRecipe = async() => {
@@ -113,8 +165,8 @@ export default function CreateRecipeModal(props) {
 		}
 		else{
 			// Display error UI components
-			setErrorSnackbarVisible(true);
 			setErrorDialogContent(response.message);
+			setErrorSnackbarVisible(true);
 
 			// Clear ingredients state of faulty input
 			setSelectedIngredients([]);
@@ -144,23 +196,26 @@ export default function CreateRecipeModal(props) {
 	<View style={{backgroundColor: colors['background1'], height: '100%'}}>
 		<ProgressBar progress={recipeCharges/10} color={colors['pink']} />
 		<View>
-			<View style={{ flexDirection: 'row', marginHorizontal: 20, marginTop: 10}}>
+			<View style={{ flexDirection: 'row', marginHorizontal: 15, marginTop: 10}}>
 				<Image 
 					source={require('../../../assets/icons/charge.png')}
 					style={{width: 18, height: 18}}
 				/>
 				<Text style={{color: 'grey'}}>{recipeCharges}/10  </Text>
 				<Text style={{color: colors['pink'], fontWeight: 700}}>Get more charges</Text>
-				<IconButton style={{marginLeft: 'auto', margin: 0}} icon={"information-outline"}></IconButton>
+				<IconButton onPress={() => setInfoDialogVisible(true)} style={{marginLeft: 'auto', margin: 0}} icon={"information-outline"}></IconButton>
 			</View>
 			{!isGeneratingRecipe ?
 			<View style={{margin: 20, marginTop: 0}}>
 				<Text style={styles.categoryTitle}>Add some tags!</Text>
-				<TagSearch updateSelectedTags={(tags) => setSelectedFilters(tags)} closeTagSearch={() => console.log('this is bad design. fix this.')}/>
+				<TagSearch 
+					dark={true}
+					updateSelectedTags={(tags) => setSelectedFilters(tags)} 
+				/>
 									
 				<Text style={styles.categoryTitle}>Add some ingredients!</Text>
 				<View style={{flexDirection: 'row'}}>
-					<TextInput style={styles.addIngredients} value={ingredientInput} mode='outlined' onChangeText={(val) => setIngredientInput(val)}/>
+					<TextInput keyboardAppearance='dark' style={styles.addIngredients} value={ingredientInput} mode='outlined' onChangeText={(val) => setIngredientInput(val)}/>
 					<IconButton style={styles.addIngredientButton} size={20} mode={'outlined'} icon={'plus'} onPress={() => addIngredient(ingredientInput)}/>
 				</View>
 
@@ -190,20 +245,16 @@ export default function CreateRecipeModal(props) {
 
 		<Portal>
 			{/* Info dialog */}
-			<Dialog visible={false}>
-				<Dialog.Title>Alert</Dialog.Title>
-				<Dialog.Content>
-					<Text variant="bodyMedium">Are you sure you want to delete your account?</Text>
-					<Text variant="bodyMedium">This action is irreversible.</Text>
-				</Dialog.Content>
+			<Dialog visible={infoDialogVisible} onDismiss={() => setInfoDialogVisible(false)} style={{backgroundColor: colors['background1']}}>
+				{infoDialogContent[infoDialogPageNumber]}
 				<Dialog.Actions>
-					<Button>No way!</Button>
-					<Button>Yes, delete my account.</Button>
+					<Button disabled={infoDialogPageNumber <= 0 ? true : false} onPress={() => setInfoDialogPageNumber(infoDialogPageNumber-1)}>Previous</Button>
+					<Button disabled={infoDialogPageNumber >= 2 ? true : false} onPress={() => setInfoDialogPageNumber(infoDialogPageNumber+1)}>Next</Button>
 				</Dialog.Actions>
 			</Dialog>
 
 			{/* Warning dialog */}
-			<Dialog visible={errorDialogVisible} onDismiss={() => setErrorDialogVisible(false)}>
+			<Dialog visible={errorDialogVisible} onDismiss={() => setErrorDialogVisible(false)} style={{backgroundColor: colors['background1']}}>
 				<Dialog.Content>
 					<Text variant="bodyMedium">{errorDialogContent}</Text>
 				</Dialog.Content>

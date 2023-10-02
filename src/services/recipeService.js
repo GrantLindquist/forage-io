@@ -17,7 +17,6 @@ const recipeService = {
     // Generates a recipe with GPT using the request parameter.
     generateRecipe: async (request, user) => {
 
-        console.log(request)
         // Make GPT request
         const completion = await openai.createChatCompletion({
             model: "gpt-3.5-turbo",
@@ -60,6 +59,8 @@ const recipeService = {
             temperature: .8
         });
         
+        console.log(completion.data.choices[0].message.content)
+
         // Attempt to parse response
         try{
             // console.log(completion.data.choices[0].message.content)
@@ -93,10 +94,17 @@ const recipeService = {
         // If GPT responds with invalid recipe format, return error
         catch (e) {
             console.error(e);
+            let message;
+            if(completion.data.choices[0].message.content == ''){
+                message = completion.data.choices[0].message.content;
+            }
+            else{
+                message = 'An error occurred while placing the recipe into the database. Please try again later.'
+            }
             return {
                 ok: false,
                 error: e,
-                message: completion.data.choices[0].message.content
+                message: message
             }
         }
     },

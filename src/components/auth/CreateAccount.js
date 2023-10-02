@@ -71,6 +71,7 @@ export default function CreateAccount() {
 			label="Username"
 			mode="outlined"
 			onChangeText={(username) => setUsername(username)}
+			keyboardAppearance="dark"
 		/>
 		{usernameHelperText != "" ? <HelperText type='error'>{usernameHelperText}</HelperText> : <></>}
 		<TextInput
@@ -78,6 +79,7 @@ export default function CreateAccount() {
 			label="Password"
 			mode="outlined"
 			onChangeText={(password) => setPassword(password)}
+			keyboardAppearance="dark"
 		/>
 		{passwordHelperText != "" ? <HelperText type='error'>{passwordHelperText}</HelperText> : <></>}
 		<TextInput
@@ -85,6 +87,7 @@ export default function CreateAccount() {
 			label="Confirm Password"
 			mode="outlined"
 			onChangeText={(confirmPassword) => setConfirmPassword(confirmPassword)}
+			keyboardAppearance="dark"
 		/>
 		{confirmPasswordHelperText != "" ? <HelperText type='error'>{confirmPasswordHelperText}</HelperText> : <></>}
 		<Button mode="contained" onPress={handleSignUp}>Create account</Button>

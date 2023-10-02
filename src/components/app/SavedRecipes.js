@@ -82,13 +82,12 @@ export default function SavedRecipes(props) {
 
 const styles = StyleSheet.create({
 	container: {
-		margin: 20,
+		margin: 15,
 		minHeight: '100%'
 	},
 	searchbar: {
 		height: 35,
 		width: '100%',
-		marginVertical: 5,
 		backgroundColor: colors['background2']
 	},
 });

@@ -59,6 +59,7 @@ export default function SignIn() {
 			label="Username"
 			mode="outlined"
 			onChangeText={(username) => setUsername(username)}
+			keyboardAppearance="dark"
 		/>
 		{usernameHelperText != "" ? <HelperText type='error'>{usernameHelperText}</HelperText> : <></>}
 		<TextInput
@@ -66,6 +67,7 @@ export default function SignIn() {
 			label="Password"
 			mode="outlined"
 			onChangeText={(password) => setPassword(password)}
+			keyboardAppearance="dark"
 		/>
 		{passwordHelperText != "" ? <HelperText type='error'>{passwordHelperText}</HelperText> : <></>}
 		<HelperText></HelperText>
