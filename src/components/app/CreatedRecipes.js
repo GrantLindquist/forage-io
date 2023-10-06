@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { FlatList, View, StyleSheet, Pressable } from "react-native";
-import { Searchbar } from "react-native-paper";
+import { Searchbar, Snackbar } from "react-native-paper";
 import { useNavigation, useRoute } from '@react-navigation/native';
 import RecipeCard from './RecipeCard';
 import RecipeCardPlaceholder from './RecipeCardPlaceholder';
@@ -25,6 +25,9 @@ export default function CreatedRecipes(props) {
 	// State for tracking user search input
 	const [searchQuery, setSearchQuery] = useState('');
 
+	// State for displaying snackbar
+	const [deleteSnackbarVisible, setDeleteSnackbarVisible] = useState(false);
+
 	// States for listing recipes
 	const [createdRecipes, setCreatedRecipes] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
@@ -43,51 +46,67 @@ export default function CreatedRecipes(props) {
 		if(route.params){
 			const { removeId } = route.params; 
 			setRemoveRecipeId(removeId);
+
+			// Display confirmation snackbar
+			setDeleteSnackbarVisible(true);
 		}
 
+		// Get created recipes on component load
 		loadCreatedRecipes();
 		console.log('loaded createdRecipes.js');
-		console.log(console.log("remove: " + removeRecipeId));
 	}, [props.refreshValue1, props.refreshValue2]);
 
 	return (
-		<View style={styles.container}>
-			<Searchbar
-				style={styles.searchbar}
-				placeholder={"search recipes"}
-				placeholderTextColor={"grey"}
-				inputStyle={{paddingLeft: 0, alignSelf: 'center'}}
-				showDivider={false}
-				mode={'view'}
-				onChangeText={query => setSearchQuery(query)}
-				value={searchQuery}
-			/>
-			{!isLoading ?
-				<FlatList
-				style={{maxHeight: '90%'}}
-				data={createdRecipes}
-				renderItem={(item) => {
-					if(item.item.Title.toLowerCase().includes(searchQuery.toLowerCase()) && item.item.RecipeId != removeRecipeId){
-						return (
-							<Pressable key={item.item.RecipeId} onPress={() => navigation.navigate('Recipe', {
-									recipe: item.item
-								})}>
-								<RecipeCard recipe={item.item}/>
-							</Pressable>
-						)
-					}
-				}}
-				ListEmptyComponent={() => <EmptyList/>}
-			/> :
-			<View>
-				<RecipeCardPlaceholder/>
-				<RecipeCardPlaceholder/>
-				<RecipeCardPlaceholder/>
-				<RecipeCardPlaceholder/>
-				<RecipeCardPlaceholder/>
+		<>
+			<View style={styles.container}>
+				<Searchbar
+					style={styles.searchbar}
+					placeholder={"search recipes"}
+					placeholderTextColor={"grey"}
+					inputStyle={{paddingLeft: 0, alignSelf: 'center'}}
+					showDivider={false}
+					mode={'view'}
+					onChangeText={query => setSearchQuery(query)}
+					value={searchQuery}
+				/>
+				{!isLoading ?
+					<FlatList
+					style={{maxHeight: '90%'}}
+					data={createdRecipes}
+					renderItem={(item) => {
+						if(item.item.Title.toLowerCase().includes(searchQuery.toLowerCase()) && item.item.RecipeId != removeRecipeId){
+							return (
+								<Pressable key={item.item.RecipeId} onPress={() => navigation.navigate('Recipe', {
+										recipe: item.item
+									})}>
+									<RecipeCard recipe={item.item}/>
+								</Pressable>
+							)
+						}
+					}}
+					ListEmptyComponent={() => <EmptyList/>}
+				/> :
+				<View>
+					{/* Placeholder loading components */}
+					<RecipeCardPlaceholder/>
+					<RecipeCardPlaceholder/>
+					<RecipeCardPlaceholder/>
+					<RecipeCardPlaceholder/>
+					<RecipeCardPlaceholder/>
+				</View>
+				}
 			</View>
-			}
-		</View>
+			{/* Recipe deletion snackbar */}
+			<Snackbar
+				visible={deleteSnackbarVisible}
+				onDismiss={() => setDeleteSnackbarVisible(false)}
+				action={{
+					label: 'OK',
+					onPress: () => {}
+				}}>
+				Recipe deleted.
+			</Snackbar>
+		</>
 	);
 };
 

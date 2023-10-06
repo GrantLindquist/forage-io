@@ -1,10 +1,7 @@
-import { useNavigation } from '@react-navigation/native';
-import { Appbar, Dialog, Portal, Text, Button } from "react-native-paper";
-import { useUser } from '@clerk/clerk-expo';
+import { Appbar } from "react-native-paper";
 import colors from "../../../colors.json";
-import { useState } from 'react';
 
-// Contains UI components that must be rendered on the highest z-index (modals, dialogs, FABs, etc.)
+// Header component for app, displays above most other components
 export default function Header() {
 
 	return (

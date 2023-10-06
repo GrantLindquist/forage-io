@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { KeyboardAvoidingView, View, Image, StyleSheet } from "react-native";
+import { KeyboardAvoidingView, View, Pressable, StyleSheet } from "react-native";
 import { Text, Button } from "react-native";
 import SignIn from "./SignIn";
 import CreateAccount from "./CreateAccount";
@@ -12,11 +12,6 @@ export default function WelcomeScreen() {
 
 	return (
 	<View style={styles.container}>
-		<Image 
-			source={require('../../../assets/login-bg.jpg')} 
-			style={{width: '100%', height: '100%', zIndex: -3, position: 'absolute'}}
-		/>
-
 		<Text style={styles.title}>forage.io</Text>
 		
 		{/* Either sign-in or create account components are displayed, depending on which option user selects */}
@@ -24,11 +19,16 @@ export default function WelcomeScreen() {
 			{isCreatingAccount ? <CreateAccount/> : <SignIn/>}
 		</KeyboardAvoidingView>
 
-		<View style={{alignItems: 'center', margin: 10, position: 'absolute', bottom: "8%"}}>
-			{isCreatingAccount ? <><Text>Already have an account?</Text>
-			<Button onPress={() => setCreatingAccount(false)} title="Sign in here!"></Button></> : 
-			<><Text>Don't have an account?</Text>
-			<Button onPress={() => setCreatingAccount(true)} title="Create one for free!"><Text>Create one here!</Text></Button></>}
+		<View style={{alignItems: 'center', margin: 10, position: 'absolute', bottom: "8%" }}>
+			{isCreatingAccount ? 
+			<Pressable onPress={() => setCreatingAccount(false)}>
+				<Text style={{ color: 'white' }}>Don't have an account?</Text>
+				<Text style={{ color: 'white' }}>Create one for free!</Text>
+			</Pressable> : 
+			<Pressable onPress={() => setCreatingAccount(true)}>
+				<Text style={{ color: 'white' }}>Already have an account?</Text>
+				<Text style={{ color: 'white' }}>Sign in here!</Text>
+			</Pressable>}
 		</View>
 	</View>
 	);	
@@ -36,10 +36,10 @@ export default function WelcomeScreen() {
 
 const styles = StyleSheet.create({
 	container: {
-	  flex: 1,
-	  alignItems: "center",
-	  justifyContent: "center",
-	  backgroundColor: "#101010"
+		flex: 1,
+		alignItems: "center",
+		justifyContent: "center",
+		backgroundColor: "#101010"
 	},
 	title: {
 		fontSize: 50,

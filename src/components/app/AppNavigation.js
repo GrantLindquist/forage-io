@@ -27,6 +27,7 @@ export default function AppNavigation() {
 
 	// Restores user charges when app loads
 	useEffect(() => {
+		// Function that update user charges
 		async function updateUserCharges() {
 			// Check for outdated charges
 			var recipeCharges = user.unsafeMetadata.recipeCharges;
@@ -47,11 +48,13 @@ export default function AppNavigation() {
 				}
 			});
 		}
+
+		// Call function on component load
 		updateUserCharges();
 	}, []);
 
   	return (
-		/* ModalStack.Navigator contains all of app navigation alongside CreateRecipeModal */
+		/* ModalStack.Navigator contains all of app navigation alongside both Modals */
 		<ModalStack.Navigator screenOptions={{ 
 				header: () => <></> ,
 				gestureResponseDistance: 400
@@ -82,7 +85,7 @@ export default function AppNavigation() {
 								<MaterialCommunityIcons name="plus" color={color} size={30} />
 							),
 						}}
-							// Displays modal when plus is selected
+							// Displays modal when create tab is selected
 							listeners = {{
 								tabPress: e => {
 									e.preventDefault();
@@ -90,6 +93,7 @@ export default function AppNavigation() {
 								}
 							}}
 						>
+							{/* Create tab is empty because a listener will redirect user to modal when clicked */}
 							{() => <></>}
 						</Tab.Screen>
 						<Tab.Screen name="Profile" options={{

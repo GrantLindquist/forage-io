@@ -25,6 +25,7 @@ export default function RecipeMenu(props) {
             <Stack.Screen name="Menu"
                 options={{header: () => <Header/>}}    
             >
+                {/* Tab navigator that directs user to various types of recipe lists */}
                 {() => <Tab.Navigator
                     screenOptions={{
                         tabBarStyle: { backgroundColor: colors['background1'] },

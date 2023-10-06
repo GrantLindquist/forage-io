@@ -66,6 +66,7 @@ export default function CreateAccount() {
 	return (
 	<View>
 		<TextInput
+			style={{ marginVertical: 2 }}
 			autoCapitalize="none"
 			value={username}
 			label="Username"
@@ -75,14 +76,16 @@ export default function CreateAccount() {
 		/>
 		{usernameHelperText != "" ? <HelperText type='error'>{usernameHelperText}</HelperText> : <></>}
 		<TextInput
+			style={{ marginVertical: 2 }}
 			value={password}
 			label="Password"
 			mode="outlined"
 			onChangeText={(password) => setPassword(password)}
 			keyboardAppearance="dark"
-		/>
+		/> 
 		{passwordHelperText != "" ? <HelperText type='error'>{passwordHelperText}</HelperText> : <></>}
 		<TextInput
+			style={{ marginVertical: 2 }}
 			value={confirmPassword}
 			label="Confirm Password"
 			mode="outlined"
@@ -90,7 +93,7 @@ export default function CreateAccount() {
 			keyboardAppearance="dark"
 		/>
 		{confirmPasswordHelperText != "" ? <HelperText type='error'>{confirmPasswordHelperText}</HelperText> : <></>}
-		<Button mode="contained" onPress={handleSignUp}>Create account</Button>
+		<Button style={{ margin: 10 }} mode="contained" onPress={handleSignUp}>Create account</Button>
 	</View>
   );
 }

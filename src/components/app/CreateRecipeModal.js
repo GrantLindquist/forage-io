@@ -53,7 +53,7 @@ export default function CreateRecipeModal(props) {
 		<>
 			<Dialog.Title>Recipe Tags</Dialog.Title>
 			<Dialog.Content>
-				<Text  pointerEvents='none'>
+				<Text pointerEvents='none'>
 					A "tag" is an adjective used for describing the recipes you want to generate.
 					For example, if you want to generate a Mexican recipe that is spicy, you should
 					select the <RecipeTag title={'mexican'} immutable={true}/> and <RecipeTag title={'spicy'} 
@@ -274,7 +274,7 @@ export default function CreateRecipeModal(props) {
         	}}>
         	Recipe was successfully generated!
       	</Snackbar>
-		
+		 
 		{/* Error snackbar */}
 		<Snackbar
        		visible={errorSnackbarVisible}

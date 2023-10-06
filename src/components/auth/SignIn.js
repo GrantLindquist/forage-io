@@ -54,15 +54,17 @@ export default function SignIn() {
 	return (
 	<View>
 		<TextInput
+			style={{ marginVertical: 2 }}
 			autoCapitalize="none"
 			value={username}
 			label="Username"
 			mode="outlined"
 			onChangeText={(username) => setUsername(username)}
 			keyboardAppearance="dark"
-		/>
+		/> 
 		{usernameHelperText != "" ? <HelperText type='error'>{usernameHelperText}</HelperText> : <></>}
 		<TextInput
+			style={{ marginVertical: 2 }}
 			value={password}
 			label="Password"
 			mode="outlined"
@@ -70,8 +72,7 @@ export default function SignIn() {
 			keyboardAppearance="dark"
 		/>
 		{passwordHelperText != "" ? <HelperText type='error'>{passwordHelperText}</HelperText> : <></>}
-		<HelperText></HelperText>
-		<Button mode="contained" onPress={handleSignIn}>Sign-in</Button>
+		<Button style={{ margin: 10 }} mode="contained" onPress={handleSignIn}>Sign-in</Button>
 	</View>
 	);
 }

@@ -31,7 +31,7 @@ export default function RemixRecipeModal(props) {
 	const [selectedFilters, setSelectedFilters] = useState(
 		Object.entries(recipe.Tags).map((tag) => {
 			return tag[0].charAt(2).toLowerCase() + tag[0].slice(3);
-		})
+		}) 
 	);
 	const [selectedIngredients, setSelectedIngredients] = useState([]);
 
@@ -109,8 +109,8 @@ export default function RemixRecipeModal(props) {
 		const response = await recipeService.generateRecipe(recipeDTO, user);
 		setGeneratingRecipe(false);
 
-		// Display snackbar depending on service response
 		if(response.ok){
+			// Display info snackbar depending on service response
 			setInfoSnackbarVisible(true);
 			setSelectedIngredients([]);
 
@@ -119,6 +119,7 @@ export default function RemixRecipeModal(props) {
 			navigation.navigate("Menu");
 		}
 		else{
+			// Display error snackbar depending on service response
 			setErrorSnackbarVisible(true);
 			setErrorDialogContent(response.message);
 

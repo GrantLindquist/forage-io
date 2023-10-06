@@ -58,8 +58,6 @@ const recipeService = {
             }],
             temperature: .8
         });
-        
-        console.log(completion.data.choices[0].message.content)
 
         // Attempt to parse response
         try{

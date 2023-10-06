@@ -29,7 +29,7 @@ export default function RecipeCard(props) {
 					<Text style={styles.recipeSubtext}>
 					${Number(props.recipe.Budget).toFixed(2)}</Text>
 					<View style={{marginLeft: 'auto'}}>
-						{/* Make liked recipes have yellow number */}
+						{/* Display liked recipes with yellow number */}
 						<Text style={user.unsafeMetadata.savedRecipeIds.includes(props.recipe.RecipeId) ? styles.highlightedSubtext : styles.recipeSubtext}>{props.recipe.Stars} <Image 
 							source={user.unsafeMetadata.savedRecipeIds.includes(props.recipe.RecipeId) ? require('../../../assets/icons/star-selected.png') : require('../../../assets/icons/star-filled.png')}
 							style={{width: 14, height: 14}}

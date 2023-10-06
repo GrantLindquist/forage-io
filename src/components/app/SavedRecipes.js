@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { FlatList, View, StyleSheet, Pressable } from "react-native";
-import { Searchbar, Text } from "react-native-paper";
+import { Searchbar } from "react-native-paper";
 import { useNavigation } from '@react-navigation/native';
 import RecipeCard from './RecipeCard';
 import RecipeCardPlaceholder from './RecipeCardPlaceholder';

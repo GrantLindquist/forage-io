@@ -2,7 +2,7 @@ import { View, StyleSheet } from "react-native";
 import { Card } from 'react-native-paper';
 import colors from "../../../colors.json";
 
-// Card that contains basic info about recipe. Clicking will direct user to more detailed information about recipe
+// Placeholder component to display while recipes are loading
 export default function RecipeCardPlaceholder() {
 
 	return (

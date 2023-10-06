@@ -55,7 +55,7 @@ export default function RecipePage(props) {
 
 		// Redirects user
 		navigation.navigate("Created", {
-			removeRecipeId: recipe.RecipeId
+			removeId: recipe.RecipeId
 		});
 
 		// Returns response
