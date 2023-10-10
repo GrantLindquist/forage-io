@@ -22,12 +22,12 @@ export default function WelcomeScreen() {
 		<View style={{alignItems: 'center', margin: 10, position: 'absolute', bottom: "8%" }}>
 			{isCreatingAccount ? 
 			<Pressable onPress={() => setCreatingAccount(false)}>
-				<Text style={{ color: 'white' }}>Don't have an account?</Text>
-				<Text style={{ color: 'white' }}>Create one for free!</Text>
-			</Pressable> : 
-			<Pressable onPress={() => setCreatingAccount(true)}>
 				<Text style={{ color: 'white' }}>Already have an account?</Text>
 				<Text style={{ color: 'white' }}>Sign in here!</Text>
+			</Pressable> :
+			<Pressable onPress={() => setCreatingAccount(true)}>
+				<Text style={{ color: 'white' }}>Don't have an account?</Text>
+				<Text style={{ color: 'white' }}>Create one for free!</Text>
 			</Pressable>}
 		</View>
 	</View>
