@@ -89,7 +89,7 @@ export default function AppNavigation() {
 							listeners = {{
 								tabPress: e => {
 									e.preventDefault();
-									navigation.navigate('createRecipeModal');
+									navigation.navigate('CreateRecipeModal');
 								}
 							}}
 						>
@@ -106,14 +106,9 @@ export default function AppNavigation() {
 					</Tab.Navigator>
 				}
 			</ModalStack.Screen>
-			<ModalStack.Screen options={{presentation: 'modal'}} name="createRecipeModal">
+			<ModalStack.Screen options={{presentation: 'modal'}} name="CreateRecipeModal">
 				{() => 
 					<CreateRecipeModal refreshCreatedRecipes={() => setRefreshCreatedRecipes(!refreshCreatedRecipes)}/>
-				}
-			</ModalStack.Screen>
-			<ModalStack.Screen options={{presentation: 'modal'}} name="remixRecipeModal">
-				{() => 
-					<RemixRecipeModal refreshCreatedRecipes={() => setRefreshCreatedRecipes(!refreshCreatedRecipes)}/>
 				}
 			</ModalStack.Screen>
 		</ModalStack.Navigator>

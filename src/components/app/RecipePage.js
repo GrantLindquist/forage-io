@@ -153,8 +153,8 @@ export default function RecipePage(props) {
 				<Appbar.Action icon={() => <Image 
 					source={require('../../../assets/icons/remix-action.png')}
 					style={{height: 24, width: 24}} />} 
-					onPress={() => navigation.navigate('remixRecipeModal', {
-							recipe: recipe
+					onPress={() => navigation.navigate('CreateRecipeModal', {
+						recipe: recipe
 				})}/>
 				{userAction}
 			</Appbar.Header>

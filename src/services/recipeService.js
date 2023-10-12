@@ -17,6 +17,8 @@ const recipeService = {
     // Generates a recipe with GPT using the request parameter.
     generateRecipe: async (request, user) => {
 
+        console.log(request);
+
         // Make GPT request
         const completion = await openai.createChatCompletion({
             model: "gpt-3.5-turbo",
@@ -93,7 +95,7 @@ const recipeService = {
         catch (e) {
             console.error(e);
             let message;
-            if(completion.data.choices[0].message.content == ''){
+            if(completion.data.choices[0].message.content != ''){
                 message = completion.data.choices[0].message.content;
             }
             else{

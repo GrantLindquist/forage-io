@@ -5,9 +5,10 @@ import IngredientTag from './IngredientTag'
 import BudgetSlider from './BudgetSlider';
 import TagSearch from './TagSearch';
 import recipeService from '../../services/recipeService';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useUser } from '@clerk/clerk-expo';
 import colors from '../../../colors.json';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import RecipeTag from './RecipeTag';
 
 // Contains UI components that must be rendered on the highest z-index (modals, dialogs, etc.)
@@ -44,6 +45,15 @@ export default function CreateRecipeModal(props) {
 
 	// State for tracking budget
 	const budget = useRef(-1);
+
+	// Recipe that may be passed through route to signal remix recipe
+	const route = useRoute();
+	const [remixRecipe, setRemixRecipe] = useState();
+	useEffect(() => {
+		if(route.params){
+			setRemixRecipe(route.params.recipe)
+		}
+	}, []);
 
 	// State for tracking checkbox status
 	const [isPublicChecked, setPublicChecked] = useState(true);
@@ -95,7 +105,7 @@ export default function CreateRecipeModal(props) {
 				</Text>
 			</Dialog.Content>
 		</>,
-	]
+	];
 
 	// Creates a recipe using user-specified filters
 	const handleCreateRecipe = async() => {
@@ -129,6 +139,7 @@ export default function CreateRecipeModal(props) {
 
 		// DTO object for prompting GPT
 		let recipeDTO = {
+			baseRecipe: remixRecipe,
 			description: recipeDescription,
 			tags: recipeTags,
 			isPublic: isPublicChecked ? 1 : 0
@@ -205,7 +216,30 @@ export default function CreateRecipeModal(props) {
 				<Text style={{color: colors['pink'], fontWeight: 700}}>Get more charges</Text>
 				<IconButton onPress={() => setInfoDialogVisible(true)} style={{marginLeft: 'auto', margin: 0}} icon={"information-outline"}></IconButton>
 			</View>
-			{!isGeneratingRecipe ?
+			{/* Displays component depending on whether or not recipe is loading */}
+			{!isGeneratingRecipe ? <>
+			{/* Displays recipe information if provided */}
+			{remixRecipe ? <>
+			<Text variant="bodySmall"><MaterialCommunityIcons name="account" size={14} /> {remixRecipe.CreatorUsername.toUpperCase()}</Text>
+			<Text style={styles.recipeTitle}>{remixRecipe.Title}</Text>
+			<View style={{ marginTop: 15,  flexDirection: 'row'}}>
+				<View style={{alignItems: 'center', width: '20%'}}>
+					<Text style={styles.subtext}>Serves</Text>
+					<Text variant="headlineMedium">{remixRecipe.Servings}</Text>
+				</View>
+				<View style={{alignItems: 'center', borderColor: colors['blue'], borderLeftWidth: '2', borderRightWidth: '2', width: '40%'}}>
+					<Text  style={styles.subtext}>Budget</Text>
+					<Text variant="headlineMedium">${Number(remixRecipe.Budget).toFixed(2)}</Text>
+				</View>
+				<View style={{alignItems: 'center' , width: '40%'}}>
+					<Text style={styles.subtext}>Time</Text>
+					<Text variant="headlineMedium">{remixRecipe.CreationTime}</Text>
+				</View>
+			</View>
+			<View style={{ marginTop: 15, flexWrap: 'wrap', flexDirection: 'row'}}>
+				{/* {recipeTags} */}
+			</View></>
+			: <></>}
 			<View style={{margin: 20, marginTop: 0}}>
 				<Text style={styles.categoryTitle}>Add some tags!</Text>
 				<TagSearch 
@@ -237,7 +271,7 @@ export default function CreateRecipeModal(props) {
 					/>
 				</View>
 				<Button disabled={recipeCharges == 0 ? true : false} textColor={colors['pink']} onPress={handleCreateRecipe}>GENERATE RECIPE</Button>
-			</View>
+			</View></>
 			: <View style={styles.loadingScreen}>
 				<ActivityIndicator size={"large"} animating={true}></ActivityIndicator>
 			</View>}
@@ -303,6 +337,11 @@ const styles = StyleSheet.create({
 		fontSize: 12,
 		fontWeight: 700,
 		color: '#666666'
+	},
+	recipeTitle: {
+		// fontFamily: 'Roboto',
+		fontSize: 36,
+		fontWeight: 700
 	},
 	loadingScreen:{
 		flex: 1,
