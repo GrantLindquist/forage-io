@@ -17,8 +17,6 @@ const recipeService = {
     // Generates a recipe with GPT using the request parameter.
     generateRecipe: async (request, user) => {
 
-        console.log(request);
-
         // Make GPT request
         const completion = await openai.createChatCompletion({
             model: "gpt-3.5-turbo",
@@ -63,7 +61,6 @@ const recipeService = {
 
         // Attempt to parse response
         try{
-            // console.log(completion.data.choices[0].message.content)
             const recipe = JSON.parse(completion.data.choices[0].message.content);
             
             // Place recipe into DB

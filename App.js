@@ -7,12 +7,48 @@ import WelcomeScreen from './src/components/auth/WelcomeScreen';
 import AppNavigation from './src/components/app/AppNavigation';
 import env from './env.json';
 import { DarkTheme, NavigationContainer } from '@react-navigation/native';
+import { Asset } from 'expo-asset';
+import { useEffect } from 'react';
 
 // Creates tab navigator
 const Stack = createStackNavigator();
 
 // App entry point
 export default function App() {
+
+	// Prepares app for user upon login
+	useEffect(() => {
+		// Preload images
+		const preloadImages = (images) => {
+			return images.map(image => {
+				return Asset.fromModule(image).downloadAsync();
+			});
+		};
+		
+		// Retrieves images from /assets to preload
+		const retrieveImages = async() => {
+			// Preload images
+			const images = [
+				require('./assets/icons/budget.png'),
+				require('./assets/icons/charge.png'),
+				require('./assets/icons/cuisine-type.png'),
+				require('./assets/icons/diet-type.png'),
+				require('./assets/icons/flavor.png'),
+				require('./assets/icons/meal-type.png'),
+				require('./assets/icons/remix-action.png'),
+				require('./assets/icons/servings.png'),
+				require('./assets/icons/star-filled.png'),
+				require('./assets/icons/star-selected.png'),
+				require('./assets/icons/time.png'),
+			];
+
+			const cacheImages = preloadImages(images);
+			await Promise.all(cacheImages);
+		}
+
+		// Executes function
+		retrieveImages();
+	}, [])
 	
 	return (
 	<ClerkProvider publishableKey={env['clerk-publishableKey']}>

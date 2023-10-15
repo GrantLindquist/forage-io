@@ -30,21 +30,20 @@ export default function AppNavigation() {
 		// Function that update user charges
 		async function updateUserCharges() {
 			// Check for outdated charges
-			var recipeCharges = user.unsafeMetadata.recipeCharges;
-			for(let item of recipeCharges){
+			var updatedCharges = [];
+			var i = 1;
+			for(let timestamp of user.unsafeMetadata.recipeCharges){
 				// If an hour has passed since its addition, remove charge
-				if(Date.now() - item > 3600000){
-					recipeCharges.shift();
+				if(Date.now() - timestamp <= (3600000*i)){
+					updatedCharges.push(timestamp);
 				}
-				else{
-					break;
-				}
+				i++;
 			}
 			// Update user obj
 			await user.update({
 				unsafeMetadata: { 
 					savedRecipeIds: user.unsafeMetadata.savedRecipeIds,
-					recipeCharges: recipeCharges
+					recipeCharges: updatedCharges
 				}
 			});
 		}

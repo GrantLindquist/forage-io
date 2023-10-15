@@ -170,6 +170,7 @@ export default function CreateRecipeModal(props) {
 		if(response.ok){
 			setInfoSnackbarVisible(true);
 			setSelectedIngredients([]);
+			setSelectedFilters([]);
 
 			// Refreshes recipeMenu component so user can see updated recipe list
 			props.refreshCreatedRecipes();
