@@ -13,24 +13,40 @@ const openai = new OpenAIApi(configuration);
 
 // Service that handles recipe CRUD functionality
 const recipeService = {
+
+    // Checks if ingredients are safe to consume before attempting to generate recipe
+    scrubIngredients: async (ingredients) => {
+        const completion = await openai.createChatCompletion({
+            model: "gpt-3.5-turbo",
+            messages: [{ 
+                role: "system", 
+                content: `You are a function that will return either 0 or 1. I provided you with an array of ingredients.
+                Check each item in the array and ensure that it's safe for human consumption. Make sure to be inclusive of 
+                cuisine from other cultures. If each item is safe, return 1. Otherwise, return 0.` 
+            },
+            {
+                role: "user",
+                content: `${ingredients}`
+            }],
+            temperature: .5
+        });
+
+        // Converts response into integer
+        const response = Number(completion.data.choices[0].message.content);
+        console.log(response);
+        return response;
+    },
     
     // Generates a recipe with GPT using the request parameter.
     generateRecipe: async (request, user) => {
+        // Format context depending on input
+        const messages = [];
 
-        // Make GPT request
-        const completion = await openai.createChatCompletion({
-            model: "gpt-3.5-turbo",
-            messages: [
-            { 
-                role: "system", 
-                content: `You are an assistant that generates recipes in JSON format. 
-                You may only respond in JSON format. The only exception is if the recipe contains inedible
-                or unsafe ingredients. In this case, you must respond with a message explaining why it's unsafe to eat.` 
-            },
-            // If a baseRecipe is included in the request, then "remix" the recipe. Otherwise, generate new recipe
-            request.baseRecipe ? { 
-                role: "assistant", 
-                content: `Generate a recipe in JSON format that is similar to this recipe and follows the same structure: 
+         // If a baseRecipe is included in the request, then "remix" the recipe. 
+        if(request.baseRecipe){
+            messages.push({ 
+                role: "user", 
+                content: `Generate a ${request.description} in JSON format that is similar to this recipe and follows the same structure: 
                 {
                     title: ${request.baseRecipe.Title},
                     servings: ${request.baseRecipe.Servings},
@@ -39,69 +55,78 @@ const recipeService = {
                     creationTime: ${request.baseRecipe.CreationTime},
                     budget: ${request.baseRecipe.Budget},
                 }
+                If applicable, include each ingredient from the model recipe in the generated recipe.
                 Make sure that the ingredients and instructions values are simple arrays.`
-            } : {
-                role: "assistant", 
-                content: `Generate recipes in JSON format using the following model: 
+            });
+        }
+        // Otherwise, generate new recipe
+        else{
+            messages.push({
+                role: "user", 
+                content: `Generate a ${request.description} in JSON format using the following model: 
                 {
                     title: a creative name for the recipe,
                     servings: the number of servings this recipe will create,
                     ingredients: an array of each ingredient for the recipe,
                     instructions: an array of each step to make the recipe,
-                    creationTime: the amount of time it takes to create the recipe (in xh xxm format),
+                    creationTime: the amount of time it takes to create the recipe in milliseconds,
                     budget: sum of approximate cost of ingredients (in xx.xx format)
-                }`
-            },
-            {
-                role: "user",
-                content: `generate a ${request.description}.`
-            }],
-            temperature: .8
-        });
-
-        // Attempt to parse response
-        try{
-            const recipe = JSON.parse(completion.data.choices[0].message.content);
-            
-            // Place recipe into DB
-            const response = await fetch(`${env['forageAPI-uri']}/recipes`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    creatorId: user.id,
-                    recipeId: uuidv4(),
-                    baseRecipeId: request.baseRecipe ? request.baseRecipe.RecipeId : null,
-                    isPublic: request.isPublic,
-                    title: recipe.title,
-                    ingredients: recipe.ingredients,
-                    instructions: recipe.instructions,
-                    tags: request.tags,
-                    creatorUsername: user.username,
-                    budget: recipe.budget,
-                    creationTime: recipe.creationTime,
-                    servings: recipe.servings
-                })
+                }
+                Make sure that the ingredients and instructions values are simple arrays.`
             });
-            // Return response
-            return(response);
         }
 
-        // If GPT responds with invalid recipe format, return error
-        catch (e) {
-            console.error(e);
-            let message;
-            if(completion.data.choices[0].message.content != ''){
-                message = completion.data.choices[0].message.content;
+        // If ingredients are either empty or approved by ChatGPT
+        if(request.ingredients == [] || await recipeService.scrubIngredients(request.ingredients) == 1){
+            // Make GPT request
+            const completion = await openai.createChatCompletion({
+                model: "gpt-3.5-turbo",
+                messages: messages,
+                temperature: .8
+            });
+
+            // Attempt to parse response
+            try{
+                const recipe = JSON.parse(completion.data.choices[0].message.content);
+                
+                // Place recipe into DB
+                const response = await fetch(`${env['forageAPI-uri']}/recipes`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        creatorId: user.id,
+                        recipeId: uuidv4(),
+                        baseRecipeId: request.baseRecipe ? request.baseRecipe.RecipeId : null,
+                        isPublic: request.isPublic,
+                        title: recipe.title,
+                        ingredients: recipe.ingredients,
+                        instructions: recipe.instructions,
+                        tags: request.tags,
+                        creatorUsername: user.username,
+                        budget: recipe.budget,
+                        creationTime: recipe.creationTime,
+                        servings: recipe.servings
+                    })
+                });
+                // Return response
+                return(response);
             }
-            else{
-                message = 'An error occurred while placing the recipe into the database. Please try again later.'
+
+            // If GPT responds with invalid recipe format, return error
+            catch (e) {
+                return {
+                    ok: false,
+                    error: e,
+                    message: "There was an issue creating your recipe. Please try again."
+                }
             }
+        }
+        else{
             return {
                 ok: false,
-                error: e,
-                message: message
+                message: "We cannot generate a recipe using unsafe or inedible ingredients."
             }
         }
     },

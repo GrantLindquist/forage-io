@@ -8,6 +8,7 @@ import { useState } from "react";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import recipeService from "../../services/recipeService";
 import colors from "../../../colors.json";
+const ms = require('ms');
 
 // Detailed page for a recipe that contains ingredients, instructions, etc.
 export default function RecipePage(props) {
@@ -22,6 +23,11 @@ export default function RecipePage(props) {
 
 	// State that tracks snackbar status
 	const [snackbarVisible, setSnackbarVisible] = useState(false);
+
+	// Attempts to format time from ms to human-readable time
+	const formattedTime = (time) => {
+		return ms(time, { long: false })
+	}
 
 	// Method for determining user action in FAB group
 	const determineUserAction = () => {
@@ -174,7 +180,7 @@ export default function RecipePage(props) {
 						</View>
 						<View style={{alignItems: 'center' , width: '40%'}}>
 							<Text style={styles.subtext}>Time</Text>
-							<Text variant="headlineMedium">{recipe.CreationTime}</Text>
+							<Text variant="headlineMedium">{formattedTime(recipe.CreationTime)}</Text>
 						</View>
 					</View>
 					<Text style={[styles.categoryTitle, {color: colors['green']}]}>Ingredients:</Text>

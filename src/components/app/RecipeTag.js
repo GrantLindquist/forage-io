@@ -8,7 +8,10 @@ import colors from "../../../colors.json";
 export default function RecipeTag(props) {
 
 	// State for tracking whether or not chip is selected
-	const [selected, setSelected] = useState(props.immutable);
+	const [selected, setSelected] = useState(() => {
+		if(props.immutable) { return true; }
+		else { return props.selected; }
+	});
 
 	// State for tracking tag object information
 	const tagObject = getTagObject(props.title);

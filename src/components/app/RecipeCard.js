@@ -2,12 +2,18 @@ import { View, StyleSheet, Image } from "react-native";
 import { Card, Text } from 'react-native-paper';
 import colors from "../../../colors.json";
 import { useUser } from "@clerk/clerk-expo";
+const ms = require('ms');
 
 // Card that contains basic info about recipe. Clicking will direct user to more detailed information about recipe
 export default function RecipeCard(props) {
 
 	// User object
 	const { user } = useUser();
+
+	// Attempts to format time from ms to human-readable time
+	const formattedTime = (time) => {
+		return ms(time, { long: false })
+	}
 
 	return (
 		<Card style={styles.card}>
@@ -25,7 +31,7 @@ export default function RecipeCard(props) {
 					<Text style={styles.recipeSubtext}><Image 
 						source={require('../../../assets/icons/time.png')}
 						style={{width: 14, height: 14}}
-					/>{props.recipe.CreationTime}</Text>
+					/>{formattedTime(props.recipe.CreationTime)}</Text>
 					<Text style={styles.recipeSubtext}>
 					${Number(props.recipe.Budget).toFixed(2)}</Text>
 					<View style={{marginLeft: 'auto'}}>

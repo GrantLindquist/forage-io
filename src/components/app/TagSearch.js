@@ -3,11 +3,23 @@ import { ScrollView, StyleSheet, View } from "react-native";
 import { Searchbar, Text, IconButton } from "react-native-paper";
 import RecipeTag from "./RecipeTag";
 import tags from '../../../tags.json';
+
 // Expandable horizontal scroll view for viewing items
 export default function TagSearch(props) {
 
     // State for tracking which tags are selected - start with default tags if provided with them
-    const [selectedTags, setSelectedTags] = useState(props.defaultTags ? props.defaultTags : []);
+    const [selectedTags, setSelectedTags] = useState(() => {
+        if (props.defaultTags) {
+            let defaultTags = [];
+            for (let tag of Object.keys(props.defaultTags)) {
+                defaultTags.push(tag[0].charAt(2).toLowerCase() + tag[0].slice(3));
+            }
+            return defaultTags;
+        } 
+        else {
+            return [];
+        }
+    });
 
     // State that handles which type of tag to display
     const [displayTypeCode, setDisplayTypeCode] = useState(0);
@@ -15,7 +27,7 @@ export default function TagSearch(props) {
 
     // Set display title of tag group
     useEffect(() => {
-        console.log('loaded tagSearch.js')
+        // Determine styled elements
         switch (displayTypeCode){
             case 0:
                 setDisplayTypeTitle("meal");
@@ -69,7 +81,6 @@ export default function TagSearch(props) {
 
         // Send results to parent component
         setSelectedTags(updatedTagList);
-        console.log(updatedTagList);
         props.updateSelectedTags(updatedTagList);
     }
 

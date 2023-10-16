@@ -71,7 +71,6 @@ export default function CreatedRecipes(props) {
 				/>
 				{!isLoading ?
 					<FlatList
-					style={{maxHeight: '90%'}}
 					data={createdRecipes}
 					renderItem={(item) => {
 						if(item.item.Title.toLowerCase().includes(searchQuery.toLowerCase()) && item.item.RecipeId != removeRecipeId){
@@ -85,6 +84,7 @@ export default function CreatedRecipes(props) {
 						}
 					}}
 					ListEmptyComponent={() => <EmptyList/>}
+					ListFooterComponent={<View style={{paddingVertical: 40}}></View>}
 				/> :
 				<View>
 					{/* Placeholder loading components */}

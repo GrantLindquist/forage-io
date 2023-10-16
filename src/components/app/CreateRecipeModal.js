@@ -48,10 +48,12 @@ export default function CreateRecipeModal(props) {
 
 	// Recipe that may be passed through route to signal remix recipe
 	const route = useRoute();
-	const [remixRecipe, setRemixRecipe] = useState();
+	const [remixRecipe, setRemixRecipe] = useState('');
+
+	// Checks whether to render modal as 'create' or 'remix'
 	useEffect(() => {
 		if(route.params){
-			setRemixRecipe(route.params.recipe)
+			setRemixRecipe(route.params.recipe);
 		}
 	}, []);
 
@@ -115,7 +117,7 @@ export default function CreateRecipeModal(props) {
 		// List ingredients if ingredient list state is not empty
 		if(selectedIngredients.length > 0){
 			ingredientString = ' that contains';
-			for(item of selectedIngredients){
+			for(let item of selectedIngredients){
 				// Adds a comma if there are more ingredients remaining in list
 				ingredientString = ingredientString + ' ' + item + (selectedIngredients.length == i+1 ? "" : ",");
 				i++;
@@ -142,9 +144,9 @@ export default function CreateRecipeModal(props) {
 			baseRecipe: remixRecipe,
 			description: recipeDescription,
 			tags: recipeTags,
+			ingredients: selectedIngredients,
 			isPublic: isPublicChecked ? 1 : 0
 		}
-		console.log(recipeDTO);
 
 		// Set loading state to true
 		setGeneratingRecipe(true);
@@ -246,6 +248,7 @@ export default function CreateRecipeModal(props) {
 				<TagSearch 
 					dark={true}
 					updateSelectedTags={(tags) => setSelectedFilters(tags)} 
+					defaultTags={remixRecipe != '' ? remixRecipe.Tags : []}
 				/>
 									
 				<Text style={styles.categoryTitle}>Add some ingredients!</Text>

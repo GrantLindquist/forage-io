@@ -53,7 +53,6 @@ export default function SavedRecipes(props) {
 			/>
 			{!isLoading ?
 				<FlatList
-				style={{maxHeight: '90%'}}
 				data={savedRecipes}
 				renderItem={(item) => {
 					if(item.item.Title.toLowerCase().includes(searchQuery.toLowerCase())){
@@ -67,6 +66,7 @@ export default function SavedRecipes(props) {
 					}
 				}}
 				ListEmptyComponent={() => <EmptyList/>}
+				ListFooterComponent={<View style={{paddingVertical: 40}}></View>}
 			/> :
 			<View>
 				<RecipeCardPlaceholder/>

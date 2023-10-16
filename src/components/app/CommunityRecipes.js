@@ -87,7 +87,7 @@ export default function CommunityRecipes() {
 
 		// Returns pagination view with predetermined pagination button array
 		return(
-			<View style={{flexDirection: 'row', marginTop: 10, width: '100%'}}>
+			<View style={{flexDirection: 'row', paddingVertical: 5, bottom: 25, width: '100%', position: 'absolute', backgroundColor: colors['background2']}}>
 				<IconButton 
 					style={styles.paginationButton} 
 					size={20} 
@@ -140,7 +140,6 @@ export default function CommunityRecipes() {
 				updateSelectedTags={(tags) => setActiveFilters(tags)} 
 			/>: <></> }
 			<FlatList
-				style={{maxHeight: '82%'}}
 				data={communityRecipes[pageNumber-1]}
 				renderItem={(item) => {
 					return (
@@ -153,6 +152,7 @@ export default function CommunityRecipes() {
 					
 				}}
 				ListEmptyComponent={() => <EmptyList/>}
+				ListFooterComponent={<View style={{paddingVertical: 40}}></View>}
 			/>
 			{endNumber != 1 ? paginationButtons() : <></>}
 		</View>

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import Profile from './Profile';
 import CreateRecipeModal from './CreateRecipeModal';
-import RemixRecipeModal from './RemixRecipeModal';
 import RecipeMenu from './RecipeMenu';
 import Header from './Header';
 import { useNavigation } from '@react-navigation/native';
