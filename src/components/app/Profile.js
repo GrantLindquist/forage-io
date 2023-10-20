@@ -3,7 +3,6 @@ import { SafeAreaView, View , StyleSheet} from "react-native";
 import { Text, Avatar, IconButton, Button, Divider, Portal, Dialog } from "react-native-paper";
 import { useUser, useClerk } from "@clerk/clerk-expo";
 import env from '../../../env.json'
-import colors from '../../../colors.json'
 
 // Contains information about the user and various modifiable settings/configurations
 export default function Profile() {
@@ -43,18 +42,18 @@ export default function Profile() {
 			<Text style={styles.subtext}>Created on {user.createdAt.toLocaleString().split(',')[0]}</Text>
 		</View>
 		<View style={{position: 'absolute', bottom: 20, width: '100%'}}>
-			<Button mode="text" textColor={colors['pink']}>Terms of Service</Button>
+			<Button mode="text">Terms of Service</Button>
 			<Divider style={{marginHorizontal: 20}}/>
-			<Button mode="text" textColor={colors['pink']} onPress={signOut}>Sign out</Button>
+			<Button mode="text" onPress={signOut}>Sign out</Button>
 			<Divider style={{marginHorizontal: 20}}/>
-			<Button mode="text" textColor={colors['pink']} onPress={() => setWarningDialogVisible(true)}>Delete account</Button>
+			<Button mode="text" onPress={() => setWarningDialogVisible(true)}>Delete account</Button>
 		</View>
 		{/* <View style={{ marginTop: 15,  flexDirection: 'row'}}>
 			<View style={{alignItems: 'center', width: '50%'}}>
 				<Text  style={styles.subtext}>Created Recipes</Text>
 				<Text variant="headlineLarge">40</Text>
 			</View>
-			<View style={{alignItems: 'center' , borderColor: colors['blue'], borderLeftWidth: '2', width: '50%'}}>
+			<View style={{alignItems: 'center' , borderColor:rgb(0, 227, 138), borderLeftWidth: '2', width: '50%'}}>
 				<Text style={styles.subtext}>Total Stars</Text>
 				<Text variant="headlineLarge">100</Text>
 			</View>

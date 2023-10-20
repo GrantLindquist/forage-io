@@ -6,7 +6,6 @@ import Header from './Header';
 import { useNavigation } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import colors from '../../../colors.json';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useUser } from '@clerk/clerk-expo';
 
@@ -64,10 +63,10 @@ export default function AppNavigation() {
 						screenOptions={{
 							header: () => <Header/>,
 							tabBarShowLabel: false,
-							tabBarActiveTintColor: colors['blue'],
-							tabBarStyle: { backgroundColor: colors['background1'] }
+							tabBarActiveTintColor: {},
+							tabBarStyle: {  }
 						}}
-						sceneContainerStyle={{ backgroundColor: colors['background2'] }}
+						sceneContainerStyle={{  }}
 					>
 						<Tab.Screen name="Home" options={{
 							header: () => <></>,

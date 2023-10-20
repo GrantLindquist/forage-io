@@ -7,7 +7,6 @@ import RecipeTag from "./RecipeTag";
 import { useState } from "react";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import recipeService from "../../services/recipeService";
-import colors from "../../../colors.json";
 const ms = require('ms');
 
 // Detailed page for a recipe that contains ingredients, instructions, etc.
@@ -136,7 +135,7 @@ export default function RecipePage(props) {
 	// Renders each ingredient 
 	const ingredients = recipe.Ingredients.map((ingredient) => {
 		return(
-			<Text variant='bodyLarge' style={{marginVertical: 5}} key={ingredient}><Text style={{fontWeight: 700, color: colors['green']}}>-</Text> {ingredient}</Text>
+			<Text variant='bodyLarge' style={{marginVertical: 5}} key={ingredient}><Text style={{fontWeight: 700}}>-</Text> {ingredient}</Text>
 		)
 	});
 
@@ -145,14 +144,14 @@ export default function RecipePage(props) {
 	const instructions = recipe.Instructions.map((instruction) => {
 		stepCounter++;
 		return(
-			<Text variant='bodyLarge' style={{marginVertical: 10}} key={"instruction" + stepCounter}><Text style={{fontWeight: 700, color: colors['pink']}}>{stepCounter}. </Text>{instruction}</Text>
+			<Text variant='bodyLarge' style={{marginVertical: 10}} key={"instruction" + stepCounter}><Text style={{fontWeight: 700}}>{stepCounter}. </Text>{instruction}</Text>
 		)
 	});
 
 	return (
 		<>
 			{/* Custom recipePage header */}
-			<Appbar.Header style={{backgroundColor: colors['background2']}}>
+			<Appbar.Header>
 				<Appbar.BackAction onPress={() => navigation.goBack()}/>
 				<Appbar.Content></Appbar.Content>
 				<Appbar.Action icon={'bell'} size={24} />
@@ -165,7 +164,7 @@ export default function RecipePage(props) {
 				{userAction}
 			</Appbar.Header>
 
-			<ScrollView style={{backgroundColor: colors['background2']}}>
+			<ScrollView>
 				<View style={styles.container}>
 					<Text style={styles.subtext}><MaterialCommunityIcons name="account" size={14} /> {recipe.CreatorUsername.toUpperCase()}</Text>
 					<Text style={styles.recipeTitle}>{recipe.Title}</Text>
@@ -174,7 +173,7 @@ export default function RecipePage(props) {
 							<Text style={styles.subtext}>Serves</Text>
 							<Text variant="headlineMedium">{recipe.Servings}</Text>
 						</View>
-						<View style={{alignItems: 'center', borderColor: colors['blue'], borderLeftWidth: '2', borderRightWidth: '2', width: '40%'}}>
+						<View style={{alignItems: 'center', borderColor: "rgb(0, 227, 138)", borderLeftWidth: '2', borderRightWidth: '2', width: '40%'}}>
 							<Text  style={styles.subtext}>Budget</Text>
 							<Text variant="headlineMedium">${Number(recipe.Budget).toFixed(2)}</Text>
 						</View>
@@ -183,11 +182,11 @@ export default function RecipePage(props) {
 							<Text variant="headlineMedium">{formattedTime(recipe.CreationTime)}</Text>
 						</View>
 					</View>
-					<Text style={[styles.categoryTitle, {color: colors['green']}]}>Ingredients:</Text>
+					<Text style={[styles.categoryTitle, {color: "rgb(0, 227, 138)"}]}>Ingredients:</Text>
 					{ingredients}
-					<Text style={[styles.categoryTitle, {color: colors['pink']}]}>Instructions:</Text>
+					<Text style={[styles.categoryTitle, {color: "rgb(0, 227, 138)"}]}>Instructions:</Text>
 					{instructions}
-					<Text style={[styles.categoryTitle, {color: colors['yellow']}]}>Tags:</Text>
+					<Text style={[styles.categoryTitle, {color: "rgb(0, 227, 138)"}]}>Tags:</Text>
 					<View style={{ flexWrap: 'wrap', flexDirection: 'row'}}>
 						{recipeTags}
 					</View>

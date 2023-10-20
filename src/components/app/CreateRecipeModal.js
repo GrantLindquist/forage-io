@@ -7,7 +7,6 @@ import TagSearch from './TagSearch';
 import recipeService from '../../services/recipeService';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useUser } from '@clerk/clerk-expo';
-import colors from '../../../colors.json';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import RecipeTag from './RecipeTag';
 
@@ -69,9 +68,9 @@ export default function CreateRecipeModal(props) {
 					A "tag" is an adjective used for describing the recipes you want to generate.
 					For example, if you want to generate a Mexican recipe that is spicy, you should
 					select the <RecipeTag title={'mexican'} immutable={true}/> and <RecipeTag title={'spicy'} 
-					immutable={true}/> tags. There are four types of tag: <Text style={{color: colors['pink']}}>meal</Text>, 
-					<Text style={{color: colors['blue']}}>cuisine</Text>, <Text style={{color: colors['yellow']}}>
-					diet</Text>, and <Text style={{color: colors['green']}}>flavor</Text>. You can 
+					immutable={true}/> tags. There are four types of tag: <Text >
+					diet</Text>, and <Text>flavor</Text>meal</Text>, 
+					<Text>cuisine</Text>, <Text>. You can 
 					only select a few of each tag. 
 				</Text>
 			</Dialog.Content>
@@ -103,7 +102,7 @@ export default function CreateRecipeModal(props) {
 				<Text>
 					A "charge" is a unit that allows you to generate a recipe. One charge will replenish every
 					hour and you can hold a maximum of 10 charges at a time. If you'd like to replenish charges
-					without waiting, press on <Text style={{color: colors['pink'], fontWeight: 700}}>Get more charges </Text>.
+					without waiting, press on <Text style={{ fontWeight: 700}}>Get more charges </Text>.
 				</Text>
 			</Dialog.Content>
 		</>,
@@ -207,8 +206,8 @@ export default function CreateRecipeModal(props) {
 	});
 
 	return (
-	<View style={{backgroundColor: colors['background1'], height: '100%'}}>
-		<ProgressBar progress={recipeCharges/10} color={colors['pink']} />
+	<View style={{ height: '100%'}}>
+		<ProgressBar progress={recipeCharges/10} />
 		<View>
 			<View style={{ flexDirection: 'row', marginHorizontal: 15, marginTop: 10}}>
 				<Image 
@@ -216,7 +215,7 @@ export default function CreateRecipeModal(props) {
 					style={{width: 18, height: 18}}
 				/>
 				<Text style={{color: 'grey'}}>{recipeCharges}/10  </Text>
-				<Text style={{color: colors['pink'], fontWeight: 700}}>Get more charges</Text>
+				<Text style={{fontWeight: 700}}>Get more charges</Text>
 				<IconButton onPress={() => setInfoDialogVisible(true)} style={{marginLeft: 'auto', margin: 0}} icon={"information-outline"}></IconButton>
 			</View>
 			{/* Displays component depending on whether or not recipe is loading */}
@@ -230,7 +229,7 @@ export default function CreateRecipeModal(props) {
 					<Text style={styles.subtext}>Serves</Text>
 					<Text variant="headlineMedium">{remixRecipe.Servings}</Text>
 				</View>
-				<View style={{alignItems: 'center', borderColor: colors['blue'], borderLeftWidth: '2', borderRightWidth: '2', width: '40%'}}>
+				<View style={{alignItems: 'center', borderColor: "rgb(0, 227, 138)", borderLeftWidth: '2', borderRightWidth: '2', width: '40%'}}>
 					<Text  style={styles.subtext}>Budget</Text>
 					<Text variant="headlineMedium">${Number(remixRecipe.Budget).toFixed(2)}</Text>
 				</View>
@@ -267,14 +266,13 @@ export default function CreateRecipeModal(props) {
 				<View style={{flexDirection: 'row'}}>
 					<Text variant='bodyLarge'>Make recipe public</Text>
 					<Checkbox.Android 
-						color={colors['blue']}
 						status={isPublicChecked ? "checked" : "unchecked"}
 						onPress={() => {
 							setPublicChecked(!isPublicChecked);
 						}}
 					/>
 				</View>
-				<Button disabled={recipeCharges == 0 ? true : false} textColor={colors['pink']} onPress={handleCreateRecipe}>GENERATE RECIPE</Button>
+				<Button disabled={recipeCharges == 0 ? true : false} onPress={handleCreateRecipe}>GENERATE RECIPE</Button>
 			</View></>
 			: <View style={styles.loadingScreen}>
 				<ActivityIndicator size={"large"} animating={true}></ActivityIndicator>
@@ -283,7 +281,7 @@ export default function CreateRecipeModal(props) {
 
 		<Portal>
 			{/* Info dialog */}
-			<Dialog visible={infoDialogVisible} onDismiss={() => setInfoDialogVisible(false)} style={{backgroundColor: colors['background1']}}>
+			<Dialog visible={infoDialogVisible} onDismiss={() => setInfoDialogVisible(false)}>
 				{infoDialogContent[infoDialogPageNumber]}
 				<Dialog.Actions>
 					<Button disabled={infoDialogPageNumber <= 0 ? true : false} onPress={() => setInfoDialogPageNumber(infoDialogPageNumber-1)}>Previous</Button>
@@ -292,7 +290,7 @@ export default function CreateRecipeModal(props) {
 			</Dialog>
 
 			{/* Warning dialog */}
-			<Dialog visible={errorDialogVisible} onDismiss={() => setErrorDialogVisible(false)} style={{backgroundColor: colors['background1']}}>
+			<Dialog visible={errorDialogVisible} onDismiss={() => setErrorDialogVisible(false)}>
 				<Dialog.Content>
 					<Text variant="bodyMedium">{errorDialogContent}</Text>
 				</Dialog.Content>
@@ -359,7 +357,6 @@ const styles = StyleSheet.create({
 	addIngredientButton: {
 		borderRadius: '5',
 		borderWidth: 0,
-		backgroundColor: colors['green'],
 		marginBottom: 0,
 		marginRight: 0,
 		marginLeft: 10

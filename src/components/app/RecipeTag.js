@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { StyleSheet, Image } from "react-native";
 import { Chip, Text } from "react-native-paper";
 import tags from '../../../tags.json';
-import colors from "../../../colors.json";
 
 // A small component containing a title and icon - used for filter sorting and recipe tagging.
 export default function RecipeTag(props) {
@@ -25,32 +24,28 @@ export default function RecipeTag(props) {
 		return tags.find((tag) => tag.title === title);
 	}
 
-	// Assigns visual properties to tag
+	// Assigns visual properties to tag - Memoize this?
 	useEffect(() => {
 		switch(tagObject.typeCode){
             case 0:
-                setColor(colors['pink']);
 				setIcon(() => <Image 
 					source={require('../../../assets/icons/meal-type.png')}
 					style={{width: 14, height: 14}}
 				/>);
                 break;
             case 1:
-                setColor(colors['blue']);
 				setIcon(() => <Image 
 					source={require('../../../assets/icons/cuisine-type.png')}
 					style={{width: 14, height: 14}}
 				/>);
                 break;
             case 2:
-                setColor(colors['yellow']);
 				setIcon(() => <Image 
 					source={require('../../../assets/icons/flavor.png')}
 					style={{width: 14, height: 14}}
 				/>);
                 break;
             case 3:
-                setColor(colors['green']);
 				setIcon(() => <Image 
 					source={require('../../../assets/icons/diet-type.png')}
 					style={{width: 14, height: 14}}
@@ -73,7 +68,6 @@ export default function RecipeTag(props) {
 		tagUnselected: {
 			marginRight: 5,
 			marginBottom: 5,
-			backgroundColor: colors['background1'],
 			borderColor: 'white',
 			borderRadius: 8,
 			borderWidth: 1,
@@ -81,7 +75,6 @@ export default function RecipeTag(props) {
 		tagSelected: {
 			marginRight: 5,
 			marginBottom: 5,
-			backgroundColor: colors['background1'],
 			borderWidth: 1,
 			borderRadius: 8,
 			borderColor: color,

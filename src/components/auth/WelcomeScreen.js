@@ -1,8 +1,25 @@
 import { useState } from "react";
 import { KeyboardAvoidingView, View, Pressable, StyleSheet } from "react-native";
-import { Text, Button } from "react-native";
+import { Text } from "react-native";
 import SignIn from "./SignIn";
 import CreateAccount from "./CreateAccount";
+import MaskedView from "@react-native-masked-view/masked-view";
+import { LinearGradient } from 'expo-linear-gradient';
+
+// Gradient text for title screen
+export const GradientText = (props) => {
+	return (
+	  <MaskedView maskElement={<Text {...props} />}>
+		<LinearGradient
+		  colors={["#38FFA0", "#00C2FF"]}
+		  start={{ x: 0, y: 1 }}
+		  end={{ x: 1, y: 0 }}
+		>
+		  <Text {...props} style={[props.style, { opacity: 0 }]} />
+		</LinearGradient>
+	  </MaskedView>
+	);
+  };
 
 // Welcomes user to application and displays either sign-in or sign-up component
 export default function WelcomeScreen() {
@@ -12,7 +29,10 @@ export default function WelcomeScreen() {
 
 	return (
 	<View style={styles.container}>
-		<Text style={styles.title}>forage.io</Text>
+		<View style={{position: 'absolute', top: '15%', alignItems: "center",}}>
+			<GradientText style={styles.title}>forage.io</GradientText>
+			<Text style={styles.subtitle}>Powered by GPT</Text>
+		</View>
 		
 		{/* Either sign-in or create account components are displayed, depending on which option user selects */}
 		<KeyboardAvoidingView behavior="padding" style={{width: "80%", position: 'absolute', bottom: "16%"}}>
@@ -21,11 +41,11 @@ export default function WelcomeScreen() {
 
 		<View style={{alignItems: 'center', margin: 10, position: 'absolute', bottom: "8%" }}>
 			{isCreatingAccount ? 
-			<Pressable onPress={() => setCreatingAccount(false)}>
+			<Pressable style={{alignItems: 'center'}} onPress={() => setCreatingAccount(false)}>
 				<Text style={{ color: 'white' }}>Already have an account?</Text>
 				<Text style={{ color: 'white' }}>Sign in here!</Text>
 			</Pressable> :
-			<Pressable onPress={() => setCreatingAccount(true)}>
+			<Pressable style={{alignItems: 'center'}} onPress={() => setCreatingAccount(true)}>
 				<Text style={{ color: 'white' }}>Don't have an account?</Text>
 				<Text style={{ color: 'white' }}>Create one for free!</Text>
 			</Pressable>}
@@ -42,10 +62,11 @@ const styles = StyleSheet.create({
 		backgroundColor: "#101010"
 	},
 	title: {
-		fontSize: 50,
+		fontSize: 58,
 		fontWeight: 700,
 		color: "white", 
-		position: 'absolute', 
-		top: "20%"
+	},
+	subtitle: {
+		color: 'white',
 	}
 });

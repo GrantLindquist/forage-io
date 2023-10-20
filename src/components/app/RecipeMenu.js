@@ -6,7 +6,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import RecipePage from './RecipePage';
 import { useEffect, useState } from 'react';
 import Header from './Header';
-import colors from '../../../colors.json';
 
 // Create navigator objects
 const Tab = createMaterialTopTabNavigator();
@@ -28,10 +27,10 @@ export default function RecipeMenu(props) {
                 {/* Tab navigator that directs user to various types of recipe lists */}
                 {() => <Tab.Navigator
                     screenOptions={{
-                        tabBarStyle: { backgroundColor: colors['background1'] },
-                        tabBarIndicatorStyle: { backgroundColor: colors['pink'] }
+                        tabBarStyle: { },
+                        tabBarIndicatorStyle: {  }
                     }}
-                    sceneContainerStyle={{ backgroundColor: colors['background2'] }}
+                    sceneContainerStyle={{  }}
                 >
                     <Tab.Screen name="Created">
                         {() => <CreatedRecipes refreshValue1={props.refreshValue} refreshValue2={refreshCreatedRecipes}/>}

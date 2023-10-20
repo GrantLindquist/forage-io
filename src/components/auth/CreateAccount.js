@@ -2,6 +2,8 @@ import { useState } from "react";
 import { View } from "react-native";
 import { useSignUp, useUser } from "@clerk/clerk-expo";
 import { HelperText, Button, TextInput } from "react-native-paper";
+import { LinearGradient } from 'expo-linear-gradient';
+import MaskedView from "@react-native-masked-view/masked-view";
 
 // Input fields for users to create their accounts
 export default function CreateAccount() {
@@ -20,6 +22,11 @@ export default function CreateAccount() {
 
 	// Attempts to create account
 	const handleSignUp = async () => {
+
+		// Resets error text
+		setUsernameHelperText("");
+		setPasswordHelperText("");
+		setConfirmPasswordHelperText("");
 
 		// Checks if password equals confirm password field
 		if(password != confirmPassword){
@@ -73,6 +80,8 @@ export default function CreateAccount() {
 			mode="outlined"
 			onChangeText={(username) => setUsername(username)}
 			keyboardAppearance="dark"
+			selectionColor="white"
+			activeOutlineColor="white"
 		/>
 		{usernameHelperText != "" ? <HelperText type='error'>{usernameHelperText}</HelperText> : <></>}
 		<TextInput
@@ -82,6 +91,8 @@ export default function CreateAccount() {
 			mode="outlined"
 			onChangeText={(password) => setPassword(password)}
 			keyboardAppearance="dark"
+			selectionColor="white"
+			activeOutlineColor="white"
 		/> 
 		{passwordHelperText != "" ? <HelperText type='error'>{passwordHelperText}</HelperText> : <></>}
 		<TextInput
@@ -91,9 +102,24 @@ export default function CreateAccount() {
 			mode="outlined"
 			onChangeText={(confirmPassword) => setConfirmPassword(confirmPassword)}
 			keyboardAppearance="dark"
+			selectionColor="white"
+			activeOutlineColor="white"
 		/>
 		{confirmPasswordHelperText != "" ? <HelperText type='error'>{confirmPasswordHelperText}</HelperText> : <></>}
-		<Button style={{ margin: 10 }} mode="contained" onPress={handleSignUp}>Create account</Button>
+				
+		<MaskedView maskElement={ <Button style={{ margin: 10, marginHorizontal: 30 }} buttonColor="black" mode="contained" onPress={handleSignUp}>
+         Create account
+        </Button>}>
+			<LinearGradient
+			colors={["#38FFA0", "#00C2FF"]}
+			start={{ x: 0, y: 1 }}
+			end={{ x: 1, y: 0 }}
+			>
+				<Button style={{ margin: 10, marginHorizontal: 30 }} buttonColor='transparent' textColor="black" mode="contained" onPress={handleSignUp}>
+					Create account
+				</Button>
+			</LinearGradient>
+		</MaskedView>
 	</View>
   );
 }

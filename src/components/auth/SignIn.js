@@ -2,6 +2,8 @@ import { useState } from "react";
 import { View } from "react-native";
 import { useSignIn, useUser } from "@clerk/clerk-expo";
 import { Text, Button, TextInput, HelperText } from "react-native-paper";
+import { LinearGradient } from 'expo-linear-gradient';
+import MaskedView from "@react-native-masked-view/masked-view";
 
 // Input fields for users to sign into their accounts
 export default function SignIn() {
@@ -40,13 +42,35 @@ export default function SignIn() {
 			// Log error
 			console.error(JSON.stringify(err, null, 2));
 
+			// Resets error text
+			setUsernameHelperText("");
+			setPasswordHelperText("");
+
 			// Update helper text state
 			for(e of err.errors){
 				if(e.meta.paramName == "identifier"){
-					setUsernameHelperText(e.message);
+					// If account does not exist
+					if(e.code == "form_identifier_not_found"){
+						setUsernameHelperText("Account does not exist.");
+					}
+					// If username is invalid
+					else if(e.code == "form_param_format_invalid"){
+						setUsernameHelperText("Enter valid username.");
+					}
+					// For all other username errors
+					else{
+						setUsernameHelperText(e.message);
+					}
 				}
 				else if(e.meta.paramName == "password"){
-					setPasswordHelperText(e.message);
+					// If password is incorrect
+					if(e.code == "form_password_incorrect"){
+						setPasswordHelperText("Password is incorrect.");
+					}
+					// For all other password errors
+					else{
+						setPasswordHelperText(e.message);
+					}
 				}
 			}
 		}
@@ -61,6 +85,8 @@ export default function SignIn() {
 			mode="outlined"
 			onChangeText={(username) => setUsername(username)}
 			keyboardAppearance="dark"
+			selectionColor="white"
+			activeOutlineColor="white"
 		/> 
 		{usernameHelperText != "" ? <HelperText type='error'>{usernameHelperText}</HelperText> : <></>}
 		<TextInput
@@ -70,9 +96,22 @@ export default function SignIn() {
 			mode="outlined"
 			onChangeText={(password) => setPassword(password)}
 			keyboardAppearance="dark"
+			selectionColor="white"
+			activeOutlineColor="white"
 		/>
 		{passwordHelperText != "" ? <HelperText type='error'>{passwordHelperText}</HelperText> : <></>}
-		<Button style={{ margin: 10 }} mode="contained" onPress={handleSignIn}>Sign-in</Button>
+		
+		<MaskedView maskElement={ <Button style={{ margin: 10, marginHorizontal: 30 }} buttonColor="black" mode="contained" onPress={handleSignIn}>
+          Sign-in
+        </Button>}>
+			<LinearGradient
+			colors={["#38FFA0", "#00C2FF"]}
+			start={{ x: 0, y: 1 }}
+			end={{ x: 1, y: 0 }}
+			>
+				<Button style={{ margin: 10, marginHorizontal: 30 }} buttonColor='transparent' textColor="black" mode="contained" onPress={handleSignIn}>Sign-in</Button>
+			</LinearGradient>
+		</MaskedView>
 	</View>
 	);
 }

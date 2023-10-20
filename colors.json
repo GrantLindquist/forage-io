@@ -1,9 +1,9 @@
 {
-    "background1": "#222222",
-    "background2": "#0F0F0F",
+    "background1": "#1A1D20",
+    "background2": "#101010",
 
     "pink": "#FF76A7",
-    "blue": "#76D7FF",
+    "blue": "#00C2FF",
     "yellow": "#FCFF73",
-    "green": "#A5FF96"
+    "green": "#38FFA0"
 }

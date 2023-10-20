@@ -1,6 +1,5 @@
 import { View, StyleSheet, Image } from "react-native";
 import { Card, Text } from 'react-native-paper';
-import colors from "../../../colors.json";
 import { useUser } from "@clerk/clerk-expo";
 const ms = require('ms');
 
@@ -51,7 +50,6 @@ const styles = StyleSheet.create({
 	card: {
 		marginVertical: 5,
 		height: 120,
-		backgroundColor: colors['background1']
 	},
 	recipeTitle: {
 		// fontFamily: 'Roboto',
@@ -65,7 +63,6 @@ const styles = StyleSheet.create({
 	},
 	highlightedSubtext: {
 		fontSize: 14,
-		color: colors['yellow'],
 		marginRight: 10
 	}
 });

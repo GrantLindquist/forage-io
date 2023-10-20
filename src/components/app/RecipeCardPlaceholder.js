@@ -1,6 +1,5 @@
 import { View, StyleSheet } from "react-native";
 import { Card } from 'react-native-paper';
-import colors from "../../../colors.json";
 
 // Placeholder component to display while recipes are loading
 export default function RecipeCardPlaceholder() {
@@ -22,6 +21,5 @@ const styles = StyleSheet.create({
 	card: {
 		marginVertical: 5,
 		height: 120,
-		backgroundColor: colors['background1']
 	},
 });
