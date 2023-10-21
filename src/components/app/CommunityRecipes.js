@@ -124,6 +124,7 @@ export default function CommunityRecipes() {
 					onChangeText={query => setSearchText(query)}
 					onSubmitEditing={() => setSearchQuery(searchText)}
 					value={searchText}
+					keyboardAppearance='dark'
 				/>
 				<IconButton 
 					icon="format-list-bulleted"
@@ -163,5 +164,6 @@ const styles = StyleSheet.create({
 	searchbar: {
 		height: 35,
 		width: '90%',
+		backgroundColor: 'transparent'
 	},
 });

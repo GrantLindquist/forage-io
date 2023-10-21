@@ -86,7 +86,7 @@ export default function SignIn() {
 			onChangeText={(username) => setUsername(username)}
 			keyboardAppearance="dark"
 			selectionColor="white"
-			activeOutlineColor="white"
+			activeOutlineColor="grey"
 		/> 
 		{usernameHelperText != "" ? <HelperText type='error'>{usernameHelperText}</HelperText> : <></>}
 		<TextInput
@@ -97,7 +97,8 @@ export default function SignIn() {
 			onChangeText={(password) => setPassword(password)}
 			keyboardAppearance="dark"
 			selectionColor="white"
-			activeOutlineColor="white"
+			activeOutlineColor="grey"
+			secureTextEntry={true}
 		/>
 		{passwordHelperText != "" ? <HelperText type='error'>{passwordHelperText}</HelperText> : <></>}
 		

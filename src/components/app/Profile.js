@@ -41,12 +41,12 @@ export default function Profile() {
 			<Text style={styles.username}>{user.username}</Text>
 			<Text style={styles.subtext}>Created on {user.createdAt.toLocaleString().split(',')[0]}</Text>
 		</View>
-		<View style={{position: 'absolute', bottom: 20, width: '100%'}}>
+		<View style={{position: 'absolute', bottom: 5, width: '100%'}}>
 			<Button mode="text">Terms of Service</Button>
 			<Divider style={{marginHorizontal: 20}}/>
 			<Button mode="text" onPress={signOut}>Sign out</Button>
-			<Divider style={{marginHorizontal: 20}}/>
-			<Button mode="text" onPress={() => setWarningDialogVisible(true)}>Delete account</Button>
+			{/* <Divider style={{marginHorizontal: 20}}/>
+			<Button mode="text" onPress={() => setWarningDialogVisible(true)}>Delete account</Button> */}
 		</View>
 		{/* <View style={{ marginTop: 15,  flexDirection: 'row'}}>
 			<View style={{alignItems: 'center', width: '50%'}}>

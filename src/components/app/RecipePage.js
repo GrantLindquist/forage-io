@@ -3,7 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import { ScrollView, View , StyleSheet, Image } from "react-native";
 import { Text, Snackbar, Appbar, FAB } from "react-native-paper";
 import { useUser } from "@clerk/clerk-expo";
-import RecipeTag from "./RecipeTag";
+import RecipeTagCompressed from "./RecipeTagCompressed";
 import { useState } from "react";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import recipeService from "../../services/recipeService";
@@ -128,7 +128,9 @@ export default function RecipePage(props) {
 		let title = tag[0].charAt(2).toLowerCase() + tag[0].slice(3);
 
 		return(
-			<RecipeTag key={title} title={title} immutable={true}/>
+			<View style={{marginRight: 5, marginBottom: 5}}>
+				<RecipeTagCompressed key={title} title={title}/>
+			</View>
 		)
 	});
 
@@ -151,7 +153,7 @@ export default function RecipePage(props) {
 	return (
 		<>
 			{/* Custom recipePage header */}
-			<Appbar.Header>
+			<Appbar.Header style={{backgroundColor: '#000000'}}>
 				<Appbar.BackAction onPress={() => navigation.goBack()}/>
 				<Appbar.Content></Appbar.Content>
 				<Appbar.Action icon={'bell'} size={24} />
@@ -168,16 +170,19 @@ export default function RecipePage(props) {
 				<View style={styles.container}>
 					<Text style={styles.subtext}><MaterialCommunityIcons name="account" size={14} /> {recipe.CreatorUsername.toUpperCase()}</Text>
 					<Text style={styles.recipeTitle}>{recipe.Title}</Text>
-					<View style={{ marginTop: 15,  flexDirection: 'row'}}>
-						<View style={{alignItems: 'center', width: '20%'}}>
+					<View style={{ marginTop: 5, flexWrap: 'wrap', flexDirection: 'row'}}>
+						{recipeTags}
+					</View>
+					<View style={{ marginTop: 15,  flexDirection: 'row', justifyContent: 'space-evenly'}}>
+						<View style={{alignItems: 'center'}}>
 							<Text style={styles.subtext}>Serves</Text>
 							<Text variant="headlineMedium">{recipe.Servings}</Text>
 						</View>
-						<View style={{alignItems: 'center', borderColor: "rgb(0, 227, 138)", borderLeftWidth: '2', borderRightWidth: '2', width: '40%'}}>
+						<View style={{alignItems: 'center', paddingHorizontal: 25, borderColor: "rgb(0, 227, 138)", borderLeftWidth: '2', borderRightWidth: '2'}}>
 							<Text  style={styles.subtext}>Budget</Text>
 							<Text variant="headlineMedium">${Number(recipe.Budget).toFixed(2)}</Text>
 						</View>
-						<View style={{alignItems: 'center' , width: '40%'}}>
+						<View style={{alignItems: 'center' }}>
 							<Text style={styles.subtext}>Time</Text>
 							<Text variant="headlineMedium">{formattedTime(recipe.CreationTime)}</Text>
 						</View>
@@ -186,10 +191,6 @@ export default function RecipePage(props) {
 					{ingredients}
 					<Text style={[styles.categoryTitle, {color: "rgb(0, 227, 138)"}]}>Instructions:</Text>
 					{instructions}
-					<Text style={[styles.categoryTitle, {color: "rgb(0, 227, 138)"}]}>Tags:</Text>
-					<View style={{ flexWrap: 'wrap', flexDirection: 'row'}}>
-						{recipeTags}
-					</View>
 				</View>
 			</ScrollView>
 			<Snackbar
@@ -213,7 +214,9 @@ const styles = StyleSheet.create({
 	recipeTitle: {
 		// fontFamily: 'Roboto',
 		fontSize: 36,
-		fontWeight: 700
+		fontWeight: 700,
+		lineHeight: 38,
+		marginTop: 5
 	},
 	categoryTitle: {
 		// fontFamily: 'Roboto',

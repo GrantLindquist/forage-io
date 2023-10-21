@@ -19,47 +19,55 @@ export default function App() {
 	// Theme for app
 	const theme = {
 		colors: {
-			primary: "rgb(0, 227, 138)",
-			onPrimary: "rgb(0, 57, 30)",
-			primaryContainer: "rgb(0, 82, 46)",
-			onPrimaryContainer: "rgb(87, 255, 166)",
-			secondary: "rgb(117, 209, 255)",
-			onSecondary: "rgb(0, 53, 72)",
-			secondaryContainer: "rgb(0, 77, 103)",
-			onSecondaryContainer: "rgb(194, 232, 255)",
-			tertiary: "rgb(248, 189, 42)",
-			onTertiary: "rgb(64, 45, 0)",
-			tertiaryContainer: "rgb(92, 67, 0)",
-			onTertiaryContainer: "rgb(255, 223, 160)",
-			error: "rgb(255, 180, 171)",
-			onError: "rgb(105, 0, 5)",
-			errorContainer: "rgb(147, 0, 10)",
-			onErrorContainer: "rgb(255, 180, 171)",
-			background: "rgb(25, 28, 26)",
-			onBackground: "rgb(225, 227, 222)",
-			surface: "rgb(25, 28, 26)",
-			onSurface: "rgb(225, 227, 222)",
-			surfaceVariant: "rgb(65, 73, 66)",
-			onSurfaceVariant: "rgb(192, 201, 192)",
-			outline: "rgb(138, 147, 139)",
-			outlineVariant: "rgb(65, 73, 66)",
-			shadow: "rgb(0, 0, 0)",
-			scrim: "rgb(0, 0, 0)",
-			inverseSurface: "rgb(225, 227, 222)",
-			inverseOnSurface: "rgb(46, 49, 46)",
-			inversePrimary: "rgb(0, 109, 63)",
+			primary: "#00E38A", // Adjust the primary color for dark mode
+			onPrimary: "#FFFFFF",
+			primaryContainer: "#FF8B8B",
+			onPrimaryContainer: "#FFFFFF",
+		
+			secondary: "#6B82FF", // Adjust the secondary color for dark mode
+			onSecondary: "#FFFFFF",
+			secondaryContainer: "#8B9DFF",
+			onSecondaryContainer: "#FFFFFF",
+		
+			tertiary: "#FFD166", // Adjust the tertiary color for dark mode
+			onTertiary: "#301E00",
+			tertiaryContainer: "#FFDEA0",
+			onTertiaryContainer: "#301E00",
+		
+			error: "#FF7171",
+			onError: "#520000",
+			errorContainer: "#FF8B8B",
+			onErrorContainer: "#520000",
+		
+			background: "#121212", // Dark background color
+			onBackground: "#F0F0F0", // Light text color on dark background
+			surface: "#111111", // Dark surface color
+			onSurface: "#F0F0F0", // Light text color on dark surface
+			surfaceVariant: "#292929", // A slightly darker shade of surface
+			onSurfaceVariant: "#F0F0F0",
+		
+			outline: "#666666", // Adjust the outline color for dark mode
+			outlineVariant: "#555555", // A slightly darker shade of outline
+			shadow: "#000000",
+			scrim: "rgba(0, 0, 0, 0.8)", // Dark scrim color
+		
+			inverseSurface: "#F0F0F0",
+			inverseOnSurface: "#121212", // Dark text color on light surface
+			inversePrimary: "#1B8056", // Inverse primary color
+		
 			elevation: {
-				level0: "transparent",
-				level1: "rgb(24, 38, 32)",
-				level2: "rgb(23, 44, 35)",
-				level3: "rgb(22, 50, 38)",
-				level4: "rgb(22, 52, 39)",
-				level5: "rgb(22, 56, 42)"
+			  level0: "transparent",
+			  level1: "#202020", // Adjust elevation levels for dark mode
+			  level2: "#1A1A1A",
+			  level3: "#141414",
+			  level4: "#0F0F0F",
+			  level5: "#0A0A0A",
 			},
-			surfaceDisabled: "rgba(225, 227, 222, 0.12)",
-			onSurfaceDisabled: "rgba(225, 227, 222, 0.38)",
-			backdrop: "rgba(42, 50, 44, 0.4)"
-		}
+		
+			surfaceDisabled: "rgba(240, 240, 240, 0.12)", // Adjust disabled surface color
+			onSurfaceDisabled: "rgba(240, 240, 240, 0.38)", // Adjust text color on disabled surface
+			backdrop: "rgba(66, 76, 68, 0.6)", // Dark backdrop color
+		  },
 	}
 
 

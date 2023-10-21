@@ -1,6 +1,7 @@
 import { View, StyleSheet, Image } from "react-native";
 import { Card, Text } from 'react-native-paper';
 import { useUser } from "@clerk/clerk-expo";
+import RecipeTagCompressed from "./RecipeTagCompressed"
 const ms = require('ms');
 
 // Card that contains basic info about recipe. Clicking will direct user to more detailed information about recipe
@@ -14,13 +15,31 @@ export default function RecipeCard(props) {
 		return ms(time, { long: false })
 	}
 
+	const tags = Object.entries(props.recipe.Tags);
+	const truncatedTags = tags.slice(0, 2); // Limit to first three tags
+	const remainder = tags.length - truncatedTags.length;
+
+	// Sub-component that lists a tag component for each recipe tag
+	const recipeTags = truncatedTags.map((tag) => {
+		// Parse title from JSON property to tag string
+		let title = tag[0].charAt(2).toLowerCase() + tag[0].slice(3);
+
+		return(
+			<View style={{marginRight: 5, marginBottom: 5}}>
+				<RecipeTagCompressed key={title} title={title}/>
+			</View>
+		)
+	});
+
 	return (
 		<Card style={styles.card}>
 			<Card.Content>
-				<View style={{flexDirection: 'row'}}>
-					<View style={{width: '90%', minHeight: 75}}>
-						<Text style={styles.recipeTitle}>{props.recipe.Title}</Text>
-					</View>
+				<View style={{width: '90%', minHeight: 75}}>
+					<Text style={styles.recipeTitle} numberOfLines={2}>{props.recipe.Title}</Text>
+				</View>
+				<View style={{ marginBottom: 7, flexWrap: 'wrap', flexDirection: 'row', alignItems: 'center'}}>
+					{recipeTags}
+					{remainder > 0 ? <Text style={[styles.recipeSubtext, {marginLeft: 5}]}>+{remainder}</Text> : <></>}
 				</View>
 				<View style={{flexDirection: 'row', width: '100%'}}>
 					<Text style={styles.recipeSubtext}><Image 
@@ -49,7 +68,7 @@ export default function RecipeCard(props) {
 const styles = StyleSheet.create({
 	card: {
 		marginVertical: 5,
-		height: 120,
+		height: 155,
 	},
 	recipeTitle: {
 		// fontFamily: 'Roboto',

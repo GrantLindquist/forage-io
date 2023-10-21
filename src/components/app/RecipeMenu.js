@@ -27,10 +27,9 @@ export default function RecipeMenu(props) {
                 {/* Tab navigator that directs user to various types of recipe lists */}
                 {() => <Tab.Navigator
                     screenOptions={{
-                        tabBarStyle: { },
-                        tabBarIndicatorStyle: {  }
+                        tabBarIndicatorStyle: { backgroundColor: "#00E38A" },
+                        tabBarStyle: { borderBottomLeftRadius: 15, borderBottomRightRadius: 15 }
                     }}
-                    sceneContainerStyle={{  }}
                 >
                     <Tab.Screen name="Created">
                         {() => <CreatedRecipes refreshValue1={props.refreshValue} refreshValue2={refreshCreatedRecipes}/>}

@@ -63,10 +63,8 @@ export default function AppNavigation() {
 						screenOptions={{
 							header: () => <Header/>,
 							tabBarShowLabel: false,
-							tabBarActiveTintColor: {},
-							tabBarStyle: {  }
+							tabBarActiveTintColor: "#00E38A",
 						}}
-						sceneContainerStyle={{  }}
 					>
 						<Tab.Screen name="Home" options={{
 							header: () => <></>,
@@ -103,7 +101,14 @@ export default function AppNavigation() {
 					</Tab.Navigator>
 				}
 			</ModalStack.Screen>
-			<ModalStack.Screen options={{presentation: 'modal'}} name="CreateRecipeModal">
+			<ModalStack.Screen 
+				options={{ 
+					presentation: 'modal', 
+					cardStyle:{
+						backgroundColor: 'transparent'
+					},
+				}} 
+				name="CreateRecipeModal">
 				{() => 
 					<CreateRecipeModal refreshCreatedRecipes={() => setRefreshCreatedRecipes(!refreshCreatedRecipes)}/>
 				}

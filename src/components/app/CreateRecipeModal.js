@@ -206,123 +206,124 @@ export default function CreateRecipeModal(props) {
 	});
 
 	return (
-	<View style={{ height: '100%'}}>
-		<ProgressBar progress={recipeCharges/10} />
-		<View>
-			<View style={{ flexDirection: 'row', marginHorizontal: 15, marginTop: 10}}>
-				<Image 
-					source={require('../../../assets/icons/charge.png')}
-					style={{width: 18, height: 18}}
-				/>
-				<Text style={{color: 'grey'}}>{recipeCharges}/10  </Text>
-				<Text style={{fontWeight: 700}}>Get more charges</Text>
-				<IconButton onPress={() => setInfoDialogVisible(true)} style={{marginLeft: 'auto', margin: 0}} icon={"information-outline"}></IconButton>
-			</View>
-			{/* Displays component depending on whether or not recipe is loading */}
-			{!isGeneratingRecipe ? <>
-			{/* Displays recipe information if provided */}
-			{remixRecipe ? <>
-			<Text variant="bodySmall"><MaterialCommunityIcons name="account" size={14} /> {remixRecipe.CreatorUsername.toUpperCase()}</Text>
-			<Text style={styles.recipeTitle}>{remixRecipe.Title}</Text>
-			<View style={{ marginTop: 15,  flexDirection: 'row'}}>
-				<View style={{alignItems: 'center', width: '20%'}}>
-					<Text style={styles.subtext}>Serves</Text>
-					<Text variant="headlineMedium">{remixRecipe.Servings}</Text>
-				</View>
-				<View style={{alignItems: 'center', borderColor: "rgb(0, 227, 138)", borderLeftWidth: '2', borderRightWidth: '2', width: '40%'}}>
-					<Text  style={styles.subtext}>Budget</Text>
-					<Text variant="headlineMedium">${Number(remixRecipe.Budget).toFixed(2)}</Text>
-				</View>
-				<View style={{alignItems: 'center' , width: '40%'}}>
-					<Text style={styles.subtext}>Time</Text>
-					<Text variant="headlineMedium">{remixRecipe.CreationTime}</Text>
-				</View>
-			</View>
-			<View style={{ marginTop: 15, flexWrap: 'wrap', flexDirection: 'row'}}>
-				{/* {recipeTags} */}
-			</View></>
-			: <></>}
-			<View style={{margin: 20, marginTop: 0}}>
-				<Text style={styles.categoryTitle}>Add some tags!</Text>
-				<TagSearch 
-					dark={true}
-					updateSelectedTags={(tags) => setSelectedFilters(tags)} 
-					defaultTags={remixRecipe != '' ? remixRecipe.Tags : []}
-				/>
-									
-				<Text style={styles.categoryTitle}>Add some ingredients!</Text>
-				<View style={{flexDirection: 'row'}}>
-					<TextInput keyboardAppearance='dark' style={styles.addIngredients} value={ingredientInput} mode='outlined' onChangeText={(val) => setIngredientInput(val)}/>
-					<IconButton style={styles.addIngredientButton} size={20} mode={'outlined'} icon={'plus'} onPress={() => addIngredient(ingredientInput)}/>
-				</View>
-
-				<ScrollView style={{paddingVertical:8}} horizontal={true}>
-					{ingredientTags}
-				</ScrollView>
-
-				<Text style={styles.categoryTitle}>More options</Text>
-				<BudgetSlider handleValueChange={(val) => budget.current = val}/>
-
-				<View style={{flexDirection: 'row'}}>
-					<Text variant='bodyLarge'>Make recipe public</Text>
-					<Checkbox.Android 
-						status={isPublicChecked ? "checked" : "unchecked"}
-						onPress={() => {
-							setPublicChecked(!isPublicChecked);
-						}}
+	<View style={{ flex: 1 ,flexDirection: 'column', justifyContent: 'flex-end'}}>
+		<View style={{ height: '95%', backgroundColor: '#000000'}}>
+			<ProgressBar progress={recipeCharges/10} />
+			<View>
+				<View style={{ alignItems: 'center', flexDirection: 'row', marginHorizontal: 15, marginTop: 10}}>
+					<Image 
+						source={require('../../../assets/icons/charge.png')}
+						style={{width: 18, height: 18}}
 					/>
+					<Text style={{color: 'grey'}}>{recipeCharges}/10  </Text>
+					<Text style={{fontWeight: 700}}>Get more charges</Text>
+					<IconButton onPress={() => setInfoDialogVisible(true)} style={{marginLeft: 'auto', margin: 0}} icon={"information-outline"}></IconButton>
 				</View>
-				<Button disabled={recipeCharges == 0 ? true : false} onPress={handleCreateRecipe}>GENERATE RECIPE</Button>
-			</View></>
-			: <View style={styles.loadingScreen}>
-				<ActivityIndicator size={"large"} animating={true}></ActivityIndicator>
-			</View>}
-		</View>	
+				{/* Displays component depending on whether or not recipe is loading */}
+				{!isGeneratingRecipe ? <>
+				{/* Displays recipe information if provided */}
+				{remixRecipe ? <>
+				<Text variant="bodySmall"><MaterialCommunityIcons name="account" size={14} /> {remixRecipe.CreatorUsername.toUpperCase()}</Text>
+				<Text style={styles.recipeTitle}>{remixRecipe.Title}</Text>
+				<View style={{ marginTop: 15,  flexDirection: 'row'}}>
+					<View style={{alignItems: 'center', width: '20%'}}>
+						<Text style={styles.subtext}>Serves</Text>
+						<Text variant="headlineMedium">{remixRecipe.Servings}</Text>
+					</View>
+					<View style={{alignItems: 'center', borderColor: "rgb(0, 227, 138)", borderLeftWidth: '2', borderRightWidth: '2', width: '40%'}}>
+						<Text  style={styles.subtext}>Budget</Text>
+						<Text variant="headlineMedium">${Number(remixRecipe.Budget).toFixed(2)}</Text>
+					</View>
+					<View style={{alignItems: 'center' , width: '40%'}}>
+						<Text style={styles.subtext}>Time</Text>
+						<Text variant="headlineMedium">{remixRecipe.CreationTime}</Text>
+					</View>
+				</View>
+				<View style={{ marginTop: 15, flexWrap: 'wrap', flexDirection: 'row'}}>
+					{/* {recipeTags} */}
+				</View></>
+				: <></>}
+				<View style={{margin: 20, marginTop: 0}}>
+					<Text style={styles.categoryTitle}>Add some tags!</Text>
+					<TagSearch 
+						dark={true}
+						updateSelectedTags={(tags) => setSelectedFilters(tags)} 
+						defaultTags={remixRecipe != '' ? remixRecipe.Tags : []}
+					/>
+										
+					<Text style={styles.categoryTitle}>Add some ingredients!</Text>
+					<View style={{flexDirection: 'row'}}>
+						<TextInput keyboardAppearance='dark' style={styles.addIngredients} value={ingredientInput} mode='outlined' onChangeText={(val) => setIngredientInput(val)}/>
+						<IconButton style={styles.addIngredientButton} size={20} mode={'outlined'} icon={'plus'} onPress={() => addIngredient(ingredientInput)}/>
+					</View>
 
-		<Portal>
-			{/* Info dialog */}
-			<Dialog visible={infoDialogVisible} onDismiss={() => setInfoDialogVisible(false)}>
-				{infoDialogContent[infoDialogPageNumber]}
-				<Dialog.Actions>
-					<Button disabled={infoDialogPageNumber <= 0 ? true : false} onPress={() => setInfoDialogPageNumber(infoDialogPageNumber-1)}>Previous</Button>
-					<Button disabled={infoDialogPageNumber >= 2 ? true : false} onPress={() => setInfoDialogPageNumber(infoDialogPageNumber+1)}>Next</Button>
-				</Dialog.Actions>
-			</Dialog>
+					<ScrollView style={{paddingVertical:8}} horizontal={true}>
+						{ingredientTags}
+					</ScrollView>
 
-			{/* Warning dialog */}
-			<Dialog visible={errorDialogVisible} onDismiss={() => setErrorDialogVisible(false)}>
-				<Dialog.Content>
-					<Text variant="bodyMedium">{errorDialogContent}</Text>
-				</Dialog.Content>
-				<Dialog.Actions>
-					<Button onPress={() => setErrorDialogVisible(false)}>OK</Button>
-				</Dialog.Actions>
-			</Dialog>
-        </Portal>
-		
-		{/* Info snackbar */}
-		<Snackbar
-       		visible={infoSnackbarVisible}
-        	onDismiss={() => setInfoSnackbarVisible(false)}
-			action={{
-          		label: 'View',
-         	 	onPress: () => navigation.navigate('Main'),
-        	}}>
-        	Recipe was successfully generated!
-      	</Snackbar>
-		 
-		{/* Error snackbar */}
-		<Snackbar
-       		visible={errorSnackbarVisible}
-        	onDismiss={() => setErrorSnackbarVisible(false)}
-			action={{
-          		label: 'Why?',
-         	 	onPress: () => setErrorDialogVisible(true),
-        	}}>
-			Recipe failed to generate.
-      	</Snackbar>
+					<Text style={styles.categoryTitle}>More options</Text>
+					<BudgetSlider handleValueChange={(val) => budget.current = val}/>
+
+					<View style={{flexDirection: 'row', alignItems: 'center'}}>
+						<Text variant='bodyLarge'>Make recipe public</Text>
+						<Checkbox.Android 
+							status={isPublicChecked ? "checked" : "unchecked"}
+							onPress={() => {
+								setPublicChecked(!isPublicChecked);
+							}}
+						/>
+					</View>
+					<Button disabled={recipeCharges == 0 ? true : false} onPress={handleCreateRecipe}>GENERATE RECIPE</Button>
+				</View></>
+				: <View style={styles.loadingScreen}>
+					<ActivityIndicator size={"large"} animating={true}></ActivityIndicator>
+				</View>}
+			</View>	
+
+			<Portal>
+				{/* Info dialog */}
+				<Dialog visible={infoDialogVisible} onDismiss={() => setInfoDialogVisible(false)}>
+					{infoDialogContent[infoDialogPageNumber]}
+					<Dialog.Actions>
+						<Button disabled={infoDialogPageNumber <= 0 ? true : false} onPress={() => setInfoDialogPageNumber(infoDialogPageNumber-1)}>Previous</Button>
+						<Button disabled={infoDialogPageNumber >= 2 ? true : false} onPress={() => setInfoDialogPageNumber(infoDialogPageNumber+1)}>Next</Button>
+					</Dialog.Actions>
+				</Dialog>
+
+				{/* Warning dialog */}
+				<Dialog visible={errorDialogVisible} onDismiss={() => setErrorDialogVisible(false)}>
+					<Dialog.Content>
+						<Text variant="bodyMedium">{errorDialogContent}</Text>
+					</Dialog.Content>
+					<Dialog.Actions>
+						<Button onPress={() => setErrorDialogVisible(false)}>OK</Button>
+					</Dialog.Actions>
+				</Dialog>
+			</Portal>
+			
+			{/* Info snackbar */}
+			<Snackbar
+				visible={infoSnackbarVisible}
+				onDismiss={() => setInfoSnackbarVisible(false)}
+				action={{
+					label: 'View',
+					onPress: () => navigation.navigate('Main'),
+				}}>
+				Recipe was successfully generated!
+			</Snackbar>
+			
+			{/* Error snackbar */}
+			<Snackbar
+				visible={errorSnackbarVisible}
+				onDismiss={() => setErrorSnackbarVisible(false)}
+				action={{
+					label: 'Why?',
+					onPress: () => setErrorDialogVisible(true),
+				}}>
+				Recipe failed to generate.
+			</Snackbar>
+		</View>
 	</View>
-	
 	);	
 };
 

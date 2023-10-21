@@ -10,7 +10,7 @@ export default function IngredientTag(props) {
 	const [selected, setSelected] = useState(true);
 
 	return (
-	<Chip style={selected ? styles.tag : {display:'none'}} mode={'flat'} closeIcon={'close'} onClose={() => setSelected(false)}>
+	<Chip style={selected ? styles.tag : {display:'none'}} mode={'flat'} closeIcon={'close'} onClose={() => setSelected(false)} compact={true}>
 		{props.children}
 	</Chip>
 	);
@@ -18,7 +18,11 @@ export default function IngredientTag(props) {
 
 const styles = StyleSheet.create({
 	tag: {
+		marginRight: 5,
+		marginBottom: 5,
+		borderColor: 'white',
 		borderRadius: 8,
-		marginRight: 5
+		borderWidth: 1,
+		backgroundColor: 'transparent'
 	}
 });

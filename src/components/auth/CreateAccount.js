@@ -93,6 +93,7 @@ export default function CreateAccount() {
 			keyboardAppearance="dark"
 			selectionColor="white"
 			activeOutlineColor="white"
+			secureTextEntry={true}
 		/> 
 		{passwordHelperText != "" ? <HelperText type='error'>{passwordHelperText}</HelperText> : <></>}
 		<TextInput
@@ -104,6 +105,7 @@ export default function CreateAccount() {
 			keyboardAppearance="dark"
 			selectionColor="white"
 			activeOutlineColor="white"
+			secureTextEntry={true}
 		/>
 		{confirmPasswordHelperText != "" ? <HelperText type='error'>{confirmPasswordHelperText}</HelperText> : <></>}
 				

@@ -49,6 +49,7 @@ export default function SavedRecipes(props) {
 				mode={'view'}
 				onChangeText={query => setSearchQuery(query)}
 				value={searchQuery}
+				keyboardAppearance='dark'
 			/>
 			{!isLoading ?
 				<FlatList
@@ -87,5 +88,6 @@ const styles = StyleSheet.create({
 	searchbar: {
 		height: 35,
 		width: '100%',
+		backgroundColor: "transparent"
 	},
 });
