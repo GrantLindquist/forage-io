@@ -95,6 +95,7 @@ export default function App() {
 				require('./assets/icons/star-filled.png'),
 				require('./assets/icons/star-selected.png'),
 				require('./assets/icons/time.png'),
+				require('./assets/icons/remix-action.png')
 			];
 
 			const cacheImages = preloadImages(images);

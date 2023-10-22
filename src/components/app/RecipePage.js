@@ -1,6 +1,6 @@
 import { useRoute } from "@react-navigation/native";
 import { useNavigation } from '@react-navigation/native';
-import { ScrollView, View , StyleSheet, Image } from "react-native";
+import { Alert, Share, ScrollView, View , StyleSheet, Image } from "react-native";
 import { Text, Snackbar, Appbar, FAB } from "react-native-paper";
 import { useUser } from "@clerk/clerk-expo";
 import RecipeTagCompressed from "./RecipeTagCompressed";
@@ -121,6 +121,50 @@ export default function RecipePage(props) {
 		console.log(savedRecipeIds);
 		return response;
 	}
+
+	// Displays share functionality for sharing recipes to people w/o the app
+	const handleShareRecipe = async() => {
+		// Constructs string for ingredient list
+		const ingredientString = recipe.Ingredients.map((ingredient) => {
+			return `- ${ingredient}\n`
+		}).join('');
+		// Constructs string for instructions list
+		stepCounter = 0;
+		const instructionString = recipe.Instructions.map((instruction) => {
+			stepCounter++;
+			return `${stepCounter}. ${instruction}\n`
+		}).join('');
+		
+		// Attempts to open user share flow
+		try {
+			const result = await Share.share({
+			  message:
+				`${recipe.Title}
+
+Serves: ${recipe.Servings}
+Budget: $${Number(recipe.Budget).toFixed(2)}
+Time: ${formattedTime(recipe.CreationTime)}
+
+Ingredients:
+${ingredientString}
+Instructions:
+${instructionString}`,
+			});
+			if (result.action === Share.sharedAction) {
+			  if (result.activityType) {
+				// shared with activity type of result.activityType
+			  } else {
+				// shared
+			  }
+			} else if (result.action === Share.dismissedAction) {
+			  // dismissed
+			}
+	 	} 
+		// Alerts user if error
+		catch (error) {
+			Alert.alert(error.message);
+		}
+	}
  
 	// Sub-component that lists a tag component for each recipe tag
 	const recipeTags = Object.entries(recipe.Tags).map((tag) => {
@@ -128,8 +172,8 @@ export default function RecipePage(props) {
 		let title = tag[0].charAt(2).toLowerCase() + tag[0].slice(3);
 
 		return(
-			<View style={{marginRight: 5, marginBottom: 5}}>
-				<RecipeTagCompressed key={title} title={title}/>
+			<View key={title} style={{marginRight: 5, marginBottom: 5}}>
+				<RecipeTagCompressed title={title}/>
 			</View>
 		)
 	});
@@ -156,8 +200,14 @@ export default function RecipePage(props) {
 			<Appbar.Header style={{backgroundColor: '#000000'}}>
 				<Appbar.BackAction onPress={() => navigation.goBack()}/>
 				<Appbar.Content></Appbar.Content>
-				<Appbar.Action icon={'bell'} size={24} />
-				<Appbar.Action icon={() => <Image 
+				<Appbar.Action 
+					icon={() => <Image 
+						source={require('../../../assets/icons/share.png')}
+						style={{height: 24, width: 24}} />} 
+						onPress={() => handleShareRecipe()} 
+					/>
+				<Appbar.Action 
+					icon={() => <Image 
 					source={require('../../../assets/icons/remix-action.png')}
 					style={{height: 24, width: 24}} />} 
 					onPress={() => navigation.navigate('CreateRecipeModal', {

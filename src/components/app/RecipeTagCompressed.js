@@ -41,7 +41,7 @@ export default function RecipeTaCompressed(props) {
 	}, []);
 
 	return (
-		<View style={{backgroundColor: color, opacity: .9, borderRadius: 2}}>
+		<View style={{backgroundColor: color, opacity: .9, borderRadius: 3}}>
 			{/* If tag is a cuisine type tag, capitalize first letter of tag */}
 			<Text style={{color: textColor, fontWeight: 700, paddingVertical: 2, paddingHorizontal: 4}}>{props.title}</Text>
 		</View>

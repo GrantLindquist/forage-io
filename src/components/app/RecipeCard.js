@@ -25,8 +25,8 @@ export default function RecipeCard(props) {
 		let title = tag[0].charAt(2).toLowerCase() + tag[0].slice(3);
 
 		return(
-			<View style={{marginRight: 5, marginBottom: 5}}>
-				<RecipeTagCompressed key={title} title={title}/>
+			<View key={title} style={{marginRight: 5, marginBottom: 5}}>
+				<RecipeTagCompressed title={title}/>
 			</View>
 		)
 	});
