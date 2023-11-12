@@ -3,7 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Alert, Share, ScrollView, View , StyleSheet, Image } from "react-native";
 import { Text, Snackbar, Appbar, FAB } from "react-native-paper";
 import { useUser } from "@clerk/clerk-expo";
-import RecipeTagCompressed from "./RecipeTagCompressed";
+import RecipeTag from "./RecipeTag";
 import { useState } from "react";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import recipeService from "../../services/recipeService";
@@ -173,7 +173,7 @@ ${instructionString}`,
 
 		return(
 			<View key={title} style={{marginRight: 5, marginBottom: 5}}>
-				<RecipeTagCompressed title={title}/>
+				<RecipeTag title={title} immutable={true}/>
 			</View>
 		)
 	});

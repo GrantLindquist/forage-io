@@ -1,7 +1,7 @@
 import { View, StyleSheet, Image } from "react-native";
 import { Card, Text } from 'react-native-paper';
 import { useUser } from "@clerk/clerk-expo";
-import RecipeTagCompressed from "./RecipeTagCompressed"
+import RecipeTag from "./RecipeTag";
 const ms = require('ms');
 
 // Card that contains basic info about recipe. Clicking will direct user to more detailed information about recipe
@@ -25,9 +25,7 @@ export default function RecipeCard(props) {
 		let title = tag[0].charAt(2).toLowerCase() + tag[0].slice(3);
 
 		return(
-			<View key={title} style={{marginRight: 5, marginBottom: 5}}>
-				<RecipeTagCompressed title={title}/>
-			</View>
+			<RecipeTag key={title} title={title} immutable={true}/>
 		)
 	});
 

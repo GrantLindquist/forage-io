@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
-import { StyleSheet, Image } from "react-native";
-import { Chip, Text } from "react-native-paper";
+import { useMemo, useState } from "react";
+import { Text } from "react-native-paper";
 import tags from '../../../tags.json';
+import { Pressable, StyleSheet } from "react-native";
 
 // A small component containing a title and icon - used for filter sorting and recipe tagging.
 export default function RecipeTag(props) {
@@ -13,33 +13,36 @@ export default function RecipeTag(props) {
 	});
 
 	// State for tracking tag object information
-	const tagObject = useMemo(() => getTagObject(props.title));
-
-	// States for styling tags
-	const [color, setColor] = useState("grey");
+	const color = useMemo(() => {
+		const tagObject = getTagObject(props.title);
+		switch(tagObject.typeCode){
+			case 0:
+				return {
+					bodyColor: '#FF008A',
+					textColor: '#FFCAED'
+				};
+			case 1:
+				return {
+					bodyColor: '#00A3FF',
+					textColor: '#BEE8FF'
+				};
+			case 2:
+				return {
+					bodyColor: '#FF7A00',
+					textColor: '#FFF0CA'
+				};
+			case 3:
+				return {
+					bodyColor: '#7000FF',
+					textColor: '#E1CAFF'
+				};
+        }
+	});
 
 	// Finds type code by tag title
 	function getTagObject(title){
 		return tags.find((tag) => tag.title === title);
 	}
-
-	// Assigns visual properties to tag
-	useEffect(() => {
-		switch(tagObject.typeCode){
-            case 0:
-				setColor("#FFCAED");
-                break;
-            case 1:
-				setColor("#BEE8FF");
-                break;
-            case 2:
-				setColor("#FFF0CA");
-                break;
-            case 3:
-				setColor("#E1CAFF");
-                break;
-        }
-	}, []);
 
 	// Function that handles user interaction with chip
 	const handlePress = () => {
@@ -51,29 +54,22 @@ export default function RecipeTag(props) {
 		}
 	}
 
-	const styles = StyleSheet.create({
-		tagUnselected: {
-			marginRight: 5,
-			marginBottom: 5,
-			borderColor: 'grey',
-			borderRadius: 8,
-			borderWidth: 1,
-			backgroundColor: 'transparent'
-		},
-		tagSelected: {
-			marginRight: 5,
-			marginBottom: 5,
-			borderWidth: 1,
-			borderRadius: 8,
-			borderColor: color,
-			backgroundColor: 'transparent'
-		}
-	});
-
 	return (
-		<Chip style={selected ? styles.tagSelected : styles.tagUnselected} compact={true} onPress={handlePress}>
+		<Pressable style={[styles.tag, selected ? {backgroundColor: color.bodyColor, color: color.textColor} : {}]} onPress={handlePress}>
 			{/* If tag is a cuisine type tag, capitalize first letter of tag */}
-			<Text style={selected ? {color:color} : {color:'grey'}} >{props.title}</Text>
-		</Chip>
+			<Text style={{paddingHorizontal: 6, paddingVertical: 4}}>{props.title}</Text>
+		</Pressable>
 	);
 };
+
+const styles = StyleSheet.create({
+	tag: {
+		backgroundColor: 'grey',
+		color: 'grey',
+		opacity: .9,
+		borderRadius: 3,
+		fontSize: 13,
+		fontWeight: 500,
+		marginRight: 6,
+	}
+})

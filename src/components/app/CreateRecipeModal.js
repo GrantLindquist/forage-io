@@ -9,6 +9,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { useUser } from '@clerk/clerk-expo';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import RecipeTag from './RecipeTag';
+const ms = require('ms');
 
 // Contains UI components that must be rendered on the highest z-index (modals, dialogs, etc.)
 export default function CreateRecipeModal(props) {
@@ -207,7 +208,7 @@ export default function CreateRecipeModal(props) {
 
 	return (
 	<View style={{ flex: 1 ,flexDirection: 'column', justifyContent: 'flex-end'}}>
-		<View style={{ height: '95%', backgroundColor: '#000000'}}>
+		<View style={{ height: '95%', backgroundColor: '#222222'}}>
 			<ProgressBar progress={recipeCharges/10} />
 			<View>
 				<View style={{ alignItems: 'center', flexDirection: 'row', marginHorizontal: 15, marginTop: 10}}>
@@ -222,26 +223,25 @@ export default function CreateRecipeModal(props) {
 				{/* Displays component depending on whether or not recipe is loading */}
 				{!isGeneratingRecipe ? <>
 				{/* Displays recipe information if provided */}
-				{remixRecipe ? <>
-				<Text variant="bodySmall"><MaterialCommunityIcons name="account" size={14} /> {remixRecipe.CreatorUsername.toUpperCase()}</Text>
-				<Text style={styles.recipeTitle}>{remixRecipe.Title}</Text>
-				<View style={{ marginTop: 15,  flexDirection: 'row'}}>
-					<View style={{alignItems: 'center', width: '20%'}}>
-						<Text style={styles.subtext}>Serves</Text>
-						<Text variant="headlineMedium">{remixRecipe.Servings}</Text>
-					</View>
-					<View style={{alignItems: 'center', borderColor: "rgb(0, 227, 138)", borderLeftWidth: '2', borderRightWidth: '2', width: '40%'}}>
-						<Text  style={styles.subtext}>Budget</Text>
-						<Text variant="headlineMedium">${Number(remixRecipe.Budget).toFixed(2)}</Text>
-					</View>
-					<View style={{alignItems: 'center' , width: '40%'}}>
-						<Text style={styles.subtext}>Time</Text>
-						<Text variant="headlineMedium">{remixRecipe.CreationTime}</Text>
+				{remixRecipe ? 
+				<View style={{marginHorizontal: 20}}>
+					<Text variant="bodySmall"><MaterialCommunityIcons name="account" size={14} /> {remixRecipe.CreatorUsername.toUpperCase()}</Text>
+					<Text style={styles.recipeTitle}>{remixRecipe.Title}</Text>
+					<View style={{ marginTop: 15,  flexDirection: 'row', justifyContent: 'space-evenly'}}>
+						<View style={{alignItems: 'center'}}>
+							<Text style={styles.subtext}>Serves</Text>
+							<Text variant="headlineMedium">{remixRecipe.Servings}</Text>
+						</View>
+						<View style={{alignItems: 'center', paddingHorizontal: 25, borderColor: "rgb(0, 227, 138)", borderLeftWidth: '2', borderRightWidth: '2'}}>
+							<Text  style={styles.subtext}>Budget</Text>
+							<Text variant="headlineMedium">${Number(remixRecipe.Budget).toFixed(2)}</Text>
+						</View>
+						<View style={{alignItems: 'center' }}>
+							<Text style={styles.subtext}>Time</Text>
+							<Text variant="headlineMedium">{ms(remixRecipe.CreationTime, { long: false })}</Text>
+						</View>
 					</View>
 				</View>
-				<View style={{ marginTop: 15, flexWrap: 'wrap', flexDirection: 'row'}}>
-					{/* {recipeTags} */}
-				</View></>
 				: <></>}
 				<View style={{margin: 20, marginTop: 0}}>
 					<Text style={styles.categoryTitle}>Add some tags!</Text>
