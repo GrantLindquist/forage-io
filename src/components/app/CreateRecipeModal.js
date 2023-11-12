@@ -140,7 +140,6 @@ export default function CreateRecipeModal(props) {
 
 		// DTO object for prompting GPT
 		let recipeDTO = {
-			baseRecipe: remixRecipe,
 			description: recipeDescription,
 			tags: recipeTags,
 			ingredients: selectedIngredients,
@@ -164,6 +163,7 @@ export default function CreateRecipeModal(props) {
 		setRecipeCharges(10 - user.unsafeMetadata.recipeCharges.length);
 		
 		// Confirm recipe completion and change state back to false once recipe is complete
+		// const response = remixRecipe.recipeId ? await recipeService.remixRecipe(recipeDTO, user, remixRecipe) : await recipeService.generateRecipe(recipeDTO, user);
 		const response = await recipeService.generateRecipe(recipeDTO, user);
 		setGeneratingRecipe(false);
 
