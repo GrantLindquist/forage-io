@@ -133,7 +133,6 @@ export default function CommunityRecipes() {
 				/>
 			</View>
 			{filtersVisible ? <TagSearch 
-				dark={false}
 				updateSelectedTags={(tags) => setActiveFilters(tags)} 
 			/>: <></> }
 			<FlatList

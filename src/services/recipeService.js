@@ -79,10 +79,6 @@ const recipeService = {
                 }
             ]
         })
-
-        console.log('base: ' +  baseRecipe)
-        console.log('remixed: ' +  completion.choices[0].message.content)
-
         const recipe = JSON.parse(completion.choices[0].message.content);
 
         // Place recipe into DB
@@ -94,16 +90,16 @@ const recipeService = {
             body: JSON.stringify({
                 creatorId: user.id,
                 recipeId: uuidv4(),
-                baseRecipe: baseRecipe.recipeId,
+                baseRecipe: baseRecipe.RecipeId,
                 isPublic: request.isPublic,
-                title: recipe.title,
-                ingredients: recipe.ingredients,
-                instructions: recipe.instructions,
+                title: recipe.Title,
+                ingredients: recipe.Ingredients,
+                instructions: recipe.Instructions,
                 tags: request.tags,
                 creatorUsername: user.username,
-                budget: recipe.budget,
-                creationTime: recipe.creationTime,
-                servings: recipe.servings
+                budget: recipe.Budget,
+                creationTime: recipe.CreationTime,
+                servings: recipe.Servings
             })
         });
         // Return response

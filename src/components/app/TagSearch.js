@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
-import { Searchbar, Text, IconButton } from "react-native-paper";
+import { ScrollView, View } from "react-native";
+import { Text, IconButton } from "react-native-paper";
 import RecipeTag from "./RecipeTag";
 import tags from '../../../tags.json';
 
@@ -8,18 +8,7 @@ import tags from '../../../tags.json';
 export default function TagSearch(props) {
 
     // State for tracking which tags are selected - start with default tags if provided with them
-    const [selectedTags, setSelectedTags] = useState(() => {
-        if (props.defaultTags) {
-            let defaultTags = [];
-            for (let tag of Object.keys(props.defaultTags)) {
-                defaultTags.push(tag[0].charAt(2).toLowerCase() + tag[0].slice(3));
-            }
-            return defaultTags;
-        } 
-        else {
-            return [];
-        }
-    });
+    const [selectedTags, setSelectedTags] = useState(props.defaultTags);
 
     // State that handles which type of tag to display
     const [displayTypeCode, setDisplayTypeCode] = useState(0);

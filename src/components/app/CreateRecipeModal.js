@@ -48,14 +48,7 @@ export default function CreateRecipeModal(props) {
 
 	// Recipe that may be passed through route to signal remix recipe
 	const route = useRoute();
-	const [remixRecipe, setRemixRecipe] = useState('');
-
-	// Checks whether to render modal as 'create' or 'remix'
-	useEffect(() => {
-		if(route.params){
-			setRemixRecipe(route.params.recipe);
-		}
-	}, []);
+	const remixRecipe = route.params ? route.params.recipe : undefined;
 
 	// State for tracking checkbox status
 	const [isPublicChecked, setPublicChecked] = useState(true);
@@ -164,8 +157,7 @@ export default function CreateRecipeModal(props) {
 		setRecipeCharges(10 - user.unsafeMetadata.recipeCharges.length);
 		
 		// Confirm recipe completion and change state back to false once recipe is complete
-		// const response = remixRecipe.recipeId ? await recipeService.remixRecipe(recipeDTO, user, remixRecipe) : await recipeService.generateRecipe(recipeDTO, user);
-		const response = await recipeService.generateRecipe(recipeDTO, user);
+		const response = remixRecipe ? await recipeService.remixRecipe(recipeDTO, user, remixRecipe) : await recipeService.generateRecipe(recipeDTO, user);
 		setGeneratingRecipe(false);
 
 		// Display snackbar depending on service response
@@ -197,6 +189,15 @@ export default function CreateRecipeModal(props) {
 		newIngredientList.push(value);
 		setSelectedIngredients(newIngredientList);
 		setIngredientInput('');
+	}
+	
+	// Arranges tags from mapped attributes to string array
+	const formatTags = (tags) => {
+		let formattedTags = [];
+		for (let tag of Object.keys(tags)) {
+			formattedTags.push(tag.charAt(2).toLowerCase() + tag.slice(3));
+		}
+		return formattedTags;
 	}
 
 	// List of ingredients that user wants to add to recipe
@@ -246,9 +247,8 @@ export default function CreateRecipeModal(props) {
 				<View style={{margin: 20, marginTop: 0}}>
 					<Text style={styles.categoryTitle}>Add some tags!</Text>
 					<TagSearch 
-						dark={true}
 						updateSelectedTags={(tags) => setSelectedFilters(tags)} 
-						defaultTags={remixRecipe != '' ? remixRecipe.Tags : []}
+						defaultTags={remixRecipe ? formatTags(remixRecipe.Tags) : []}
 					/>
 										
 					<Text style={styles.categoryTitle}>Add some ingredients!</Text>
