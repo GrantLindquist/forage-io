@@ -71,5 +71,6 @@ const styles = StyleSheet.create({
 		fontSize: 13,
 		fontWeight: 500,
 		marginRight: 6,
+		marginBottom: 6
 	}
 })

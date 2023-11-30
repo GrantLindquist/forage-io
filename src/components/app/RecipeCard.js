@@ -15,8 +15,18 @@ export default function RecipeCard(props) {
 		return ms(time, { long: false })
 	}
 
+	// Reduces preview tags to amount that can fit on recipe card
 	const tags = Object.entries(props.recipe.Tags);
-	const truncatedTags = tags.slice(0, 2); // Limit to first three tags
+	let chars = 0;
+	let tagNum = 0;
+	
+	for(let tag of tags){
+	  if (chars + tag[0].length > 30) break;
+	  chars += tag[0].length;
+	  tagNum++;
+	}
+	
+	const truncatedTags = tags.slice(0, tagNum);
 	const remainder = tags.length - truncatedTags.length;
 
 	// Sub-component that lists a tag component for each recipe tag
@@ -32,14 +42,14 @@ export default function RecipeCard(props) {
 	return (
 		<Card style={styles.card}>
 			<Card.Content>
-				<View style={{width: '90%', minHeight: 75}}>
+				<View style={{width: '90%', marginBottom: 10}}>
 					<Text style={styles.recipeTitle} numberOfLines={2}>{props.recipe.Title}</Text>
 				</View>
-				<View style={{ marginBottom: 7, flexWrap: 'wrap', flexDirection: 'row', alignItems: 'center'}}>
+				<View style={{ marginBottom: 8, flexWrap: 'wrap', flexDirection: 'row', alignItems: 'center'}}>
 					{recipeTags}
 					{remainder > 0 ? <Text style={[styles.recipeSubtext, {marginLeft: 5}]}>+{remainder}</Text> : <></>}
 				</View>
-				<View style={{flexDirection: 'row', width: '100%'}}>
+				<View style={{flexDirection: 'row', width: '100%', marginTop: 5}}>
 					<Text style={styles.recipeSubtext}><Image 
 						source={require('../../../assets/icons/servings.png')}
 						style={{width: 14, height: 14}}
@@ -66,7 +76,6 @@ export default function RecipeCard(props) {
 const styles = StyleSheet.create({
 	card: {
 		marginVertical: 5,
-		height: 155,
 	},
 	recipeTitle: {
 		// fontFamily: 'Roboto',

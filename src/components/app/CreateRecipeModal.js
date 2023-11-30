@@ -1,11 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
 import { View, ScrollView, StyleSheet, Image } from "react-native";
-import { Text, TextInput, Button, IconButton, Checkbox, ActivityIndicator, Snackbar, ProgressBar, Portal, Dialog } from 'react-native-paper';
+import { Text, TextInput, Button, IconButton, Checkbox, ActivityIndicator, Snackbar, ProgressBar, Portal, Dialog, HelperText } from 'react-native-paper';
 import IngredientTag from './IngredientTag'
 import BudgetSlider from './BudgetSlider';
 import TagSearch from './TagSearch';
 import recipeService from '../../services/recipeService';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useUser } from '@clerk/clerk-expo';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import RecipeTag from './RecipeTag';
@@ -42,6 +41,8 @@ export default function CreateRecipeModal(props) {
 
 	// State for tracking active ingredient input
 	const [ingredientInput, setIngredientInput] = useState('');
+	// State for displaying dumb user UX helper text
+	const [ingredientHelperText, setIngredientHelperText] = useState('');
 
 	// State for tracking budget
 	const budget = useRef(-1);
@@ -104,83 +105,92 @@ export default function CreateRecipeModal(props) {
 
 	// Creates a recipe using user-specified filters
 	const handleCreateRecipe = async() => {
-		// String for describing ingredients for recipe
-		let ingredientString = '';
-		let i = 0;
-		// List ingredients if ingredient list state is not empty
-		if(selectedIngredients.length > 0){
-			ingredientString = ' that contains';
-			for(let item of selectedIngredients){
-				// Adds a comma if there are more ingredients remaining in list
-				ingredientString = ingredientString + ' ' + item + (selectedIngredients.length == i+1 ? "" : ",");
-				i++;
-			}
-		}
-
-		// String for describing recipe budget
-		let budgetString = '';
-		if(budget.current != -1){
-			budgetString = ' with a budget of under $' + budget.current;
-		}
-
-		// Create recipe description & tags
-		let recipeDescription = '';
-		let recipeTags = [];
-		for(let filter of selectedFilters){
-			recipeDescription = recipeDescription.concat(filter + " ");
-			recipeTags.push(filter);
-		}
-		recipeDescription = recipeDescription.concat(`recipe${ingredientString}${budgetString}`); 
-
-		// DTO object for prompting GPT
-		let recipeDTO = {
-			description: recipeDescription,
-			tags: recipeTags,
-			ingredients: selectedIngredients,
-			isPublic: isPublicChecked ? 1 : 0
-		}
-
-		// Set loading state to true
-		setGeneratingRecipe(true);
-
-		// Add charge to user object
-		var recipeCharges = user.unsafeMetadata.recipeCharges;
-		recipeCharges.push(Date.now());
-		await user.update({
-			unsafeMetadata: { 
-				savedRecipeIds: user.unsafeMetadata.savedRecipeIds,
-				recipeCharges: recipeCharges,
-			}
-		});
-
-		// Update charge in UI
-		setRecipeCharges(10 - user.unsafeMetadata.recipeCharges.length);
-		
-		// Confirm recipe completion and change state back to false once recipe is complete
-		const response = remixRecipe ? await recipeService.remixRecipe(recipeDTO, user, remixRecipe) : await recipeService.generateRecipe(recipeDTO, user);
-		setGeneratingRecipe(false);
-
-		// Display snackbar depending on service response
-		if(response.ok){
-			setInfoSnackbarVisible(true);
-			setSelectedIngredients([]);
-			setSelectedFilters([]);
-
-			// Refreshes recipeMenu component so user can see updated recipe list
-			props.refreshCreatedRecipes();
+		// Alert user that ingredientInput is not empty before generating recipe
+		if (ingredientInput != '') {
+			setIngredientHelperText("Did you mean to add this ingredient to your recipe?");
 		}
 		else{
-			// Display error UI components
-			setErrorDialogContent(response.message);
-			setErrorSnackbarVisible(true);
+			// String for describing ingredients for recipe
+			let ingredientString = '';
+			let i = 0;
+			// List ingredients if ingredient list state is not empty
+			if(selectedIngredients.length > 0){
+				ingredientString = ' that contains';
+				for(let item of selectedIngredients){
+					// Adds a comma if there are more ingredients remaining in list
+					ingredientString = ingredientString + ' ' + item + (selectedIngredients.length == i+1 ? "" : ",");
+					i++;
+				}
+			}
 
-			// Clear ingredients state of faulty input
-			setSelectedIngredients([]);
+			// String for describing recipe budget
+			let budgetString = '';
+			if(budget.current != -1){
+				budgetString = ' with a budget of under $' + budget.current;
+			}
+
+			// Create recipe description & tags
+			let recipeDescription = '';
+			let recipeTags = [];
+			for(let filter of selectedFilters){
+				recipeDescription = recipeDescription.concat(filter + " ");
+				recipeTags.push(filter);
+			}
+			recipeDescription = recipeDescription.concat(`recipe${ingredientString}${budgetString}`); 
+
+			// DTO object for prompting GPT
+			let recipeDTO = {
+				description: recipeDescription,
+				tags: recipeTags,
+				ingredients: selectedIngredients,
+				isPublic: isPublicChecked ? 1 : 0
+			}
+
+			// Set loading state to true
+			setGeneratingRecipe(true);
+
+			// Add charge to user object
+			var recipeCharges = user.unsafeMetadata.recipeCharges;
+			recipeCharges.push(Date.now());
+			await user.update({
+				unsafeMetadata: { 
+					savedRecipeIds: user.unsafeMetadata.savedRecipeIds,
+					recipeCharges: recipeCharges,
+				}
+			});
+
+			// Update charge in UI
+			setRecipeCharges(10 - user.unsafeMetadata.recipeCharges.length);
+
+			// Confirm recipe completion and change state back to false once recipe is complete
+			const response = remixRecipe ? await recipeService.remixRecipe(recipeDTO, user, remixRecipe) : await recipeService.generateRecipe(recipeDTO, user);
+			setGeneratingRecipe(false);
+
+			// Display snackbar depending on service response
+			if(response.ok){
+				setInfoSnackbarVisible(true);
+				setSelectedIngredients([]);
+				setSelectedFilters([]);
+
+				// Refreshes recipeMenu component so user can see updated recipe list
+				props.refreshCreatedRecipes();
+			}
+			else{
+				// Display error UI components
+				setErrorDialogContent(response.message);
+				setErrorSnackbarVisible(true);
+
+				// Clear ingredients state of faulty input
+				setSelectedIngredients([]);
+			}
 		}
 	}
 
 	// Appends ingredient to ingredient list state
 	const addIngredient = (value) => {
+		// Remove ingredient helper text
+		setIngredientHelperText('');
+		
 		// Adds ingredient to state and updates
 		let newIngredientList = [];
 		for(item of selectedIngredients){
@@ -189,6 +199,18 @@ export default function CreateRecipeModal(props) {
 		newIngredientList.push(value);
 		setSelectedIngredients(newIngredientList);
 		setIngredientInput('');
+	}
+
+	// Removes ingredient from list dstate
+	const deleteIngredient = (value) => {
+		// Adds ingredient to state and updates
+		let newIngredientList = [];
+		for(item of selectedIngredients){
+			if(item != value){
+				newIngredientList.push(item);
+			}
+		}
+		setSelectedIngredients(newIngredientList);
 	}
 	
 	// Arranges tags from mapped attributes to string array
@@ -203,7 +225,7 @@ export default function CreateRecipeModal(props) {
 	// List of ingredients that user wants to add to recipe
 	const ingredientTags = selectedIngredients.map((item) => {
 		return(
-			<IngredientTag key={item}>{item}</IngredientTag>
+			<IngredientTag key={item} handleDelete={() => deleteIngredient(item)}>{item}</IngredientTag>
 		)
 	});
 
@@ -226,7 +248,6 @@ export default function CreateRecipeModal(props) {
 				{/* Displays recipe information if provided */}
 				{remixRecipe ? 
 				<View style={{marginHorizontal: 20}}>
-					<Text variant="bodySmall"><MaterialCommunityIcons name="account" size={14} /> {remixRecipe.CreatorUsername.toUpperCase()}</Text>
 					<Text style={styles.recipeTitle}>{remixRecipe.Title}</Text>
 					<View style={{ marginTop: 15,  flexDirection: 'row', justifyContent: 'space-evenly'}}>
 						<View style={{alignItems: 'center'}}>
@@ -251,11 +272,15 @@ export default function CreateRecipeModal(props) {
 						defaultTags={remixRecipe ? formatTags(remixRecipe.Tags) : []}
 					/>
 										
-					<Text style={styles.categoryTitle}>Add some ingredients!</Text>
+					<View style={{flexDirection: 'row', alignItems: 'baseline'}}>
+						<Text style={styles.categoryTitle}>Add some ingredients!</Text>
+						<Text style={{color: 'grey'}}> ({ingredientTags.length}/5)</Text>
+					</View>
 					<View style={{flexDirection: 'row'}}>
 						<TextInput keyboardAppearance='dark' style={styles.addIngredients} value={ingredientInput} mode='outlined' onChangeText={(val) => setIngredientInput(val)}/>
-						<IconButton style={styles.addIngredientButton} size={20} mode={'outlined'} icon={'plus'} onPress={() => addIngredient(ingredientInput)}/>
+						<IconButton style={styles.addIngredientButton} disabled={ingredientInput.length < 2 || ingredientTags.length >= 5 ? true : false} size={20} mode={'outlined'} icon={'plus'} onPress={() => addIngredient(ingredientInput)}/>
 					</View>
+					<HelperText type='error'>{ingredientHelperText}</HelperText>
 
 					<ScrollView style={{paddingVertical:8}} horizontal={true}>
 						{ingredientTags}
@@ -350,6 +375,10 @@ const styles = StyleSheet.create({
 		flex: 1,
 		alignItems: "center",
 		justifyContent: "center",
+		width: '100%',
+		height: '100%',
+		borderColor: 'red',
+		borderWidth: 2
 	},
 	addIngredients: {
 		height: 35,

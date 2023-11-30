@@ -31,7 +31,7 @@ export default function TagSearch(props) {
                 setDisplayTypeTitle("flavor");
                 break;
         }
-    }, [displayTypeCode, selectedTags])
+    }, [displayTypeCode])
 
     // Updates selected tags - only gives tag title strings to upper layer
     const updateSelectedTags = (tag) => {

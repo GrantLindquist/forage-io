@@ -6,14 +6,19 @@ import Slider from '@react-native-community/slider';
 // Component for budget selection slider
 export default function BudgetSlider (props) {
 
+	// Budget bounds
+	const minimumBudget = 2;
+	const maximumBudget = 15;
+	const budgetStep = .25;
+
 	// Budget value for slider display and setting budget
-	const [budget, setBudget] = useState(.75);
+	const [budget, setBudget] = useState(minimumBudget - budgetStep);
 	
 	// Updates budget value to parent component
 	const handleValueChange = (val) => {
 		
 		// Send new slider value to parent
-		if(val == .75){
+		if(val <= minimumBudget - budgetStep){
 			props.handleValueChange(-1);
 		}
 		else{
@@ -26,13 +31,13 @@ export default function BudgetSlider (props) {
 
     return (
 		<View>
-			<Text variant='bodyLarge'>Budget: {budget != .75 ? "$" + budget.toFixed(2) : "-"} </Text>
+			<Text variant='bodyLarge'>Budget: {budget != minimumBudget - budgetStep ? "$" + budget.toFixed(2) : "-"} </Text>
 			<Slider
 				onValueChange={val => handleValueChange(val)}
-				minimumValue={.75}
-				maximumValue={15}
+				minimumValue={minimumBudget - budgetStep}
+				maximumValue={maximumBudget}
 				minimumTrackTintColor={"rgb(0, 227, 138)"}
-				step={.25}
+				step={budgetStep}
 				value={budget}
 			/>
 		</View>
