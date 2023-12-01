@@ -39,6 +39,23 @@ export default function RecipeTag(props) {
         }
 	});
 
+	const formattedTitle = useMemo(() => {
+		// Insert a space before all uppercase letters
+		const tagObject = getTagObject(props.title);
+		normalCase = props.title.replace(/([A-Z])/g, " $1");
+
+		// Capitalize the first letter of each word for cuisine tags
+		if(tagObject.typeCode == 1){
+			normalCase = normalCase.charAt(0).toUpperCase() + normalCase.slice(1);
+		}
+		else{
+			normalCase = normalCase.toLowerCase();
+		}
+	 
+		return normalCase;
+	 
+	}, [props.title])
+
 	// Finds type code by tag title
 	function getTagObject(title){
 		return tags.find((tag) => tag.title === title);
@@ -57,7 +74,7 @@ export default function RecipeTag(props) {
 	return (
 		<Pressable style={[styles.tag, selected ? {backgroundColor: color.bodyColor, color: color.textColor} : {}]} onPress={handlePress}>
 			{/* If tag is a cuisine type tag, capitalize first letter of tag */}
-			<Text style={{paddingHorizontal: 6, paddingVertical: 4}}>{props.title}</Text>
+			<Text style={{paddingHorizontal: 6, paddingVertical: 4}}>{formattedTitle}</Text>
 		</Pressable>
 	);
 };

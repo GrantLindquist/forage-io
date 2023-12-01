@@ -63,10 +63,8 @@ export default function CreateRecipeModal(props) {
 					A "tag" is an adjective used for describing the recipes you want to generate.
 					For example, if you want to generate a Mexican recipe that is spicy, you should
 					select the <RecipeTag title={'mexican'} immutable={true}/> and <RecipeTag title={'spicy'} 
-					immutable={true}/> tags. There are four types of tag: <Text >
-					diet</Text>, and <Text>flavor</Text>meal</Text>, 
-					<Text>cuisine</Text>, <Text>. You can 
-					only select a few of each tag. 
+					immutable={true}/> tags. There are four types of tag:
+					cuisine, meal type, diet, and flavor. You can only select a few of each tag. 
 				</Text>
 			</Dialog.Content>
 		</>,
@@ -75,7 +73,7 @@ export default function CreateRecipeModal(props) {
 			<Dialog.Content>
 				<Text>
 					Additionally, you can specify up to five ingredients you would like to see in the recipe.
-					Any input that isn't an edible food item will cause a failed recipe generation.
+					Any input that isn't an edible food item not be included in the recipe.
 				</Text>
 				<Text>Yes:</Text>
 				<View pointerEvents='none' style={{flexDirection: 'row'}}>
@@ -87,7 +85,7 @@ export default function CreateRecipeModal(props) {
 				<View  pointerEvents='none' style={{flexDirection: 'row'}}>
 					<IngredientTag>Dirt</IngredientTag>
 					<IngredientTag>Antifreeze</IngredientTag>
-					<IngredientTag>Etc.</IngredientTag>
+					<IngredientTag>XYZ</IngredientTag>
 				</View>
 			</Dialog.Content>
 		</>,
