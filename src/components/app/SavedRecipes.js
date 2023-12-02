@@ -39,18 +39,20 @@ export default function SavedRecipes(props) {
 	}, [props.refreshValue]);
 
 	return (
-		<View style={styles.container}>
-			<Searchbar
-				style={styles.searchbar}
-				placeholder={"search recipes"}
-				placeholderTextColor={"grey"}
-				inputStyle={{paddingLeft: 0, alignSelf: 'center'}}
-				showDivider={false}
-				mode={'view'}
-				onChangeText={query => setSearchQuery(query)}
-				value={searchQuery}
-				keyboardAppearance='dark'
-			/>
+		<View style={{minHeight: '100%'}}>
+			<View style={{padding: 5, marginTop: 5}}>
+				<Searchbar
+					style={styles.searchbar}
+					placeholder={"search recipes"}
+					placeholderTextColor={"grey"}
+					inputStyle={{paddingLeft: 0, alignSelf: 'center'}}
+					showDivider={false}
+					mode={'view'}
+					onChangeText={query => setSearchQuery(query)}
+					value={searchQuery}
+					keyboardAppearance='dark'
+				/>
+			</View>
 			{!isLoading ?
 				<FlatList
 				data={savedRecipes}
@@ -81,13 +83,10 @@ export default function SavedRecipes(props) {
 };
 
 const styles = StyleSheet.create({
-	container: {
-		margin: 15,
-		minHeight: '100%'
-	},
 	searchbar: {
 		height: 35,
 		width: '100%',
-		backgroundColor: "transparent"
+		backgroundColor: "transparent",
+		padding: 5
 	},
 });

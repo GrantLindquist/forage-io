@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ScrollView, View } from "react-native";
+import { ScrollView, View, Image } from "react-native";
 import { Text, IconButton } from "react-native-paper";
 import RecipeTag from "./RecipeTag";
 import tags from '../../../tags.json';
@@ -101,14 +101,14 @@ export default function TagSearch(props) {
 	return (
         <View style={{ alignItems: 'center' }}>
             <ScrollView style={{ paddingTop: 8 }} horizontal={true}>
-                <View style={{ flexWrap: 'wrap', flexDirection: 'row', flex: 3 }}>
+                <View style={{ marginBottom: 3, flexWrap: 'wrap', flexDirection: 'row', flex: 3 }}>
                     {tagList}
                 </View>
 	        </ScrollView>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <IconButton style={{ margin: 0 }} size={20} icon={"arrow-left-drop-circle-outline"} onPress={() => updateDisplayTypeCode(-1)} />
+                <IconButton style={{ margin: 0 }} size={20} icon={() => <Image source={require('../../../assets/icons/back.png')}/>} onPress={() => updateDisplayTypeCode(-1)} />
                 <Text style={{ fontSize: 16, textAlign: 'center', minWidth: 80 }}>{displayTypeTitle}</Text>
-                <IconButton style={{ margin: 0 }} size={20} icon={"arrow-right-drop-circle-outline"} onPress={() => updateDisplayTypeCode(1)} />
+                <IconButton style={{ margin: 0 }} size={20} icon={() => <Image source={require('../../../assets/icons/forward.png')}/>} onPress={() => updateDisplayTypeCode(1)} />
             </View>
         </View>
 	);

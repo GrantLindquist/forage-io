@@ -51,9 +51,6 @@ export default function CreateRecipeModal(props) {
 	const route = useRoute();
 	const remixRecipe = route.params ? route.params.recipe : undefined;
 
-	// State for tracking checkbox status
-	const [isPublicChecked, setPublicChecked] = useState(true);
-
 	// List of dialog content options for the recipe modal
 	const infoDialogContent = [
 		<>
@@ -141,7 +138,7 @@ export default function CreateRecipeModal(props) {
 				description: recipeDescription,
 				tags: recipeTags,
 				ingredients: selectedIngredients,
-				isPublic: isPublicChecked ? 1 : 0
+				isPublic: 1
 			}
 
 			// Set loading state to true
@@ -228,7 +225,7 @@ export default function CreateRecipeModal(props) {
 	});
 
 	return (
-	<View style={{ flex: 1 ,flexDirection: 'column', justifyContent: 'flex-end'}}>
+	<View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-end'}}>
 		<View style={{ height: '95%', backgroundColor: '#222222'}}>
 			<ProgressBar progress={recipeCharges/10} />
 			<View>
@@ -275,7 +272,7 @@ export default function CreateRecipeModal(props) {
 						<Text style={{color: 'grey'}}> ({ingredientTags.length}/5)</Text>
 					</View>
 					<View style={{flexDirection: 'row'}}>
-						<TextInput keyboardAppearance='dark' style={styles.addIngredients} value={ingredientInput} mode='outlined' onChangeText={(val) => setIngredientInput(val)}/>
+						<TextInput maxLength={25} keyboardAppearance='dark' style={styles.addIngredients} value={ingredientInput} mode='outlined' onChangeText={(val) => setIngredientInput(val)}/>
 						<IconButton style={styles.addIngredientButton} disabled={ingredientInput.length < 2 || ingredientTags.length >= 5 ? true : false} size={20} mode={'outlined'} icon={'plus'} onPress={() => addIngredient(ingredientInput)}/>
 					</View>
 					<HelperText type='error'>{ingredientHelperText}</HelperText>
@@ -287,15 +284,6 @@ export default function CreateRecipeModal(props) {
 					<Text style={styles.categoryTitle}>More options</Text>
 					<BudgetSlider handleValueChange={(val) => budget.current = val}/>
 
-					<View style={{flexDirection: 'row', alignItems: 'center'}}>
-						<Text variant='bodyLarge'>Make recipe public</Text>
-						<Checkbox.Android 
-							status={isPublicChecked ? "checked" : "unchecked"}
-							onPress={() => {
-								setPublicChecked(!isPublicChecked);
-							}}
-						/>
-					</View>
 					<Button disabled={recipeCharges == 0 ? true : false} onPress={handleCreateRecipe}>GENERATE RECIPE</Button>
 				</View></>
 				: <View style={styles.loadingScreen}>
@@ -370,17 +358,15 @@ const styles = StyleSheet.create({
 		fontWeight: 700
 	},
 	loadingScreen:{
-		flex: 1,
 		alignItems: "center",
 		justifyContent: "center",
 		width: '100%',
-		height: '100%',
-		borderColor: 'red',
-		borderWidth: 2
+		height: '90%',
 	},
 	addIngredients: {
 		height: 35,
 		width: '85%',
+		lineHeight: 18,
 	},
 	addIngredientButton: {
 		borderRadius: '5',

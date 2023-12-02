@@ -80,7 +80,7 @@ export default function App() {
 			});
 		};
 		
-		// Retrieves images from /assets to preload
+		// Preloads images from /assets
 		const retrieveImages = async() => {
 			// Preload images
 			const images = [
@@ -95,7 +95,11 @@ export default function App() {
 				require('./assets/icons/star-filled.png'),
 				require('./assets/icons/star-selected.png'),
 				require('./assets/icons/time.png'),
-				require('./assets/icons/remix-action.png')
+				require('./assets/icons/remix-action.png'),
+				require('./assets/icons/forward.png'),
+				require('./assets/icons/back.png'),
+				require('./assets/icons/up.png'),
+				require('./assets/icons/down.png')
 			];
 
 			const cacheImages = preloadImages(images);

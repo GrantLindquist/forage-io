@@ -32,6 +32,9 @@ export default function CreateAccount() {
 		if(password != confirmPassword){
 			setConfirmPasswordHelperText("Your password inputs are not equal.");
 		}
+		else if (username.length > 16) {
+			setUsernameHelperText("Usernames must be between 4 and 16 characters long.");
+		}
 		else{
 			// Idk what this does.
 			if (!isLoaded) {
@@ -60,7 +63,12 @@ export default function CreateAccount() {
 				// Update helper text state
 				for(e of err.errors){
 					if(e.meta.paramName == "username"){
-						setUsernameHelperText(e.message);
+						if(e.code == "form_username_invalid_length"){
+							setUsernameHelperText("Usernames must be between 4 and 16 characters long.");
+						}
+						else{
+							setUsernameHelperText(e.message);
+						}
 					}
 					else if(e.meta.paramName == "password"){
 						setPasswordHelperText(e.message);

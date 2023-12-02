@@ -76,6 +76,7 @@ export default function RecipeCard(props) {
 const styles = StyleSheet.create({
 	card: {
 		marginVertical: 5,
+		marginHorizontal: 15
 	},
 	recipeTitle: {
 		// fontFamily: 'Roboto',

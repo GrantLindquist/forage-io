@@ -20,6 +20,7 @@ export default function RecipeCardPlaceholder() {
 const styles = StyleSheet.create({
 	card: {
 		marginVertical: 5,
+		marginHorizontal: 15,
 		height: 120,
 	},
 });

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { FlatList, View, StyleSheet, Pressable } from "react-native";
-import { Searchbar, IconButton, Text } from "react-native-paper";
+import { FlatList, View, StyleSheet, Pressable, Image } from "react-native";
+import { Searchbar, IconButton, Text, useTheme } from "react-native-paper";
 import TagSearch from './TagSearch';
 import { useNavigation } from '@react-navigation/native';
 import RecipeCard from './RecipeCard';
@@ -8,12 +8,14 @@ import { useUser } from '@clerk/clerk-expo';
 import recipeService from '../../services/recipeService';
 import EmptyList from './EmptyList';
 
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 // Collection of recipes created by other users
 export default function CommunityRecipes() {
 
 	// User object
 	const { user } = useUser(); 
+
+	// Theme
+	const theme = useTheme();
 	
 	// State that provides navigation property
 	const navigation = useNavigation();
@@ -86,10 +88,11 @@ export default function CommunityRecipes() {
 
 		// Returns pagination view with predetermined pagination button array
 		return(
-			<View style={{flexDirection: 'row', paddingVertical: 5, bottom: 25, width: '100%', position: 'absolute'}}>
+			<View style={{backgroundColor: '#111111', flexDirection: 'row', bottom: 0, width: '100%', position: 'absolute'}}>
 				<IconButton 
 					size={20} 
-					icon={() => <MaterialCommunityIcons name="arrow-left" color={'white'} size={20}/>}
+					disabled={pageNumber == 1 ? true : false}
+					icon={() => <Image source={require('../../../assets/icons/back.png')} />}
 					onPress={() => setPageNumber(1)}
 				/>
 				{paginationButtons.map((page) => {
@@ -97,14 +100,15 @@ export default function CommunityRecipes() {
 						<IconButton
 							key={page}
 							size={20} 
-							icon={() => <Text>{page}</Text>}
+							icon={() => <Text style={page == pageNumber ? {color: theme.colors.primary, fontWeight: 700} : {}}>{page}</Text>}
 							onPress={() => setPageNumber(page)}
 						/>
 					)
 				})}
 				<IconButton 
 					size={20} 
-					icon={() => <MaterialCommunityIcons name="arrow-right" color={'white'} size={20}/>}
+					disabled={pageNumber == endNumber ? true : false}
+					icon={() => <Image source={require('../../../assets/icons/forward.png')}/>}
 					onPress={() => setPageNumber(endNumber)}
 				/>
 			</View>
@@ -112,8 +116,8 @@ export default function CommunityRecipes() {
 	};
 
 	return (
-		<View style={styles.container}>
-			<View style={{flexDirection:'row', alignItems: 'center'}}>
+		<View style={{height: '100%'}}>
+			<View style={{flexDirection:'row', alignItems: 'center', padding: 3, marginTop: 5}}>
 				<Searchbar
 					style={styles.searchbar}
 					placeholder={"search recipes"}
@@ -127,16 +131,18 @@ export default function CommunityRecipes() {
 					keyboardAppearance='dark'
 				/>
 				<IconButton 
-					icon="format-list-bulleted"
+					icon={() => filtersVisible ? <Image source={require('../../../assets/icons/up.png')}/> : <Image source={require('../../../assets/icons/down.png')}/>}
 					style={{ margin: 0, marginLeft: 'auto' }}
 					onPress={() => setFiltersVisible(!filtersVisible)}
 				/>
 			</View>
 			{filtersVisible ? <TagSearch 
-				updateSelectedTags={(tags) => setActiveFilters(tags)} 
+				updateSelectedTags={(tags) => setActiveFilters(tags)}
+				defaultTags={[]} 
 			/>: <></> }
 			<FlatList
 				data={communityRecipes[pageNumber-1]}
+				indicatorStyle='white'
 				renderItem={(item) => {
 					return (
 						<Pressable key={item.item.RecipeId} onPress={() => navigation.navigate('Recipe', {
@@ -148,7 +154,7 @@ export default function CommunityRecipes() {
 					
 				}}
 				ListEmptyComponent={() => <EmptyList/>}
-				ListFooterComponent={<View style={{paddingVertical: 40}}></View>}
+				ListFooterComponent={<View style={{paddingVertical: 60}}></View>}
 			/>
 			{endNumber != 1 ? paginationButtons() : <></>}
 		</View>
@@ -156,13 +162,9 @@ export default function CommunityRecipes() {
 };
 
 const styles = StyleSheet.create({
-	container: {
-		margin: 15,
-		minHeight: '95%'
-	},
 	searchbar: {
 		height: 35,
-		width: '90%',
-		backgroundColor: 'transparent'
+		width: '100%',
+		backgroundColor: 'transparent',
 	},
 });

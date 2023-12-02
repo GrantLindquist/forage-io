@@ -27,7 +27,9 @@ export default function RecipeMenu(props) {
                 {/* Tab navigator that directs user to various types of recipe lists */}
                 {() => <Tab.Navigator
                     screenOptions={{
-                        tabBarIndicatorStyle: { backgroundColor: "#00E38A" },
+                        tabBarIndicatorStyle: { 
+                            backgroundColor: "#00E38A",
+                        },
                         tabBarStyle: { borderBottomLeftRadius: 15, borderBottomRightRadius: 15 }
                     }}
                 >

@@ -57,21 +57,24 @@ export default function CreatedRecipes(props) {
 
 	return (
 		<>
-			<View style={styles.container}>
-				<Searchbar
-					style={styles.searchbar}
-					placeholder={"search recipes"}
-					placeholderTextColor={"grey"}
-					inputStyle={{paddingLeft: 0, alignSelf: 'center'}}
-					showDivider={false}
-					mode={'view'}
-					onChangeText={query => setSearchQuery(query)}
-					value={searchQuery}
-					keyboardAppearance='dark'
-				/>
+			<View style={{minHeight: '100%'}}>
+				<View style={{padding: 5, marginTop: 5}}>
+					<Searchbar
+						style={styles.searchbar}
+						placeholder={"search recipes"}
+						placeholderTextColor={"grey"}
+						inputStyle={{paddingLeft: 0, alignSelf: 'center'}}
+						showDivider={false}
+						mode={'view'}
+						onChangeText={query => setSearchQuery(query)}
+						value={searchQuery}
+						keyboardAppearance='dark'
+					/>
+				</View>
 				{!isLoading ?
 					<FlatList
 					data={createdRecipes}
+					indicatorStyle='white'
 					renderItem={(item) => {
 						if(item.item.Title.toLowerCase().includes(searchQuery.toLowerCase()) && item.item.RecipeId != removeRecipeId){
 							return (
@@ -84,7 +87,7 @@ export default function CreatedRecipes(props) {
 						}
 					}}
 					ListEmptyComponent={() => <EmptyList/>}
-					ListFooterComponent={<View style={{paddingVertical: 40}}></View>}
+					ListFooterComponent={<View style={{paddingVertical: 30}}></View>}
 				/> :
 				<View>
 					{/* Placeholder loading components */}
@@ -111,13 +114,9 @@ export default function CreatedRecipes(props) {
 };
 
 const styles = StyleSheet.create({
-	container: {
-		margin: 15,
-		minHeight: '100%'
-	},
 	searchbar: {
 		height: 35,
 		width: '100%',
-		backgroundColor: 'transparent'
+		backgroundColor: 'transparent',
 	},
 });

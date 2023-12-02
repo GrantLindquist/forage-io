@@ -1,10 +1,10 @@
 import { useRoute } from "@react-navigation/native";
 import { useNavigation } from '@react-navigation/native';
 import { Alert, Share, ScrollView, View , StyleSheet, Image } from "react-native";
-import { Text, Snackbar, Appbar, FAB } from "react-native-paper";
+import { Text, Snackbar, Appbar } from "react-native-paper";
 import { useUser } from "@clerk/clerk-expo";
 import RecipeTag from "./RecipeTag";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import recipeService from "../../services/recipeService";
 const ms = require('ms');
@@ -28,6 +28,11 @@ export default function RecipePage(props) {
 		return ms(time, { long: false })
 	}
 
+	// State for tracking whether or can save or unsave this recipe
+	const canBeSaved = useMemo(() => {
+		return user.unsafeMetadata.savedRecipeIds.includes(recipe.RecipeId);
+	}, [user.unsafeMetadata.savedRecipeIds])
+
 	// Method for determining user action in FAB group
 	const determineUserAction = () => {
 		// If user has created recipe, display delete action
@@ -39,7 +44,12 @@ export default function RecipePage(props) {
 		// Otherwise, display save action
 		else {
 			return (
-				<Appbar.Action icon={'star'} size={24} onPress={() => handleSaveRecipe()} />
+				<Appbar.Action 
+					icon={() => <Image 
+						source={!canBeSaved ? require('../../../assets/icons/star-selected.png') : require('../../../assets/icons/star-filled.png')}
+						style={{height: 24, width: 24}} />} 
+						onPress={() => handleSaveRecipe()} 
+					/>
 			)
 		}
 	}
@@ -71,25 +81,19 @@ export default function RecipePage(props) {
 	const handleSaveRecipe = async () => {
 		const prevSavedRecipeIds = user.unsafeMetadata.savedRecipeIds;
 		var savedRecipeIds = [];
-		var savingRecipe = true;
 
 		// If user has any saved recipes, loop through and place into new id list
 		if(prevSavedRecipeIds){
 			for(item of prevSavedRecipeIds){
-				// Unsave recipe if recipe is already saved
-				if(item == recipe.RecipeId)
+				if(item != recipe.RecipeId)
 				{
-					savingRecipe = false;
-				}
-				// Append id otherwise
-				else{
 					savedRecipeIds.push(item);
 				}
 			}
 		}
 
 		// Place newly handled recipe id into list if recipe id hasn't already been removed
-		if(savingRecipe){
+		if(canBeSaved){
 			savedRecipeIds.push(recipe.RecipeId);
 
 			// Execute service request
@@ -109,16 +113,15 @@ export default function RecipePage(props) {
 			}
 		});
 
+		// Displays Snackbar
+		setSnackbarVisible(true);
+
 		// Refreshes savedRecipes.js
 		props.refreshSavedRecipes();
 
 		// Updates FAB display
 		setUserAction(determineUserAction());
 
-		// Displays Snackbar
-		setSnackbarVisible(true);
-		
-		console.log(savedRecipeIds);
 		return response;
 	}
 
@@ -248,7 +251,7 @@ ${instructionString}`,
 					label: 'OK',
 					onPress: () => {},
 				}}>
-				{!user.unsafeMetadata.savedRecipeIds.includes(recipe.RecipeId) ? "Recipe has been unsaved!" : "Recipe has been saved!"}
+				{!canBeSaved ? "Recipe has been unsaved!" : "Recipe has been saved!"}
 			</Snackbar>
 		</>
 	);

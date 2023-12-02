@@ -38,7 +38,7 @@ export default function Profile() {
 	<>
 		<View style={styles.container}>
 			<Avatar.Image source={{uri: user.imageUrl}} size={120} style={{marginTop: 80, marginBottom: 10}}/>
-			<Text style={styles.username}>{user.username}</Text>
+			<Text style={user.username.length > 12 ? styles.usernameSmall : styles.usernameLarge}>{user.username}</Text>
 			<Text style={styles.subtext}>Created on {user.createdAt.toLocaleString().split(',')[0]}</Text>
 		</View>
 		<View style={{position: 'absolute', bottom: 5, width: '100%'}}>
@@ -60,7 +60,7 @@ export default function Profile() {
 		</View> */}
 
 		{/* Account deletion warning dialog */}
-		<Portal>
+		{/* <Portal>
 			<Dialog visible={warningDialogVisible} onDismiss={() => setWarningDialogVisible(false)}>
 				<Dialog.Title style={{fontWeight: 700}}>Woah, there!</Dialog.Title>
 				<Dialog.Content>
@@ -72,7 +72,7 @@ export default function Profile() {
 					<Button onPress={handleDeleteAccount}>Yes, delete my account.</Button>
 				</Dialog.Actions>
 			</Dialog>
-        </Portal>
+        </Portal> */}
 	</>
 	);	
 };
@@ -83,7 +83,13 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
-	username: {
+	usernameSmall: {
+		// fontFamily: 'Roboto',
+		fontSize: 30,
+		fontWeight: 700,
+		marginBottom: 5
+	},
+	usernameLarge: {
 		// fontFamily: 'Roboto',
 		fontSize: 36,
 		fontWeight: 700,

@@ -24,7 +24,7 @@ const recipeService = {
                     role: 'user',
                     content: `Generate a ${request.description} in JSON format using the following model: 
                     {
-                        title: a creative, simple name for the recipe--please exclude any indeble/dangerous ingredients from the recipe name,
+                        title: a creative, simple name for the recipe--please exclude any inedible/dangerous ingredients from the recipe name,
                         servings: the number of servings this recipe will create,
                         ingredients: an array of each ingredient for the recipe,
                         instructions: an array of each step to make the recipe,
@@ -32,7 +32,8 @@ const recipeService = {
                         budget: sum of approximate cost of ingredients (in xx.xx format)
                     }
                     Ensure that the ingredients and instructions values are simple arrays.
-                    Please make sure that all ingredients are edible. Do not create inedbile or dangerous recipes.`
+                    Please make sure that ingredients belong to recipe description; do not animal products into vegan recipes, etc.
+                    Please make sure that all ingredients are edible. Do not create inedible or dangerous recipes.`
                 }
             ]
         })
@@ -75,7 +76,8 @@ const recipeService = {
                     ${JSON.stringify(baseRecipe)}
                     Ensure that the JSON format is the same as the example recipe.
                     Ensure that the ingredients and instructions values are simple arrays.
-                    Please make sure that all ingredients are edible. Do not create inedbile or dangerous recipes.`
+                    Please make sure that ingredients belong to recipe description; do not animal products into vegan recipes, etc.
+                    Please make sure that all ingredients are edible. Do not create inedible or dangerous recipes.`
                 }
             ]
         })
