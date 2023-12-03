@@ -10,6 +10,44 @@ const openai = new OpenAI({
     apiKey: env['openAI-apiKey'],
 });
 
+// Extra instructions for recipe generation
+const extraInstructions = (tags) => {
+    console.log(tags);
+
+    // Adds instructions for dietary restrictions
+    let dietaryInstructions = "";
+    switch(tags){
+        case(tags.includes("vegan")):
+            dietaryInstructions = dietaryInstructions.concat("This is a vegan recipe, either exclude or substitute all non-vegan ingredients. ");
+            break;
+        case(tags.includes("vegetarian")):
+            dietaryInstructions = dietaryInstructions.concat("This is a vegetarian recipe, either exclude or substitute all non-vegetarian ingredients. ");
+            break;
+        case(tags.includes("paleo")):
+            dietaryInstructions = dietaryInstructions.concat("This is a paleo recipe, either exclude or substitute all non-paleo ingredients. ");
+            break;
+        case(tags.includes("pescetarian")):
+            dietaryInstructions = dietaryInstructions.concat("This is a pescetarian recipe, either exclude or substitute all non-pescetarian ingredients. ");
+            break;
+        case(tags.includes("keto")):
+            dietaryInstructions = dietaryInstructions.concat("This is a keto recipe, either exclude or substitute all non-keto ingredients. ");
+            break;
+        case(tags.includes("dairy-free")):
+            dietaryInstructions = dietaryInstructions.concat("This is a dairy-free recipe, either exclude or substitute all ingredients containing dairy. ");
+            break;
+        case(tags.includes("gluten-free")):
+            dietaryInstructions = dietaryInstructions.concat("This is a gluten-free, either exclude or substitute all ingredients containing gluten. ");
+            break;
+    }
+
+    console.log(dietaryInstructions)
+
+    return `Ensure that the ingredients and instructions values are simple arrays.
+    Please make sure that ingredients belong to recipe description; do not animal products into vegan recipes, etc.
+    Please make sure that all ingredients are edible. Do not create inedible or dangerous recipes. 
+    ${dietaryInstructions}`
+} 
+
 // Service that handles recipe CRUD functionality
 const recipeService = {
 
@@ -31,9 +69,7 @@ const recipeService = {
                         creationTime: the amount of time it takes to create the recipe in milliseconds,
                         budget: sum of approximate cost of ingredients (in xx.xx format)
                     }
-                    Ensure that the ingredients and instructions values are simple arrays.
-                    Please make sure that ingredients belong to recipe description; do not animal products into vegan recipes, etc.
-                    Please make sure that all ingredients are edible. Do not create inedible or dangerous recipes.`
+                    ${extraInstructions(request.tags)}`
                 }
             ]
         })
@@ -75,9 +111,7 @@ const recipeService = {
                     content: `Generate a ${request.description} in JSON format that is similar to this recipe: 
                     ${JSON.stringify(baseRecipe)}
                     Ensure that the JSON format is the same as the example recipe.
-                    Ensure that the ingredients and instructions values are simple arrays.
-                    Please make sure that ingredients belong to recipe description; do not animal products into vegan recipes, etc.
-                    Please make sure that all ingredients are edible. Do not create inedible or dangerous recipes.`
+                    ${extraInstructions(request.tags)}`
                 }
             ]
         })

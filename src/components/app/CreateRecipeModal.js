@@ -119,10 +119,7 @@ export default function CreateRecipeModal(props) {
 			}
 
 			// String for describing recipe budget
-			let budgetString = '';
-			if(budget.current != -1){
-				budgetString = ' with a budget of under $' + budget.current;
-			}
+			let budgetString = budget.current != -1 ? ' with a budget of under $' + budget.current : ' with a budget of under $7.50'; 
 
 			// Create recipe description & tags
 			let recipeDescription = '';
