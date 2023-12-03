@@ -43,8 +43,8 @@ const extraInstructions = (tags) => {
     console.log(dietaryInstructions)
 
     return `Ensure that the ingredients and instructions values are simple arrays.
-    Please make sure that ingredients belong to recipe description; do not animal products into vegan recipes, etc.
     Please make sure that all ingredients are edible. Do not create inedible or dangerous recipes. 
+    Please make sure that creation time is calculated in milliseconds.
     ${dietaryInstructions}`
 } 
 
@@ -84,7 +84,6 @@ const recipeService = {
             body: JSON.stringify({
                 creatorId: user.id,
                 recipeId: uuidv4(),
-                isPublic: request.isPublic,
                 title: recipe.title,
                 ingredients: recipe.ingredients,
                 instructions: recipe.instructions,
@@ -127,7 +126,6 @@ const recipeService = {
                 creatorId: user.id,
                 recipeId: uuidv4(),
                 baseRecipe: baseRecipe.RecipeId,
-                isPublic: request.isPublic,
                 title: recipe.Title,
                 ingredients: recipe.Ingredients,
                 instructions: recipe.Instructions,

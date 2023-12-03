@@ -30,7 +30,8 @@ export default function RecipePage(props) {
 
 	// State for tracking whether or can save or unsave this recipe
 	const canBeSaved = useMemo(() => {
-		return user.unsafeMetadata.savedRecipeIds.includes(recipe.RecipeId);
+		// Can be saved if not included in users saved recipes (not already saved)
+		return !user.unsafeMetadata.savedRecipeIds.includes(recipe.RecipeId);
 	}, [user.unsafeMetadata.savedRecipeIds])
 
 	// Method for determining user action in FAB group
@@ -251,7 +252,7 @@ ${instructionString}`,
 					label: 'OK',
 					onPress: () => {},
 				}}>
-				{!canBeSaved ? "Recipe has been unsaved!" : "Recipe has been saved!"}
+				{!canBeSaved ? "Recipe has been saved!" : "Recipe has been unsaved!"}
 			</Snackbar>
 		</>
 	);

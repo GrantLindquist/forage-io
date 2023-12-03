@@ -136,10 +136,13 @@ export default function CommunityRecipes() {
 					onPress={() => setFiltersVisible(!filtersVisible)}
 				/>
 			</View>
-			{filtersVisible ? <TagSearch 
-				updateSelectedTags={(tags) => setActiveFilters(tags)}
-				defaultTags={[]} 
-			/>: <></> }
+			{filtersVisible ?
+			<View style={{marginHorizontal: 20}}>
+				<TagSearch 
+					updateSelectedTags={(tags) => setActiveFilters(tags)}
+					defaultTags={[]} 
+				/>
+			</View> : <></> }
 			<FlatList
 				data={communityRecipes[pageNumber-1]}
 				indicatorStyle='white'
@@ -164,7 +167,7 @@ export default function CommunityRecipes() {
 const styles = StyleSheet.create({
 	searchbar: {
 		height: 35,
-		width: '100%',
+		width: '92%',
 		backgroundColor: 'transparent',
 	},
 });

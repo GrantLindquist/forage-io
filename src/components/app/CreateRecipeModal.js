@@ -135,7 +135,6 @@ export default function CreateRecipeModal(props) {
 				description: recipeDescription,
 				tags: recipeTags,
 				ingredients: selectedIngredients,
-				isPublic: 1
 			}
 
 			// Set loading state to true
@@ -299,14 +298,14 @@ export default function CreateRecipeModal(props) {
 				</Dialog>
 
 				{/* Warning dialog */}
-				<Dialog visible={errorDialogVisible} onDismiss={() => setErrorDialogVisible(false)}>
+				{/* <Dialog visible={errorDialogVisible} onDismiss={() => setErrorDialogVisible(false)}>
 					<Dialog.Content>
 						<Text variant="bodyMedium">{errorDialogContent}</Text>
 					</Dialog.Content>
 					<Dialog.Actions>
 						<Button onPress={() => setErrorDialogVisible(false)}>OK</Button>
 					</Dialog.Actions>
-				</Dialog>
+				</Dialog> */}
 			</Portal>
 			
 			{/* Info snackbar */}
@@ -314,7 +313,7 @@ export default function CreateRecipeModal(props) {
 				visible={infoSnackbarVisible}
 				onDismiss={() => setInfoSnackbarVisible(false)}
 				action={{
-					label: 'View',
+					label: 'Ok',
 					onPress: () => navigation.navigate('Main'),
 				}}>
 				Recipe was successfully generated!
@@ -325,10 +324,10 @@ export default function CreateRecipeModal(props) {
 				visible={errorSnackbarVisible}
 				onDismiss={() => setErrorSnackbarVisible(false)}
 				action={{
-					label: 'Why?',
+					label: 'Ok',
 					onPress: () => setErrorDialogVisible(true),
 				}}>
-				Recipe failed to generate.
+				There was an error handling your request.
 			</Snackbar>
 		</View>
 	</View>
