@@ -51,7 +51,7 @@ export default function CreateRecipeModal(props) {
 	const route = useRoute();
 	const remixRecipe = route.params ? route.params.recipe : undefined;
 
-	// List of dialog content options for the recipe modal
+	// List of info dialog content options for the recipe modal
 	const infoDialogContent = [
 		<>
 			<Dialog.Title>Recipe Tags</Dialog.Title>
