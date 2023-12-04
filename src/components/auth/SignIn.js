@@ -78,7 +78,7 @@ export default function SignIn() {
 	return (
 	<View>
 		<TextInput
-			style={{ marginVertical: 2 }}
+			style={{ marginVertical: 3 }}
 			autoCapitalize="none"
 			value={username}
 			label="Username"
@@ -90,7 +90,7 @@ export default function SignIn() {
 		/> 
 		{usernameHelperText != "" ? <HelperText type='error'>{usernameHelperText}</HelperText> : <></>}
 		<TextInput
-			style={{ marginVertical: 2 }}
+			style={{ marginVertical: 3 }}
 			value={password}
 			label="Password"
 			mode="outlined"

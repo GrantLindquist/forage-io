@@ -325,7 +325,8 @@ export default function CreateRecipeModal(props) {
 				onDismiss={() => setErrorSnackbarVisible(false)}
 				action={{
 					label: 'Ok',
-					onPress: () => setErrorDialogVisible(true),
+					// onPress: () => setErrorDialogVisible(true),
+					onPress: () => setErrorSnackbarVisible(false)
 				}}>
 				There was an error handling your request.
 			</Snackbar>

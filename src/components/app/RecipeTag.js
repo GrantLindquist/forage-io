@@ -7,10 +7,10 @@ import { Pressable, StyleSheet } from "react-native";
 export default function RecipeTag(props) {
 
 	// State for tracking whether or not chip is selected
-	const [selected, setSelected] = useState(() => {
+	const selected = useMemo(() => {
 		if(props.immutable) { return true; }
 		else { return props.selected; }
-	});
+	}, [props.selected])
 
 	// State for tracking tag object information
 	const color = useMemo(() => {
@@ -65,7 +65,6 @@ export default function RecipeTag(props) {
 	const handlePress = () => {
 		// Update selected state if tag is mutable
 		if(!props.immutable){
-			setSelected(!selected);
 			// Use parental callback method to make specified action occur
 			props.handlePress(props.tag);
 		}

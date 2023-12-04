@@ -39,7 +39,7 @@ export default function WelcomeScreen() {
 			{isCreatingAccount ? <CreateAccount/> : <SignIn/>}
 		</KeyboardAvoidingView>
 
-		<View style={{alignItems: 'center', margin: 10, position: 'absolute', bottom: "8%" }}>
+		<View style={{alignItems: 'center', margin: 10, position: 'absolute', bottom: "9%" }}>
 			{isCreatingAccount ? 
 			<Pressable style={{alignItems: 'center'}} onPress={() => setCreatingAccount(false)}>
 				<Text style={{ color: 'white' }}>Already have an account?</Text>

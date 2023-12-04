@@ -81,7 +81,7 @@ export default function CreateAccount() {
 	return (
 	<View>
 		<TextInput
-			style={{ marginVertical: 2 }}
+			style={{ marginVertical: 3 }}
 			autoCapitalize="none"
 			value={username}
 			label="Username"
@@ -89,30 +89,30 @@ export default function CreateAccount() {
 			onChangeText={(username) => setUsername(username)}
 			keyboardAppearance="dark"
 			selectionColor="white"
-			activeOutlineColor="white"
+			activeOutlineColor="grey"
 		/>
 		{usernameHelperText != "" ? <HelperText type='error'>{usernameHelperText}</HelperText> : <></>}
 		<TextInput
-			style={{ marginVertical: 2 }}
+			style={{ marginVertical: 3 }}
 			value={password}
 			label="Password"
 			mode="outlined"
 			onChangeText={(password) => setPassword(password)}
 			keyboardAppearance="dark"
 			selectionColor="white"
-			activeOutlineColor="white"
+			activeOutlineColor="grey"
 			secureTextEntry={true}
 		/> 
 		{passwordHelperText != "" ? <HelperText type='error'>{passwordHelperText}</HelperText> : <></>}
 		<TextInput
-			style={{ marginVertical: 2 }}
+			style={{ marginVertical: 3 }}
 			value={confirmPassword}
 			label="Confirm Password"
 			mode="outlined"
 			onChangeText={(confirmPassword) => setConfirmPassword(confirmPassword)}
 			keyboardAppearance="dark"
 			selectionColor="white"
-			activeOutlineColor="white"
+			activeOutlineColor="grey"
 			secureTextEntry={true}
 		/>
 		{confirmPasswordHelperText != "" ? <HelperText type='error'>{confirmPasswordHelperText}</HelperText> : <></>}
