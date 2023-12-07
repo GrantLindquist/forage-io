@@ -16,26 +16,26 @@ const extraInstructions = (tags) => {
 
     // Adds instructions for dietary restrictions
     let dietaryInstructions = "";
-    switch(tags){
-        case(tags.includes("vegan")):
+    switch (tags) {
+        case (tags.includes("vegan")):
             dietaryInstructions = dietaryInstructions.concat("This is a vegan recipe, either exclude or substitute all non-vegan ingredients. ");
             break;
-        case(tags.includes("vegetarian")):
+        case (tags.includes("vegetarian")):
             dietaryInstructions = dietaryInstructions.concat("This is a vegetarian recipe, either exclude or substitute all non-vegetarian ingredients. ");
             break;
-        case(tags.includes("paleo")):
+        case (tags.includes("paleo")):
             dietaryInstructions = dietaryInstructions.concat("This is a paleo recipe, either exclude or substitute all non-paleo ingredients. ");
             break;
-        case(tags.includes("pescetarian")):
+        case (tags.includes("pescetarian")):
             dietaryInstructions = dietaryInstructions.concat("This is a pescetarian recipe, either exclude or substitute all non-pescetarian ingredients. ");
             break;
-        case(tags.includes("keto")):
+        case (tags.includes("keto")):
             dietaryInstructions = dietaryInstructions.concat("This is a keto recipe, either exclude or substitute all non-keto ingredients. ");
             break;
-        case(tags.includes("dairy-free")):
+        case (tags.includes("dairy-free")):
             dietaryInstructions = dietaryInstructions.concat("This is a dairy-free recipe, either exclude or substitute all ingredients containing dairy. ");
             break;
-        case(tags.includes("gluten-free")):
+        case (tags.includes("gluten-free")):
             dietaryInstructions = dietaryInstructions.concat("This is a gluten-free, either exclude or substitute all ingredients containing gluten. ");
             break;
     }
@@ -46,7 +46,7 @@ const extraInstructions = (tags) => {
     Please make sure that all ingredients are edible. Do not create inedible or dangerous recipes. 
     Please make sure that creation time is calculated in milliseconds.
     ${dietaryInstructions}`
-} 
+}
 
 // Service that handles recipe CRUD functionality
 const recipeService = {
@@ -99,7 +99,7 @@ const recipeService = {
     },
 
     // Generates a recipe with GPT that is similar to another existing recipe
-    remixRecipe: async(request, user, baseRecipe) => {
+    remixRecipe: async (request, user, baseRecipe) => {
         // Send recipe request to GPT
         const completion = await openai.chat.completions.create({
             model: 'gpt-3.5-turbo-1106',

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { SafeAreaView, View , StyleSheet} from "react-native";
+import { SafeAreaView, View, StyleSheet } from "react-native";
 import { Text, Avatar, IconButton, Button, Divider, Portal, Dialog } from "react-native-paper";
 import { useUser, useClerk } from "@clerk/clerk-expo";
 import env from '../../../env.json'
@@ -11,44 +11,44 @@ export default function Profile() {
 	const [warningDialogVisible, setWarningDialogVisible] = useState(false);
 
 	// User object
-	const { user } = useUser(); 
+	const { user } = useUser();
 	// Clerk signOut object
 	const { signOut } = useClerk();
 
 	// Deletes user's account
-	const handleDeleteAccount = async() => {
+	const handleDeleteAccount = async () => {
 
 		// Signs user out of account
 		signOut();
 
 		// Deletes user
-        const response = await fetch(`https://api.clerk.com/v1/users/${user.id}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
+		const response = await fetch(`https://api.clerk.com/v1/users/${user.id}`, {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json',
 				'authorization': 'Bearer ' + env['clerk-secretKey'],
-            }
-        });
-        // Returns recipe JSON
-        let data = await response.json();
+			}
+		});
+		// Returns recipe JSON
+		let data = await response.json();
 		console.log(data);
 	}
 
 	return (
-	<>
-		<View style={styles.container}>
-			<Avatar.Image source={{uri: user.imageUrl}} size={120} style={{marginTop: 80, marginBottom: 10}}/>
-			<Text style={user.username.length > 12 ? styles.usernameSmall : styles.usernameLarge}>{user.username}</Text>
-			<Text style={styles.subtext}>Created on {user.createdAt.toLocaleString().split(',')[0]}</Text>
-		</View>
-		<View style={{position: 'absolute', bottom: 5, width: '100%'}}>
-			<Button mode="text">Terms of Service</Button>
-			<Divider style={{marginHorizontal: 20}}/>
-			<Button mode="text" onPress={signOut}>Sign out</Button>
-			{/* <Divider style={{marginHorizontal: 20}}/>
+		<>
+			<View style={styles.container}>
+				<Avatar.Image source={{ uri: user.imageUrl }} size={120} style={{ marginTop: 80, marginBottom: 10 }} />
+				<Text style={user.username.length > 12 ? styles.usernameSmall : styles.usernameLarge}>{user.username}</Text>
+				<Text style={styles.subtext}>Created on {user.createdAt.toLocaleString().split(',')[0]}</Text>
+			</View>
+			<View style={{ position: 'absolute', bottom: 5, width: '100%' }}>
+				<Button mode="text">Terms of Service</Button>
+				<Divider style={{ marginHorizontal: 20 }} />
+				<Button mode="text" onPress={signOut}>Sign out</Button>
+				{/* <Divider style={{marginHorizontal: 20}}/>
 			<Button mode="text" onPress={() => setWarningDialogVisible(true)}>Delete account</Button> */}
-		</View>
-		{/* <View style={{ marginTop: 15,  flexDirection: 'row'}}>
+			</View>
+			{/* <View style={{ marginTop: 15,  flexDirection: 'row'}}>
 			<View style={{alignItems: 'center', width: '50%'}}>
 				<Text  style={styles.subtext}>Created Recipes</Text>
 				<Text variant="headlineLarge">40</Text>
@@ -59,8 +59,8 @@ export default function Profile() {
 			</View>
 		</View> */}
 
-		{/* Account deletion warning dialog */}
-		{/* <Portal>
+			{/* Account deletion warning dialog */}
+			{/* <Portal>
 			<Dialog visible={warningDialogVisible} onDismiss={() => setWarningDialogVisible(false)}>
 				<Dialog.Title style={{fontWeight: 700}}>Woah, there!</Dialog.Title>
 				<Dialog.Content>
@@ -73,8 +73,8 @@ export default function Profile() {
 				</Dialog.Actions>
 			</Dialog>
         </Portal> */}
-	</>
-	);	
+		</>
+	);
 };
 
 const styles = StyleSheet.create({

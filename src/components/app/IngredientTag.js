@@ -18,9 +18,9 @@ export default function IngredientTag(props) {
 	}
 
 	return (
-	<Chip style={selected ? styles.tag : {display:'none'}} mode={'flat'} closeIcon={'close'} onClose={handleDelete} compact={true}>
-		{props.children}
-	</Chip>
+		<Chip style={selected ? styles.tag : { display: 'none' }} mode={'flat'} closeIcon={'close'} onClose={handleDelete} compact={true}>
+			{props.children}
+		</Chip>
 	);
 };
 

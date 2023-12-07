@@ -30,16 +30,16 @@ export default function AppNavigation() {
 			// Check for outdated charges
 			var updatedCharges = [];
 			var i = 1;
-			for(let timestamp of user.unsafeMetadata.recipeCharges){
+			for (let timestamp of user.unsafeMetadata.recipeCharges) {
 				// If an hour has passed since its addition, remove charge
-				if(Date.now() - timestamp <= (3600000*i)){
+				if (Date.now() - timestamp <= (3600000 * i)) {
 					updatedCharges.push(timestamp);
 				}
 				i++;
 			}
 			// Update user obj
 			await user.update({
-				unsafeMetadata: { 
+				unsafeMetadata: {
 					savedRecipeIds: user.unsafeMetadata.savedRecipeIds,
 					recipeCharges: updatedCharges
 				}
@@ -50,38 +50,38 @@ export default function AppNavigation() {
 		updateUserCharges();
 	}, []);
 
-  	return (
+	return (
 		/* ModalStack.Navigator contains all of app navigation alongside both Modals */
-		<ModalStack.Navigator screenOptions={{ 
-				header: () => <></> ,
-				gestureResponseDistance: 400
-			}}>
+		<ModalStack.Navigator screenOptions={{
+			header: () => <></>,
+			gestureResponseDistance: 400
+		}}>
 			<ModalStack.Screen name="Main">
 				{() =>
 					/* Tab.Navigator contains each bottom tab */
-					<Tab.Navigator 
+					<Tab.Navigator
 						screenOptions={{
-							header: () => <Header/>,
+							header: () => <Header />,
 							tabBarShowLabel: false,
 							tabBarActiveTintColor: "#00E38A",
 						}}
 					>
 						<Tab.Screen name="Home" options={{
 							header: () => <></>,
-							tabBarIcon: ({color}) => (
+							tabBarIcon: ({ color }) => (
 								<MaterialCommunityIcons name="text-search" color={color} size={30} />
 							),
 						}}>
-							{() => <RecipeMenu refreshValue={refreshCreatedRecipes}/>}
+							{() => <RecipeMenu refreshValue={refreshCreatedRecipes} />}
 						</Tab.Screen>
 						{/* Create Recipe tab only contains listener to activate CreateRecipeModal from ModalStack */}
 						<Tab.Screen name="Create" options={{
-							tabBarIcon: ({color}) => (
+							tabBarIcon: ({ color }) => (
 								<MaterialCommunityIcons name="plus" color={color} size={30} />
 							),
 						}}
 							// Displays modal when create tab is selected
-							listeners = {{
+							listeners={{
 								tabPress: e => {
 									e.preventDefault();
 									navigation.navigate('CreateRecipeModal');
@@ -92,27 +92,27 @@ export default function AppNavigation() {
 							{() => <></>}
 						</Tab.Screen>
 						<Tab.Screen name="Profile" options={{
-							tabBarIcon: ({color}) => (
+							tabBarIcon: ({ color }) => (
 								<MaterialCommunityIcons name="account" color={color} size={30} />
-							)	
+							)
 						}}>
-							{() => <Profile/>}
+							{() => <Profile />}
 						</Tab.Screen>
 					</Tab.Navigator>
 				}
 			</ModalStack.Screen>
-			<ModalStack.Screen 
-				options={{ 
-					presentation: 'modal', 
-					cardStyle:{
+			<ModalStack.Screen
+				options={{
+					presentation: 'modal',
+					cardStyle: {
 						backgroundColor: 'transparent'
 					},
-				}} 
+				}}
 				name="CreateRecipeModal">
-				{() => 
-					<CreateRecipeModal refreshCreatedRecipes={() => setRefreshCreatedRecipes(!refreshCreatedRecipes)}/>
+				{() =>
+					<CreateRecipeModal refreshCreatedRecipes={() => setRefreshCreatedRecipes(!refreshCreatedRecipes)} />
 				}
 			</ModalStack.Screen>
 		</ModalStack.Navigator>
-  	);
+	);
 }

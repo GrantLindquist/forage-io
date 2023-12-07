@@ -14,30 +14,30 @@ const Stack = createStackNavigator();
 // Renders tabs for each type of recipeList component
 export default function RecipeMenu(props) {
 
-	// State for refreshing savedRecipes & createdRecipes component
-	const [refreshCreatedRecipes, setRefreshCreatedRecipes] = useState(false);
+    // State for refreshing savedRecipes & createdRecipes component
+    const [refreshCreatedRecipes, setRefreshCreatedRecipes] = useState(false);
     const [refreshSavedRecipes, setRefreshSavedRecipes] = useState(false);
 
-	return (
+    return (
         <Stack.Navigator>
             {/* Stack for displaying recipe menu & nested recipe tabs */}
             <Stack.Screen name="Menu"
-                options={{header: () => <Header/>}}    
+                options={{ header: () => <Header /> }}
             >
                 {/* Tab navigator that directs user to various types of recipe lists */}
                 {() => <Tab.Navigator
                     screenOptions={{
-                        tabBarIndicatorStyle: { 
+                        tabBarIndicatorStyle: {
                             backgroundColor: "#00E38A",
                         },
                         tabBarStyle: { borderBottomLeftRadius: 15, borderBottomRightRadius: 15 }
                     }}
                 >
                     <Tab.Screen name="Created">
-                        {() => <CreatedRecipes refreshValue1={props.refreshValue} refreshValue2={refreshCreatedRecipes}/>}
+                        {() => <CreatedRecipes refreshValue1={props.refreshValue} refreshValue2={refreshCreatedRecipes} />}
                     </Tab.Screen>
                     <Tab.Screen name="Saved">
-                        {() => <SavedRecipes refreshValue={refreshSavedRecipes}/>}
+                        {() => <SavedRecipes refreshValue={refreshSavedRecipes} />}
                     </Tab.Screen>
                     <Tab.Screen name="Community" component={CommunityRecipes} />
                 </Tab.Navigator>}
@@ -49,10 +49,10 @@ export default function RecipeMenu(props) {
                     gestureResponseDistance: 75
                 }}
             >
-                {() => <RecipePage 
+                {() => <RecipePage
                     refreshCreatedRecipes={() => setRefreshCreatedRecipes(!refreshCreatedRecipes)}
-                    refreshSavedRecipes={() => setRefreshSavedRecipes(!refreshSavedRecipes)}/>}
+                    refreshSavedRecipes={() => setRefreshSavedRecipes(!refreshSavedRecipes)} />}
             </Stack.Screen>
         </Stack.Navigator>
-	);
+    );
 };

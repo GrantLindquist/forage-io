@@ -29,13 +29,13 @@ export default function CreateAccount() {
 		setConfirmPasswordHelperText("");
 
 		// Checks if password equals confirm password field
-		if(password != confirmPassword){
+		if (password != confirmPassword) {
 			setConfirmPasswordHelperText("Your password inputs are not equal.");
 		}
 		else if (username.length > 16) {
 			setUsernameHelperText("Usernames must be between 4 and 16 characters long.");
 		}
-		else{
+		else {
 			// Idk what this does.
 			if (!isLoaded) {
 				return;
@@ -54,23 +54,23 @@ export default function CreateAccount() {
 					},
 				});
 				await setActive({ session: completeSignUp.createdSessionId });
-			} 
+			}
 			// If account creation fails, return error from Clerk
 			catch (err) {
 				// Log error
 				console.error(JSON.stringify(err, null, 2));
 
 				// Update helper text state
-				for(e of err.errors){
-					if(e.meta.paramName == "username"){
-						if(e.code == "form_username_invalid_length"){
+				for (e of err.errors) {
+					if (e.meta.paramName == "username") {
+						if (e.code == "form_username_invalid_length") {
 							setUsernameHelperText("Usernames must be between 4 and 16 characters long.");
 						}
-						else{
+						else {
 							setUsernameHelperText(e.message);
 						}
 					}
-					else if(e.meta.paramName == "password"){
+					else if (e.meta.paramName == "password") {
 						setPasswordHelperText(e.message);
 					}
 				}
@@ -79,57 +79,57 @@ export default function CreateAccount() {
 	};
 
 	return (
-	<View>
-		<TextInput
-			style={{ marginVertical: 3 }}
-			autoCapitalize="none"
-			value={username}
-			label="Username"
-			mode="outlined"
-			onChangeText={(username) => setUsername(username)}
-			keyboardAppearance="dark"
-			selectionColor="white"
-			activeOutlineColor="grey"
-		/>
-		{usernameHelperText != "" ? <HelperText type='error'>{usernameHelperText}</HelperText> : <></>}
-		<TextInput
-			style={{ marginVertical: 3 }}
-			value={password}
-			label="Password"
-			mode="outlined"
-			onChangeText={(password) => setPassword(password)}
-			keyboardAppearance="dark"
-			selectionColor="white"
-			activeOutlineColor="grey"
-			secureTextEntry={true}
-		/> 
-		{passwordHelperText != "" ? <HelperText type='error'>{passwordHelperText}</HelperText> : <></>}
-		<TextInput
-			style={{ marginVertical: 3 }}
-			value={confirmPassword}
-			label="Confirm Password"
-			mode="outlined"
-			onChangeText={(confirmPassword) => setConfirmPassword(confirmPassword)}
-			keyboardAppearance="dark"
-			selectionColor="white"
-			activeOutlineColor="grey"
-			secureTextEntry={true}
-		/>
-		{confirmPasswordHelperText != "" ? <HelperText type='error'>{confirmPasswordHelperText}</HelperText> : <></>}
-				
-		<MaskedView maskElement={ <Button style={{ margin: 10, marginHorizontal: 30 }} buttonColor="black" mode="contained" onPress={handleSignUp}>
-         Create account
-        </Button>}>
-			<LinearGradient
-			colors={["#38FFA0", "#00C2FF"]}
-			start={{ x: 0, y: 1 }}
-			end={{ x: 1, y: 0 }}
-			>
-				<Button style={{ margin: 10, marginHorizontal: 30 }} buttonColor='transparent' textColor="black" mode="contained" onPress={handleSignUp}>
-					Create account
-				</Button>
-			</LinearGradient>
-		</MaskedView>
-	</View>
-  );
+		<View>
+			<TextInput
+				style={{ marginVertical: 3 }}
+				autoCapitalize="none"
+				value={username}
+				label="Username"
+				mode="outlined"
+				onChangeText={(username) => setUsername(username)}
+				keyboardAppearance="dark"
+				selectionColor="white"
+				activeOutlineColor="grey"
+			/>
+			{usernameHelperText != "" ? <HelperText type='error'>{usernameHelperText}</HelperText> : <></>}
+			<TextInput
+				style={{ marginVertical: 3 }}
+				value={password}
+				label="Password"
+				mode="outlined"
+				onChangeText={(password) => setPassword(password)}
+				keyboardAppearance="dark"
+				selectionColor="white"
+				activeOutlineColor="grey"
+				secureTextEntry={true}
+			/>
+			{passwordHelperText != "" ? <HelperText type='error'>{passwordHelperText}</HelperText> : <></>}
+			<TextInput
+				style={{ marginVertical: 3 }}
+				value={confirmPassword}
+				label="Confirm Password"
+				mode="outlined"
+				onChangeText={(confirmPassword) => setConfirmPassword(confirmPassword)}
+				keyboardAppearance="dark"
+				selectionColor="white"
+				activeOutlineColor="grey"
+				secureTextEntry={true}
+			/>
+			{confirmPasswordHelperText != "" ? <HelperText type='error'>{confirmPasswordHelperText}</HelperText> : <></>}
+
+			<MaskedView maskElement={<Button style={{ margin: 10, marginHorizontal: 30 }} buttonColor="black" mode="contained" onPress={handleSignUp}>
+				Create account
+			</Button>}>
+				<LinearGradient
+					colors={["#38FFA0", "#00C2FF"]}
+					start={{ x: 0, y: 1 }}
+					end={{ x: 1, y: 0 }}
+				>
+					<Button style={{ margin: 10, marginHorizontal: 30 }} buttonColor='transparent' textColor="black" mode="contained" onPress={handleSignUp}>
+						Create account
+					</Button>
+				</LinearGradient>
+			</MaskedView>
+		</View>
+	);
 }

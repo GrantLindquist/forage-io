@@ -14,7 +14,7 @@ const ms = require('ms');
 export default function CreateRecipeModal(props) {
 
 	// Gets user from Clerk
-	const { user } = useUser(); 
+	const { user } = useUser();
 
 	const theme = useTheme();
 
@@ -56,48 +56,48 @@ export default function CreateRecipeModal(props) {
 	// List of info dialog content options for the recipe modal
 	const infoDialogContent = [
 		<>
-			<Dialog.Title style={{color: theme.colors.primary, fontWeight: 700, marginBottom: 12}}>Creating a Recipe</Dialog.Title>
-			<Dialog.Content pointerEvents='none' style={{lineHeight: 22}}>
-				<Text style={{fontSize: 16, fontWeight: 700, marginBottom: 2}}>Recipe Tags</Text>
-				<Text style={{paddingBottom: 12}}>
+			<Dialog.Title style={{ color: theme.colors.primary, fontWeight: 700, marginBottom: 12 }}>Creating a Recipe</Dialog.Title>
+			<Dialog.Content pointerEvents='none' style={{ lineHeight: 22 }}>
+				<Text style={{ fontSize: 16, fontWeight: 700, marginBottom: 2 }}>Recipe Tags</Text>
+				<Text style={{ paddingBottom: 12 }}>
 					A "tag" is an adjective used for describing the recipes you want to generate.
 				</Text>
-				<Text style={{paddingBottom: 12}}>
+				<Text style={{ paddingBottom: 12 }}>
 					For example, if you want to generate a vegan Mexican breakfast recipe that is spicy, you should
-					select the following tags: 
+					select the following tags:
 				</Text>
-				<View style={{flexDirection: 'row', paddingBottom: 6}}>
-					<RecipeTag title={'vegan'} immutable={true}/> 
-					<RecipeTag title={'mexican'} immutable={true}/>
-					<RecipeTag title={'breakfast'} immutable={true}/>
-					<RecipeTag title={'spicy'} immutable={true}/>
+				<View style={{ flexDirection: 'row', paddingBottom: 6 }}>
+					<RecipeTag title={'vegan'} immutable={true} />
+					<RecipeTag title={'mexican'} immutable={true} />
+					<RecipeTag title={'breakfast'} immutable={true} />
+					<RecipeTag title={'spicy'} immutable={true} />
 				</View>
 				<Text>
 					There are four types of tag:
-					<Text style={{fontWeight: 700, color: '#FF008A'}}> cuisine</Text>, 
-					<Text style={{fontWeight: 700, color: '#00A3FF'}}> meal type</Text>, 
-					<Text style={{fontWeight: 700, color: '#FF7A00'}}> diet</Text>, and 
-					<Text style={{fontWeight: 700, color: '#7000FF'}}> flavor</Text>. 
+					<Text style={{ fontWeight: 700, color: '#FF008A' }}> cuisine</Text>,
+					<Text style={{ fontWeight: 700, color: '#00A3FF' }}> meal type</Text>,
+					<Text style={{ fontWeight: 700, color: '#FF7A00' }}> diet</Text>, and
+					<Text style={{ fontWeight: 700, color: '#7000FF' }}> flavor</Text>.
 					You can only select a few of each tag.
 				</Text>
 			</Dialog.Content>
 		</>,
 		<>
-			<Dialog.Title style={{color: theme.colors.primary, fontWeight: 700, marginBottom: 12}}>Creating a Recipe</Dialog.Title>
-			<Dialog.Content pointerEvents='none' style={{lineHeight: 22}}>
-				<Text style={{fontSize: 16, fontWeight: 700, marginBottom: 4}}>Ingredients</Text>
-				<Text style={{paddingBottom: 12}}>
+			<Dialog.Title style={{ color: theme.colors.primary, fontWeight: 700, marginBottom: 12 }}>Creating a Recipe</Dialog.Title>
+			<Dialog.Content pointerEvents='none' style={{ lineHeight: 22 }}>
+				<Text style={{ fontSize: 16, fontWeight: 700, marginBottom: 4 }}>Ingredients</Text>
+				<Text style={{ paddingBottom: 12 }}>
 					Additionally, you can specify up to five ingredients you would like to see in the recipe.
 					Any input that isn't an edible food item not be included in the recipe.
 				</Text>
-				<Text style={{paddingBottom: 8}}>Yes:</Text>
-				<View style={{flexDirection: 'row', paddingBottom: 8}}>
+				<Text style={{ paddingBottom: 8 }}>Yes:</Text>
+				<View style={{ flexDirection: 'row', paddingBottom: 8 }}>
 					<IngredientTag>Spinach</IngredientTag>
 					<IngredientTag>Eggs</IngredientTag>
 					<IngredientTag>Milk</IngredientTag>
 				</View>
-				<Text style={{paddingBottom: 8}}>No:</Text>
-				<View  pointerEvents='none' style={{flexDirection: 'row'}}>
+				<Text style={{ paddingBottom: 8 }}>No:</Text>
+				<View pointerEvents='none' style={{ flexDirection: 'row' }}>
 					<IngredientTag>Dirt</IngredientTag>
 					<IngredientTag>Antifreeze</IngredientTag>
 					<IngredientTag>XYZ</IngredientTag>
@@ -105,12 +105,12 @@ export default function CreateRecipeModal(props) {
 			</Dialog.Content>
 		</>,
 		<>
-			<Dialog.Title style={{color: theme.colors.primary, fontWeight: 700, marginBottom: 12}}>Creating a Recipe</Dialog.Title>
-			<Dialog.Content pointerEvents='none' style={{lineHeight: 22}}>
-				<Text style={{fontSize: 16, fontWeight: 700, marginBottom: 4}}>Recipe Charges</Text>
+			<Dialog.Title style={{ color: theme.colors.primary, fontWeight: 700, marginBottom: 12 }}>Creating a Recipe</Dialog.Title>
+			<Dialog.Content pointerEvents='none' style={{ lineHeight: 22 }}>
+				<Text style={{ fontSize: 16, fontWeight: 700, marginBottom: 4 }}>Recipe Charges</Text>
 				<Text>
 					A "charge" is a unit that allows you to generate a recipe. One charge will replenish every
-					hour and you can hold a maximum of 10 charges at a time. 
+					hour and you can hold a maximum of 10 charges at a time.
 					{/* If you'd like to replenish charges without waiting, press on <Text style={{ fontWeight: 700}}>Get more charges </Text>. */}
 				</Text>
 			</Dialog.Content>
@@ -118,36 +118,36 @@ export default function CreateRecipeModal(props) {
 	];
 
 	// Creates a recipe using user-specified filters
-	const handleCreateRecipe = async() => {
+	const handleCreateRecipe = async () => {
 		// Alert user that ingredientInput is not empty before generating recipe
 		if (ingredientInput != '') {
 			setIngredientHelperText("Did you mean to add this ingredient to your recipe?");
 		}
-		else{
+		else {
 			// String for describing ingredients for recipe
 			let ingredientString = '';
 			let i = 0;
 			// List ingredients if ingredient list state is not empty
-			if(selectedIngredients.length > 0){
+			if (selectedIngredients.length > 0) {
 				ingredientString = ' that contains';
-				for(let item of selectedIngredients){
+				for (let item of selectedIngredients) {
 					// Adds a comma if there are more ingredients remaining in list
-					ingredientString = ingredientString + ' ' + item + (selectedIngredients.length == i+1 ? "" : ",");
+					ingredientString = ingredientString + ' ' + item + (selectedIngredients.length == i + 1 ? "" : ",");
 					i++;
 				}
 			}
 
 			// String for describing recipe budget
-			let budgetString = budget.current != -1 ? ' with a budget of under $' + budget.current : ' with a budget of under $7.50'; 
+			let budgetString = budget.current != -1 ? ' with a budget of under $' + budget.current : ' with a budget of under $7.50';
 
 			// Create recipe description & tags
 			let recipeDescription = '';
 			let recipeTags = [];
-			for(let filter of selectedFilters){
+			for (let filter of selectedFilters) {
 				recipeDescription = recipeDescription.concat(filter + " ");
 				recipeTags.push(filter);
 			}
-			recipeDescription = recipeDescription.concat(`recipe${ingredientString}${budgetString}`); 
+			recipeDescription = recipeDescription.concat(`recipe${ingredientString}${budgetString}`);
 
 			// DTO object for prompting GPT
 			let recipeDTO = {
@@ -163,7 +163,7 @@ export default function CreateRecipeModal(props) {
 			var recipeCharges = user.unsafeMetadata.recipeCharges;
 			recipeCharges.push(Date.now());
 			await user.update({
-				unsafeMetadata: { 
+				unsafeMetadata: {
 					savedRecipeIds: user.unsafeMetadata.savedRecipeIds,
 					recipeCharges: recipeCharges,
 				}
@@ -177,7 +177,7 @@ export default function CreateRecipeModal(props) {
 			setGeneratingRecipe(false);
 
 			// Display snackbar depending on service response
-			if(response.ok){
+			if (response.ok) {
 				setInfoSnackbarVisible(true);
 				setSelectedIngredients([]);
 				setSelectedFilters([]);
@@ -185,7 +185,7 @@ export default function CreateRecipeModal(props) {
 				// Refreshes recipeMenu component so user can see updated recipe list
 				props.refreshCreatedRecipes();
 			}
-			else{
+			else {
 				// Display error UI components
 				setErrorDialogContent(response.message);
 				setErrorSnackbarVisible(true);
@@ -200,10 +200,10 @@ export default function CreateRecipeModal(props) {
 	const addIngredient = (value) => {
 		// Remove ingredient helper text
 		setIngredientHelperText('');
-		
+
 		// Adds ingredient to state and updates
 		let newIngredientList = [];
-		for(item of selectedIngredients){
+		for (item of selectedIngredients) {
 			newIngredientList.push(item);
 		}
 		newIngredientList.push(value);
@@ -215,14 +215,14 @@ export default function CreateRecipeModal(props) {
 	const deleteIngredient = (value) => {
 		// Adds ingredient to state and updates
 		let newIngredientList = [];
-		for(item of selectedIngredients){
-			if(item != value){
+		for (item of selectedIngredients) {
+			if (item != value) {
 				newIngredientList.push(item);
 			}
 		}
 		setSelectedIngredients(newIngredientList);
 	}
-	
+
 	// Arranges tags from mapped attributes to string array
 	const formatTags = (tags) => {
 		let formattedTags = [];
@@ -234,90 +234,90 @@ export default function CreateRecipeModal(props) {
 
 	// List of ingredients that user wants to add to recipe
 	const ingredientTags = selectedIngredients.map((item) => {
-		return(
+		return (
 			<IngredientTag key={item} handleDelete={() => deleteIngredient(item)}>{item}</IngredientTag>
 		)
 	});
 
 	return (
-	<View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-end'}}>
-		<View style={{ height: '95%', backgroundColor: '#222222'}}>
-			<ProgressBar progress={recipeCharges/10} />
-			<View>
-				<View style={{ alignItems: 'center', flexDirection: 'row', marginHorizontal: 15, marginTop: 10}}>
-					<Image 
-						source={require('../../../assets/icons/charge.png')}
-						style={{width: 18, height: 18}}
-					/>
-					<Text style={{color: 'grey'}}>{recipeCharges}/10  </Text>
-					{/* <Text style={{fontWeight: 700}}>Get more charges</Text> */}
-					<IconButton onPress={() => setInfoDialogVisible(true)} style={{marginLeft: 'auto', margin: 0}} icon={"information-outline"}></IconButton>
+		<View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-end' }}>
+			<View style={{ height: '95%', backgroundColor: '#222222' }}>
+				<ProgressBar progress={recipeCharges / 10} />
+				<View>
+					<View style={{ alignItems: 'center', flexDirection: 'row', marginHorizontal: 15, marginTop: 10 }}>
+						<Image
+							source={require('../../../assets/icons/charge.png')}
+							style={{ width: 18, height: 18 }}
+						/>
+						<Text style={{ color: 'grey' }}>{recipeCharges}/10  </Text>
+						{/* <Text style={{fontWeight: 700}}>Get more charges</Text> */}
+						<IconButton onPress={() => setInfoDialogVisible(true)} style={{ marginLeft: 'auto', margin: 0 }} icon={"information-outline"}></IconButton>
+					</View>
+					{/* Displays component depending on whether or not recipe is loading */}
+					{!isGeneratingRecipe ? <>
+						{/* Displays recipe information if provided */}
+						{remixRecipe ?
+							<View style={{ marginHorizontal: 20 }}>
+								<Text style={styles.recipeTitle}>{remixRecipe.Title}</Text>
+								<View style={{ marginTop: 15, flexDirection: 'row', justifyContent: 'space-evenly' }}>
+									<View style={{ alignItems: 'center' }}>
+										<Text style={styles.subtext}>Serves</Text>
+										<Text variant="headlineMedium">{remixRecipe.Servings}</Text>
+									</View>
+									<View style={{ alignItems: 'center', paddingHorizontal: 25, borderColor: "rgb(0, 227, 138)", borderLeftWidth: '2', borderRightWidth: '2' }}>
+										<Text style={styles.subtext}>Budget</Text>
+										<Text variant="headlineMedium">${Number(remixRecipe.Budget).toFixed(2)}</Text>
+									</View>
+									<View style={{ alignItems: 'center' }}>
+										<Text style={styles.subtext}>Time</Text>
+										<Text variant="headlineMedium">{ms(remixRecipe.CreationTime, { long: false })}</Text>
+									</View>
+								</View>
+							</View>
+							: <></>}
+						<View style={{ margin: 20, marginTop: 0 }}>
+							<Text style={styles.categoryTitle}>Add some tags!</Text>
+							<TagSearch
+								updateSelectedTags={(tags) => setSelectedFilters(tags)}
+								defaultTags={remixRecipe ? formatTags(remixRecipe.Tags) : []}
+							/>
+
+							<View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
+								<Text style={styles.categoryTitle}>Add some ingredients!</Text>
+								<Text style={{ color: 'grey' }}> ({ingredientTags.length}/5)</Text>
+							</View>
+							<View style={{ flexDirection: 'row' }}>
+								<TextInput maxLength={25} keyboardAppearance='dark' style={styles.addIngredients} value={ingredientInput} mode='outlined' onChangeText={(val) => setIngredientInput(val)} />
+								<IconButton style={styles.addIngredientButton} disabled={ingredientInput.length < 2 || ingredientTags.length >= 5 ? true : false} size={20} mode={'outlined'} icon={'plus'} onPress={() => addIngredient(ingredientInput)} />
+							</View>
+							<HelperText type='error'>{ingredientHelperText}</HelperText>
+
+							<ScrollView horizontal={true}>
+								{ingredientTags}
+							</ScrollView>
+
+							<Text style={styles.categoryTitle}>More options</Text>
+							<BudgetSlider handleValueChange={(val) => budget.current = val} />
+
+							<Button disabled={recipeCharges == 0 ? true : false} onPress={handleCreateRecipe}>GENERATE RECIPE</Button>
+						</View></>
+						: <View style={styles.loadingScreen}>
+							<ActivityIndicator size={"large"} animating={true}></ActivityIndicator>
+						</View>}
 				</View>
-				{/* Displays component depending on whether or not recipe is loading */}
-				{!isGeneratingRecipe ? <>
-				{/* Displays recipe information if provided */}
-				{remixRecipe ? 
-				<View style={{marginHorizontal: 20}}>
-					<Text style={styles.recipeTitle}>{remixRecipe.Title}</Text>
-					<View style={{ marginTop: 15,  flexDirection: 'row', justifyContent: 'space-evenly'}}>
-						<View style={{alignItems: 'center'}}>
-							<Text style={styles.subtext}>Serves</Text>
-							<Text variant="headlineMedium">{remixRecipe.Servings}</Text>
-						</View>
-						<View style={{alignItems: 'center', paddingHorizontal: 25, borderColor: "rgb(0, 227, 138)", borderLeftWidth: '2', borderRightWidth: '2'}}>
-							<Text  style={styles.subtext}>Budget</Text>
-							<Text variant="headlineMedium">${Number(remixRecipe.Budget).toFixed(2)}</Text>
-						</View>
-						<View style={{alignItems: 'center' }}>
-							<Text style={styles.subtext}>Time</Text>
-							<Text variant="headlineMedium">{ms(remixRecipe.CreationTime, { long: false })}</Text>
-						</View>
-					</View>
-				</View>
-				: <></>}
-				<View style={{margin: 20, marginTop: 0}}>
-					<Text style={styles.categoryTitle}>Add some tags!</Text>
-					<TagSearch 
-						updateSelectedTags={(tags) => setSelectedFilters(tags)} 
-						defaultTags={remixRecipe ? formatTags(remixRecipe.Tags) : []}
-					/>
-										
-					<View style={{flexDirection: 'row', alignItems: 'baseline'}}>
-						<Text style={styles.categoryTitle}>Add some ingredients!</Text>
-						<Text style={{color: 'grey'}}> ({ingredientTags.length}/5)</Text>
-					</View>
-					<View style={{flexDirection: 'row'}}>
-						<TextInput maxLength={25} keyboardAppearance='dark' style={styles.addIngredients} value={ingredientInput} mode='outlined' onChangeText={(val) => setIngredientInput(val)}/>
-						<IconButton style={styles.addIngredientButton} disabled={ingredientInput.length < 2 || ingredientTags.length >= 5 ? true : false} size={20} mode={'outlined'} icon={'plus'} onPress={() => addIngredient(ingredientInput)}/>
-					</View>
-					<HelperText type='error'>{ingredientHelperText}</HelperText>
 
-					<ScrollView horizontal={true}>
-						{ingredientTags}
-					</ScrollView>
+				<Portal>
+					{/* Info dialog */}
+					<Dialog visible={infoDialogVisible} onDismiss={() => setInfoDialogVisible(false)}>
+						{infoDialogContent[infoDialogPageNumber]}
+						<Dialog.Actions>
+							<Button disabled={infoDialogPageNumber <= 0 ? true : false} onPress={() => setInfoDialogPageNumber(infoDialogPageNumber - 1)}>Previous</Button>
+							<Button disabled={infoDialogPageNumber >= 2 ? true : false} onPress={() => setInfoDialogPageNumber(infoDialogPageNumber + 1)}>Next</Button>
+						</Dialog.Actions>
+					</Dialog>
 
-					<Text style={styles.categoryTitle}>More options</Text>
-					<BudgetSlider handleValueChange={(val) => budget.current = val}/>
-
-					<Button disabled={recipeCharges == 0 ? true : false} onPress={handleCreateRecipe}>GENERATE RECIPE</Button>
-				</View></>
-				: <View style={styles.loadingScreen}>
-					<ActivityIndicator size={"large"} animating={true}></ActivityIndicator>
-				</View>}
-			</View>	
-
-			<Portal>
-				{/* Info dialog */}
-				<Dialog visible={infoDialogVisible} onDismiss={() => setInfoDialogVisible(false)}>
-					{infoDialogContent[infoDialogPageNumber]}
-					<Dialog.Actions>
-						<Button disabled={infoDialogPageNumber <= 0 ? true : false} onPress={() => setInfoDialogPageNumber(infoDialogPageNumber-1)}>Previous</Button>
-						<Button disabled={infoDialogPageNumber >= 2 ? true : false} onPress={() => setInfoDialogPageNumber(infoDialogPageNumber+1)}>Next</Button>
-					</Dialog.Actions>
-				</Dialog>
-
-				{/* Warning dialog */}
-				{/* <Dialog visible={errorDialogVisible} onDismiss={() => setErrorDialogVisible(false)}>
+					{/* Warning dialog */}
+					{/* <Dialog visible={errorDialogVisible} onDismiss={() => setErrorDialogVisible(false)}>
 					<Dialog.Content>
 						<Text variant="bodyMedium">{errorDialogContent}</Text>
 					</Dialog.Content>
@@ -325,33 +325,33 @@ export default function CreateRecipeModal(props) {
 						<Button onPress={() => setErrorDialogVisible(false)}>OK</Button>
 					</Dialog.Actions>
 				</Dialog> */}
-			</Portal>
-			
-			{/* Info snackbar */}
-			<Snackbar
-				visible={infoSnackbarVisible}
-				onDismiss={() => setInfoSnackbarVisible(false)}
-				action={{
-					label: 'OK',
-					onPress: () => navigation.navigate('Main'),
-				}}>
-				Recipe was successfully generated!
-			</Snackbar>
-			
-			{/* Error snackbar */}
-			<Snackbar
-				visible={errorSnackbarVisible}
-				onDismiss={() => setErrorSnackbarVisible(false)}
-				action={{
-					label: 'OK',
-					// onPress () => setErrorDialogVisible(true),
-					onPress: () => setErrorSnackbarVisible(false)
-				}}>
-				There was an error handling your request.
-			</Snackbar>
+				</Portal>
+
+				{/* Info snackbar */}
+				<Snackbar
+					visible={infoSnackbarVisible}
+					onDismiss={() => setInfoSnackbarVisible(false)}
+					action={{
+						label: 'OK',
+						onPress: () => navigation.navigate('Main'),
+					}}>
+					Recipe was successfully generated!
+				</Snackbar>
+
+				{/* Error snackbar */}
+				<Snackbar
+					visible={errorSnackbarVisible}
+					onDismiss={() => setErrorSnackbarVisible(false)}
+					action={{
+						label: 'OK',
+						// onPress () => setErrorDialogVisible(true),
+						onPress: () => setErrorSnackbarVisible(false)
+					}}>
+					There was an error handling your request.
+				</Snackbar>
+			</View>
 		</View>
-	</View>
-	);	
+	);
 };
 
 const styles = StyleSheet.create({
@@ -373,7 +373,7 @@ const styles = StyleSheet.create({
 		fontSize: 36,
 		fontWeight: 700
 	},
-	loadingScreen:{
+	loadingScreen: {
 		alignItems: "center",
 		justifyContent: "center",
 		width: '100%',

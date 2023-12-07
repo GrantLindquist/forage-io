@@ -4,7 +4,7 @@ import { Text } from 'react-native-paper';
 import Slider from '@react-native-community/slider';
 
 // Component for budget selection slider
-export default function BudgetSlider (props) {
+export default function BudgetSlider(props) {
 
 	// Budget bounds
 	const minimumBudget = 2;
@@ -13,15 +13,15 @@ export default function BudgetSlider (props) {
 
 	// Budget value for slider display and setting budget
 	const [budget, setBudget] = useState(minimumBudget - budgetStep);
-	
+
 	// Updates budget value to parent component
 	const handleValueChange = (val) => {
-		
+
 		// Send new slider value to parent
-		if(val <= minimumBudget - budgetStep){
+		if (val <= minimumBudget - budgetStep) {
 			props.handleValueChange(-1);
 		}
-		else{
+		else {
 			props.handleValueChange(val);
 		}
 
@@ -29,7 +29,7 @@ export default function BudgetSlider (props) {
 		setBudget(val);
 	}
 
-    return (
+	return (
 		<View>
 			<Text variant='bodyLarge'>Budget: {budget != minimumBudget - budgetStep ? "$" + budget.toFixed(2) : "-"} </Text>
 			<Slider
@@ -41,6 +41,6 @@ export default function BudgetSlider (props) {
 				value={budget}
 			/>
 		</View>
-    );
-  }
+	);
+}
 ;

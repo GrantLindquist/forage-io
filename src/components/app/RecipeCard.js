@@ -19,13 +19,13 @@ export default function RecipeCard(props) {
 	const tags = Object.entries(props.recipe.Tags);
 	let chars = 0;
 	let tagNum = 0;
-	
-	for(let tag of tags){
-	  if (chars + tag[0].length > 30) break;
-	  chars += tag[0].length;
-	  tagNum++;
+
+	for (let tag of tags) {
+		if (chars + tag[0].length > 30) break;
+		chars += tag[0].length;
+		tagNum++;
 	}
-	
+
 	const truncatedTags = tags.slice(0, tagNum);
 	const remainder = tags.length - truncatedTags.length;
 
@@ -34,42 +34,42 @@ export default function RecipeCard(props) {
 		// Parse title from JSON property to tag string
 		let title = tag[0].charAt(2).toLowerCase() + tag[0].slice(3);
 
-		return(
-			<RecipeTag key={title} title={title} immutable={true}/>
+		return (
+			<RecipeTag key={title} title={title} immutable={true} />
 		)
 	});
 
 	return (
 		<Card style={styles.card}>
 			<Card.Content>
-				<View style={{width: '90%', marginBottom: 10}}>
+				<View style={{ width: '90%', marginBottom: 10 }}>
 					<Text style={styles.recipeTitle} numberOfLines={2}>{props.recipe.Title}</Text>
 				</View>
-				<View style={{ marginBottom: 8, flexWrap: 'wrap', flexDirection: 'row', alignItems: 'center'}}>
+				<View style={{ marginBottom: 8, flexWrap: 'wrap', flexDirection: 'row', alignItems: 'center' }}>
 					{recipeTags}
-					{remainder > 0 ? <Text style={[styles.recipeSubtext, {marginLeft: 5}]}>+{remainder}</Text> : <></>}
+					{remainder > 0 ? <Text style={[styles.recipeSubtext, { marginLeft: 5 }]}>+{remainder}</Text> : <></>}
 				</View>
-				<View style={{flexDirection: 'row', width: '100%', marginTop: 5}}>
-					<Text style={styles.recipeSubtext}><Image 
+				<View style={{ flexDirection: 'row', width: '100%', marginTop: 5 }}>
+					<Text style={styles.recipeSubtext}><Image
 						source={require('../../../assets/icons/servings.png')}
-						style={{width: 14, height: 14}}
+						style={{ width: 14, height: 14 }}
 					/>{props.recipe.Servings}</Text>
-					<Text style={styles.recipeSubtext}><Image 
+					<Text style={styles.recipeSubtext}><Image
 						source={require('../../../assets/icons/time.png')}
-						style={{width: 14, height: 14}}
+						style={{ width: 14, height: 14 }}
 					/>{formattedTime(props.recipe.CreationTime)}</Text>
 					<Text style={styles.recipeSubtext}>
-					${Number(props.recipe.Budget).toFixed(2)}</Text>
-					<View style={{marginLeft: 'auto'}}>
+						${Number(props.recipe.Budget).toFixed(2)}</Text>
+					<View style={{ marginLeft: 'auto' }}>
 						{/* Display liked recipes with yellow number */}
-						<Text style={user.unsafeMetadata.savedRecipeIds.includes(props.recipe.RecipeId) ? styles.highlightedSubtext : styles.recipeSubtext}>{props.recipe.Stars} <Image 
+						<Text style={user.unsafeMetadata.savedRecipeIds.includes(props.recipe.RecipeId) ? styles.highlightedSubtext : styles.recipeSubtext}>{props.recipe.Stars} <Image
 							source={user.unsafeMetadata.savedRecipeIds.includes(props.recipe.RecipeId) ? require('../../../assets/icons/star-selected.png') : require('../../../assets/icons/star-filled.png')}
-							style={{width: 14, height: 14}}
+							style={{ width: 14, height: 14 }}
 						/></Text>
 					</View>
 				</View>
 			</Card.Content>
-	  	</Card>
+		</Card>
 	);
 };
 
