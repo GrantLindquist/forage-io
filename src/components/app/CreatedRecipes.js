@@ -103,6 +103,7 @@ export default function CreatedRecipes(props) {
 			<Snackbar
 				visible={deleteSnackbarVisible}
 				onDismiss={() => setDeleteSnackbarVisible(false)}
+				style={{marginBottom: 0}}
 				action={{
 					label: 'OK',
 					onPress: () => {}

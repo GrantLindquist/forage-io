@@ -27,8 +27,7 @@ export default function IngredientTag(props) {
 const styles = StyleSheet.create({
 	tag: {
 		marginRight: 5,
-		marginBottom: 5,
-		borderColor: 'white',
+		borderColor: 'grey',
 		borderRadius: 8,
 		borderWidth: 1,
 		backgroundColor: 'transparent'

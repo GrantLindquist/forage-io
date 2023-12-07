@@ -6,7 +6,7 @@ export default function EmptyList() {
 
 	return (
         <View style={styles.container}>
-            <Text>Nothing to see here!</Text>
+            <Text style={{color: 'grey', marginBottom: 24}}>There are no recipes here... yet.</Text>
         </View>
 	);
 };
@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
 	container: {
 		justifyContent: 'center',
         alignItems: 'center',
+        textAlign: 'center',
         minHeight: "100%",
 	},
 });

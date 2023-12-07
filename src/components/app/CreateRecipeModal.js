@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { View, ScrollView, StyleSheet, Image } from "react-native";
-import { Text, TextInput, Button, IconButton, Checkbox, ActivityIndicator, Snackbar, ProgressBar, Portal, Dialog, HelperText } from 'react-native-paper';
+import { Text, TextInput, Button, IconButton, Checkbox, ActivityIndicator, Snackbar, ProgressBar, Portal, Dialog, HelperText, useTheme } from 'react-native-paper';
 import IngredientTag from './IngredientTag'
 import BudgetSlider from './BudgetSlider';
 import TagSearch from './TagSearch';
@@ -15,6 +15,8 @@ export default function CreateRecipeModal(props) {
 
 	// Gets user from Clerk
 	const { user } = useUser(); 
+
+	const theme = useTheme();
 
 	// Navigation object
 	const navigation = useNavigation();
@@ -54,31 +56,47 @@ export default function CreateRecipeModal(props) {
 	// List of info dialog content options for the recipe modal
 	const infoDialogContent = [
 		<>
-			<Dialog.Title>Recipe Tags</Dialog.Title>
-			<Dialog.Content>
-				<Text pointerEvents='none'>
+			<Dialog.Title style={{color: theme.colors.primary, fontWeight: 700, marginBottom: 12}}>Creating a Recipe</Dialog.Title>
+			<Dialog.Content pointerEvents='none' style={{lineHeight: 22}}>
+				<Text style={{fontSize: 16, fontWeight: 700, marginBottom: 2}}>Recipe Tags</Text>
+				<Text style={{paddingBottom: 12}}>
 					A "tag" is an adjective used for describing the recipes you want to generate.
-					For example, if you want to generate a Mexican recipe that is spicy, you should
-					select the <RecipeTag title={'mexican'} immutable={true}/> and <RecipeTag title={'spicy'} 
-					immutable={true}/> tags. There are four types of tag:
-					cuisine, meal type, diet, and flavor. You can only select a few of each tag. 
+				</Text>
+				<Text style={{paddingBottom: 12}}>
+					For example, if you want to generate a vegan Mexican breakfast recipe that is spicy, you should
+					select the following tags: 
+				</Text>
+				<View style={{flexDirection: 'row', paddingBottom: 6}}>
+					<RecipeTag title={'vegan'} immutable={true}/> 
+					<RecipeTag title={'mexican'} immutable={true}/>
+					<RecipeTag title={'breakfast'} immutable={true}/>
+					<RecipeTag title={'spicy'} immutable={true}/>
+				</View>
+				<Text>
+					There are four types of tag:
+					<Text style={{fontWeight: 700, color: '#FF008A'}}> cuisine</Text>, 
+					<Text style={{fontWeight: 700, color: '#00A3FF'}}> meal type</Text>, 
+					<Text style={{fontWeight: 700, color: '#FF7A00'}}> diet</Text>, and 
+					<Text style={{fontWeight: 700, color: '#7000FF'}}> flavor</Text>. 
+					You can only select a few of each tag.
 				</Text>
 			</Dialog.Content>
 		</>,
 		<>
-			<Dialog.Title>Adding Ingredients</Dialog.Title>
-			<Dialog.Content>
-				<Text>
+			<Dialog.Title style={{color: theme.colors.primary, fontWeight: 700, marginBottom: 12}}>Creating a Recipe</Dialog.Title>
+			<Dialog.Content pointerEvents='none' style={{lineHeight: 22}}>
+				<Text style={{fontSize: 16, fontWeight: 700, marginBottom: 4}}>Ingredients</Text>
+				<Text style={{paddingBottom: 12}}>
 					Additionally, you can specify up to five ingredients you would like to see in the recipe.
 					Any input that isn't an edible food item not be included in the recipe.
 				</Text>
-				<Text>Yes:</Text>
-				<View pointerEvents='none' style={{flexDirection: 'row'}}>
+				<Text style={{paddingBottom: 8}}>Yes:</Text>
+				<View style={{flexDirection: 'row', paddingBottom: 8}}>
 					<IngredientTag>Spinach</IngredientTag>
 					<IngredientTag>Eggs</IngredientTag>
 					<IngredientTag>Milk</IngredientTag>
 				</View>
-				<Text>No:</Text>
+				<Text style={{paddingBottom: 8}}>No:</Text>
 				<View  pointerEvents='none' style={{flexDirection: 'row'}}>
 					<IngredientTag>Dirt</IngredientTag>
 					<IngredientTag>Antifreeze</IngredientTag>
@@ -87,12 +105,13 @@ export default function CreateRecipeModal(props) {
 			</Dialog.Content>
 		</>,
 		<>
-			<Dialog.Title>Recipe Charges</Dialog.Title>
-			<Dialog.Content>
+			<Dialog.Title style={{color: theme.colors.primary, fontWeight: 700, marginBottom: 12}}>Creating a Recipe</Dialog.Title>
+			<Dialog.Content pointerEvents='none' style={{lineHeight: 22}}>
+				<Text style={{fontSize: 16, fontWeight: 700, marginBottom: 4}}>Recipe Charges</Text>
 				<Text>
 					A "charge" is a unit that allows you to generate a recipe. One charge will replenish every
-					hour and you can hold a maximum of 10 charges at a time. If you'd like to replenish charges
-					without waiting, press on <Text style={{ fontWeight: 700}}>Get more charges </Text>.
+					hour and you can hold a maximum of 10 charges at a time. 
+					{/* If you'd like to replenish charges without waiting, press on <Text style={{ fontWeight: 700}}>Get more charges </Text>. */}
 				</Text>
 			</Dialog.Content>
 		</>,
@@ -231,7 +250,7 @@ export default function CreateRecipeModal(props) {
 						style={{width: 18, height: 18}}
 					/>
 					<Text style={{color: 'grey'}}>{recipeCharges}/10  </Text>
-					<Text style={{fontWeight: 700}}>Get more charges</Text>
+					{/* <Text style={{fontWeight: 700}}>Get more charges</Text> */}
 					<IconButton onPress={() => setInfoDialogVisible(true)} style={{marginLeft: 'auto', margin: 0}} icon={"information-outline"}></IconButton>
 				</View>
 				{/* Displays component depending on whether or not recipe is loading */}
@@ -273,7 +292,7 @@ export default function CreateRecipeModal(props) {
 					</View>
 					<HelperText type='error'>{ingredientHelperText}</HelperText>
 
-					<ScrollView style={{paddingVertical:8}} horizontal={true}>
+					<ScrollView horizontal={true}>
 						{ingredientTags}
 					</ScrollView>
 
@@ -313,7 +332,7 @@ export default function CreateRecipeModal(props) {
 				visible={infoSnackbarVisible}
 				onDismiss={() => setInfoSnackbarVisible(false)}
 				action={{
-					label: 'Ok',
+					label: 'OK',
 					onPress: () => navigation.navigate('Main'),
 				}}>
 				Recipe was successfully generated!
@@ -324,8 +343,8 @@ export default function CreateRecipeModal(props) {
 				visible={errorSnackbarVisible}
 				onDismiss={() => setErrorSnackbarVisible(false)}
 				action={{
-					label: 'Ok',
-					// onPress: () => setErrorDialogVisible(true),
+					label: 'OK',
+					// onPress () => setErrorDialogVisible(true),
 					onPress: () => setErrorSnackbarVisible(false)
 				}}>
 				There was an error handling your request.
