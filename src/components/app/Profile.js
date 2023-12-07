@@ -37,7 +37,7 @@ export default function Profile() {
 	return (
 		<>
 			<View style={styles.container}>
-				<Avatar.Image source={{ uri: user.imageUrl }} size={120} style={{ marginTop: 80, marginBottom: 10 }} />
+				<Avatar.Image source={{ uri: user.imageUrl }} size={120} style={{ marginTop: 160, marginBottom: 10 }} />
 				<Text style={user.username.length > 12 ? styles.usernameSmall : styles.usernameLarge}>{user.username}</Text>
 				<Text style={styles.subtext}>Created on {user.createdAt.toLocaleString().split(',')[0]}</Text>
 			</View>

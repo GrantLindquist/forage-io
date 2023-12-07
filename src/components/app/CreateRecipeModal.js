@@ -8,6 +8,9 @@ import recipeService from '../../services/recipeService';
 import { useUser } from '@clerk/clerk-expo';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import RecipeTag from './RecipeTag';
+import { LinearGradient } from 'expo-linear-gradient';
+import MaskedView from '@react-native-masked-view/masked-view';
+
 const ms = require('ms');
 
 // Contains UI components that must be rendered on the highest z-index (modals, dialogs, etc.)
@@ -299,10 +302,21 @@ export default function CreateRecipeModal(props) {
 							<Text style={styles.categoryTitle}>More options</Text>
 							<BudgetSlider handleValueChange={(val) => budget.current = val} />
 
-							<Button disabled={recipeCharges == 0 ? true : false} onPress={handleCreateRecipe}>GENERATE RECIPE</Button>
+							<MaskedView maskElement={<Button style={{ margin: 20, marginHorizontal: 50 }} buttonColor="black" mode="contained">
+								Generate Recipe
+							</Button>}>
+								<LinearGradient
+									colors={["#38FFA0", "#00C2FF"]}
+									start={{ x: 0, y: 1 }}
+									end={{ x: 1, y: 0 }}
+								>
+									<Button style={{ margin: 20, marginHorizontal: 50 }} onPress={handleCreateRecipe} disabled={recipeCharges == 0 ? true : false} buttonColor='transparent' textColor="black" mode="contained">Generate</Button>
+								</LinearGradient>
+							</MaskedView>
 						</View></>
 						: <View style={styles.loadingScreen}>
 							<ActivityIndicator size={"large"} animating={true}></ActivityIndicator>
+							<Text style={{ color: 'grey', paddingHorizontal: 10 }}>Generating recipe...</Text>
 						</View>}
 				</View>
 
