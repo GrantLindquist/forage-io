@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { KeyboardAvoidingView, View, Pressable, StyleSheet } from "react-native";
+import { KeyboardAvoidingView, View, Pressable, StyleSheet, Image } from "react-native";
 import { Text } from "react-native";
 import SignIn from "./SignIn";
 import CreateAccount from "./CreateAccount";
@@ -30,7 +30,10 @@ export default function WelcomeScreen() {
 	return (
 		<View style={styles.container}>
 			<View style={{ position: 'absolute', top: '15%', alignItems: "center", }}>
-				<GradientText style={styles.title}>forage.io</GradientText>
+				<Image
+					style={{ height: 90, width: 280 }}
+					source={require('../../../assets/logo/nav-logoface.png')}>
+				</Image>
 				<Text style={styles.subtitle}>Powered by GPT</Text>
 			</View>
 
@@ -67,6 +70,6 @@ const styles = StyleSheet.create({
 		color: "white",
 	},
 	subtitle: {
-		color: 'white',
+		color: 'grey',
 	}
 });

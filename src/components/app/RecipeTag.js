@@ -71,7 +71,7 @@ export default function RecipeTag(props) {
 	}
 
 	return (
-		<Pressable style={[styles.tag, selected ? { backgroundColor: color.bodyColor, color: color.textColor } : {}]} onPress={handlePress}>
+		<Pressable style={[styles.tag, selected ? { backgroundColor: color.bodyColor, color: color.textColor, borderColor: color.bodyColor } : {}]} onPress={handlePress}>
 			{/* If tag is a cuisine type tag, capitalize first letter of tag */}
 			<Text style={{ paddingHorizontal: 6, paddingVertical: 4 }}>{formattedTitle}</Text>
 		</Pressable>
@@ -80,10 +80,12 @@ export default function RecipeTag(props) {
 
 const styles = StyleSheet.create({
 	tag: {
-		backgroundColor: 'grey',
+		backgroundColor: 'transparent',
 		color: 'grey',
 		opacity: .9,
-		borderRadius: 3,
+		borderRadius: 5,
+		borderColor: 'grey',
+		borderWidth: 1,
 		fontSize: 13,
 		fontWeight: 500,
 		marginRight: 6,
