@@ -4,7 +4,7 @@ import { Alert, Share, ScrollView, View, StyleSheet, Pressable } from "react-nat
 import { Text, Snackbar, Appbar } from "react-native-paper";
 import { useUser } from "@clerk/clerk-expo";
 import RecipeTag from "./RecipeTag";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import recipeService from "../../services/recipeService";
 import MaskedView from "@react-native-masked-view/masked-view";
@@ -33,7 +33,11 @@ export default function RecipePage(props) {
 	// State for tracking whether or can save or unsave this recipe
 	const [canBeSaved, setCanBeSaved] = useState(
 		// Can be saved if not included in users saved recipes (not already saved)
-		!user.unsafeMetadata.savedRecipeIds.includes(recipe.RecipeId), [])
+		!user.unsafeMetadata.savedRecipeIds.includes(recipe.RecipeId));
+
+	useEffect(() => {
+    	setUserAction(determineUserAction());
+	}, [canBeSaved]);
 
 	// Method for determining user action in FAB group
 	const determineUserAction = () => {
@@ -121,9 +125,6 @@ export default function RecipePage(props) {
 
 		// Refreshes savedRecipes.js
 		props.refreshSavedRecipes();
-
-		// Updates FAB display
-		setUserAction(determineUserAction());
 
 		return response;
 	}
