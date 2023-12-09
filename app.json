@@ -4,10 +4,10 @@
     "slug": "forage-io",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/logo/nav-logo.png",
+    "icon": "./assets/logo/forage.io-icon.png",
     "userInterfaceStyle": "dark",
     "splash": {
-      "image": "./assets/logo/nav-logoface.png",
+      "image": "./assets/forage.io-splash.png",
       "backgroundColor": "#000000"
     },
     "assetBundlePatterns": [

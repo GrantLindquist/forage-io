@@ -101,6 +101,7 @@ export default function App() {
 				require('./assets/icons/up.png'),
 				require('./assets/icons/down.png'),
 				require('./assets/logo/nav-logoface.png'),
+				require('./assets/welcome-bg.png'),
 			];
 
 			const cacheImages = preloadImages(images);

@@ -29,11 +29,14 @@ export default function WelcomeScreen() {
 
 	return (
 		<View style={styles.container}>
+			<Image 
+				style={{height: '100%', width: '100%'}}
+				source={require('../../../assets/welcome-bg.png')}
+			/>
 			<View style={{ position: 'absolute', top: '15%', alignItems: "center", }}>
 				<Image
 					style={{ height: 80, width: 290 }}
-					source={require('../../../assets/logo/nav-logoface.png')}>
-				</Image>
+					source={require('../../../assets/logo/nav-logoface.png')}/>
 				<Text style={styles.subtitle}>Powered by GPT</Text>
 			</View>
 
