@@ -1,12 +1,14 @@
 import { useRoute } from "@react-navigation/native";
 import { useNavigation } from '@react-navigation/native';
-import { Alert, Share, ScrollView, View, StyleSheet, Image } from "react-native";
+import { Alert, Share, ScrollView, View, StyleSheet, Pressable } from "react-native";
 import { Text, Snackbar, Appbar } from "react-native-paper";
 import { useUser } from "@clerk/clerk-expo";
 import RecipeTag from "./RecipeTag";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import recipeService from "../../services/recipeService";
+import MaskedView from "@react-native-masked-view/masked-view";
+import { LinearGradient } from "expo-linear-gradient";
 const ms = require('ms');
 
 // Detailed page for a recipe that contains ingredients, instructions, etc.
@@ -29,10 +31,9 @@ export default function RecipePage(props) {
 	}
 
 	// State for tracking whether or can save or unsave this recipe
-	const canBeSaved = useMemo(() => {
+	const [canBeSaved, setCanBeSaved] = useState(
 		// Can be saved if not included in users saved recipes (not already saved)
-		return !user.unsafeMetadata.savedRecipeIds.includes(recipe.RecipeId);
-	}, [user.unsafeMetadata.savedRecipeIds])
+		!user.unsafeMetadata.savedRecipeIds.includes(recipe.RecipeId), [])
 
 	// Method for determining user action in FAB group
 	const determineUserAction = () => {
@@ -46,9 +47,9 @@ export default function RecipePage(props) {
 		else {
 			return (
 				<Appbar.Action
-					icon={() => <Image
-						source={!canBeSaved ? require('../../../assets/icons/star-selected.png') : require('../../../assets/icons/star-filled.png')}
-						style={{ height: 24, width: 24 }} />}
+					icon={!canBeSaved ? "star" : "star-outline"}
+					size={30}
+					color={!canBeSaved ? "#FFFF78" : "white"}
 					onPress={() => handleSaveRecipe()}
 				/>
 			)
@@ -99,10 +100,12 @@ export default function RecipePage(props) {
 			// Execute service request
 			let response = await recipeService.updateRecipeStars(recipe.CreatorId, recipe.RecipeId, Number(recipe.Stars) + 1);
 			console.log(response);
+			setCanBeSaved(false);
 		}
 		else {
 			let response = await recipeService.updateRecipeStars(recipe.CreatorId, recipe.RecipeId, Number(recipe.Stars) - 1);
 			console.log(response);
+			setCanBeSaved(true);
 		}
 
 		// Update user with new list of ids
@@ -201,19 +204,23 @@ ${instructionString}`,
 			<Appbar.Header style={{ backgroundColor: '#000000' }}>
 				<Appbar.BackAction onPress={() => navigation.goBack()} />
 				<Appbar.Content></Appbar.Content>
+				<Pressable style={{ paddingRight: 11 }} onPress={() => navigation.navigate('CreateRecipeModal', {
+					recipe: recipe
+				})}>
+					<MaskedView maskElement={<MaterialCommunityIcons name="creation" size={30} />}>
+						<LinearGradient
+							colors={["#38FFA0", "#00C2FF"]}
+							start={{ x: 0, y: 0 }}
+							end={{ x: 1, y: 0 }}
+							style={{ width: 30, height: 30 }}
+						/>
+					</MaskedView>
+				</Pressable>
 				<Appbar.Action
-					icon={() => <Image
-						source={require('../../../assets/icons/share.png')}
-						style={{ height: 24, width: 24 }} />}
+					icon={"share"}
+					size={30}
 					onPress={() => handleShareRecipe()}
 				/>
-				<Appbar.Action
-					icon={() => <Image
-						source={require('../../../assets/icons/remix-action.png')}
-						style={{ height: 24, width: 24 }} />}
-					onPress={() => navigation.navigate('CreateRecipeModal', {
-						recipe: recipe
-					})} />
 				{userAction}
 			</Appbar.Header>
 

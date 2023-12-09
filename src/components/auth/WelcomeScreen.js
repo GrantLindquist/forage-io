@@ -31,7 +31,7 @@ export default function WelcomeScreen() {
 		<View style={styles.container}>
 			<View style={{ position: 'absolute', top: '15%', alignItems: "center", }}>
 				<Image
-					style={{ height: 90, width: 280 }}
+					style={{ height: 80, width: 290 }}
 					source={require('../../../assets/logo/nav-logoface.png')}>
 				</Image>
 				<Text style={styles.subtitle}>Powered by GPT</Text>

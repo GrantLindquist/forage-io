@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ScrollView, View, Image } from "react-native";
 import { Text, IconButton } from "react-native-paper";
 import RecipeTag from "./RecipeTag";
-import tags from '../../../tags.json';
+import tags from '../../utilities/tags.json';
 
 // Expandable horizontal scroll view for viewing items
 export default function TagSearch(props) {

@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Text } from "react-native-paper";
-import tags from '../../../tags.json';
+import tags from '../../utilities/tags.json';
 import { Pressable, StyleSheet } from "react-native";
 
 // A small component containing a title and icon - used for filter sorting and recipe tagging.
