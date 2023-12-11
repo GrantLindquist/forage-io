@@ -39,18 +39,20 @@ export default function Profile() {
 
 	return (
 		<>
-			<View style={styles.container}>
-				{/* <Avatar.Image source={{ uri: user.imageUrl }} size={120} style={{ marginTop: 160, marginBottom: 10 }} /> */}
-				<MaskedView style={{marginTop: 150}} maskElement={<MaterialCommunityIcons name="account-outline" size={100} />}>
-					<LinearGradient
-						colors={["#38FFA0", "#00C2FF"]}
-						start={{ x: 0, y: 0 }}
-						end={{ x: 1, y: 0 }}
-						style={{ width: 100, height: 100 }}
-					/>
-				</MaskedView>
-				<Text style={user.username.length > 12 ? styles.usernameSmall : styles.usernameLarge}>{user.username}</Text>
-				<Text style={styles.subtext}>Created on {user.createdAt.toLocaleString().split(',')[0]}</Text>
+			<View style={{ paddingBottom: '20%' }}>
+				<View style={styles.container}>
+					{/* <Avatar.Image source={{ uri: user.imageUrl }} size={120} style={{ marginTop: 160, marginBottom: 10 }} /> */}
+					<MaskedView maskElement={<MaterialCommunityIcons name="account-outline" size={100} />}>
+						<LinearGradient
+							colors={["#38FFA0", "#00C2FF"]}
+							start={{ x: 0, y: 0 }}
+							end={{ x: 1, y: 0 }}
+							style={{ width: 100, height: 100 }}
+						/>
+					</MaskedView>
+					<Text style={user.username.length > 12 ? styles.usernameSmall : styles.usernameLarge}>{user.username}</Text>
+					<Text style={styles.subtext}>Created on {user.createdAt.toLocaleString().split(',')[0]}</Text>
+				</View>
 			</View>
 			<View style={{ position: 'absolute', bottom: 5, width: '100%' }}>
 				<Button mode="text">Terms of Service</Button>
@@ -90,9 +92,9 @@ export default function Profile() {
 
 const styles = StyleSheet.create({
 	container: {
-		marginBottom: 20,
 		alignItems: 'center',
 		justifyContent: 'center',
+		height: '100%',
 	},
 	usernameSmall: {
 		// fontFamily: 'Roboto',

@@ -105,7 +105,7 @@ export default function TagSearch(props) {
 
     return (
         <View style={{ alignItems: 'center' }}>
-            <ScrollView style={{ paddingTop: 8 }} horizontal={true}>
+            <ScrollView style={{ paddingTop: 8 }} horizontal={true} showsHorizontalScrollIndicator={false}>
                 <View style={{ marginBottom: 0, flexWrap: 'wrap', flexDirection: 'row', flex: 3 }}>
                     {tagList}
                 </View>

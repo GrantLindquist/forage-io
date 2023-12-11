@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from 'react';
-import { View, ScrollView, StyleSheet, Image } from "react-native";
+import { useState, useRef, useEffect, useMemo } from 'react';
+import { View, ScrollView, StyleSheet, Image, Pressable } from "react-native";
 import { Text, TextInput, Button, IconButton, Checkbox, ActivityIndicator, Snackbar, ProgressBar, Portal, Dialog, HelperText, useTheme } from 'react-native-paper';
 import IngredientTag from './IngredientTag'
 import BudgetSlider from './BudgetSlider';
@@ -37,6 +37,17 @@ export default function CreateRecipeModal(props) {
 
 	// State for tracking recipe charge progress bar
 	const [recipeCharges, setRecipeCharges] = useState(10 - user.unsafeMetadata.recipeCharges.length);
+	const recipeChargesValueColor = useMemo(() => {
+		if (recipeCharges == 0) {
+			return "red";
+		}
+		else if (recipeCharges <= 3) {
+			return "yellow";
+		}
+		else {
+			return "grey";
+		}
+	}, [recipeCharges])
 
 	// State for tracking dialogs
 	const [errorDialogVisible, setErrorDialogVisible] = useState(false);
@@ -55,6 +66,8 @@ export default function CreateRecipeModal(props) {
 	// Recipe that may be passed through route to signal remix recipe
 	const route = useRoute();
 	const remixRecipe = route.params ? route.params.recipe : undefined;
+
+	const [remixRecipeVisible, setRemixRecipeVisible] = useState(false);
 
 	// List of info dialog content options for the recipe modal
 	const infoDialogContent = [
@@ -244,41 +257,63 @@ export default function CreateRecipeModal(props) {
 
 	return (
 		<View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-end' }}>
-			<View style={{ height: '95%', backgroundColor: '#222222' }}>
-				<ProgressBar progress={recipeCharges / 10} />
+			<View style={{ height: '95%', backgroundColor: '#000000' }}>
 				<View>
-					<View style={{ alignItems: 'center', flexDirection: 'row', marginHorizontal: 15, marginTop: 10 }}>
-						<Image
-							source={require('../../../assets/icons/charge.png')}
-							style={{ width: 18, height: 18 }}
-						/>
-						<Text style={{ color: 'grey' }}>{recipeCharges}/10  </Text>
-						{/* <Text style={{fontWeight: 700}}>Get more charges</Text> */}
-						<IconButton onPress={() => setInfoDialogVisible(true)} style={{ marginLeft: 'auto', margin: 0 }} icon={"information-outline"}></IconButton>
+					<View style={{ backgroundColor: '#222222' }}>
+						<ProgressBar progress={recipeCharges / 10} />
+						<View style={{ marginHorizontal: 15, marginTop: 15 }}>
+							<View style={{ alignItems: 'center', flexDirection: 'row' }}>
+								<Image
+									source={require('../../../assets/icons/charge.png')}
+									style={{ width: 18, height: 18 }}
+								/>
+								<Text style={{ color: recipeChargesValueColor }}> {recipeCharges}
+									<Text style={{ color: 'grey' }}>/10</Text>
+								</Text>
+								{/* <Text style={{fontWeight: 700}}>Get more charges</Text> */}
+							</View>
+							<View style={[{ alignItems: 'center', flexDirection: 'row' }, !remixRecipe && { marginBottom: 15 }]}>
+								<Text variant="headlineMedium" style={{ color: theme.colors.primary, fontWeight: 700 }}>{remixRecipe ? "Remix Recipe" : "Generate Recipe"}</Text>
+								<IconButton onPress={() => setInfoDialogVisible(true)} style={{ margin: 0 }} icon={"information-outline"}></IconButton>
+							</View>
+							{remixRecipe &&
+								<Pressable style={{ marginBottom: 15 }} onPress={() => setRemixRecipeVisible(!remixRecipeVisible)}>
+									{remixRecipeVisible ?
+										<Text>Hide Original</Text> : <Text>View Original</Text>
+									}
+
+								</Pressable>
+							}
+						</View>
 					</View>
+
 					{/* Displays component depending on whether or not recipe is loading */}
 					{!isGeneratingRecipe ? <>
 						{/* Displays recipe information if provided */}
 						{remixRecipe ?
-							<View style={{ marginHorizontal: 20 }}>
-								<Text style={styles.recipeTitle}>{remixRecipe.Title}</Text>
-								<View style={{ marginTop: 15, flexDirection: 'row', justifyContent: 'space-evenly' }}>
-									<View style={{ alignItems: 'center' }}>
-										<Text style={styles.subtext}>Serves</Text>
-										<Text variant="headlineMedium">{remixRecipe.Servings}</Text>
+							<>
+								{remixRecipeVisible &&
+									<View style={{ margin: 20 }}>
+										<Text style={styles.recipeTitle}>{remixRecipe.Title}</Text>
+										<View style={{ marginTop: 15, flexDirection: 'row', justifyContent: 'space-evenly' }}>
+											<View style={{ alignItems: 'center' }}>
+												<Text style={styles.subtext}>Serves</Text>
+												<Text variant="headlineMedium">{remixRecipe.Servings}</Text>
+											</View>
+											<View style={{ alignItems: 'center', paddingHorizontal: 25, borderColor: "rgb(0, 227, 138)", borderLeftWidth: '2', borderRightWidth: '2' }}>
+												<Text style={styles.subtext}>Budget</Text>
+												<Text variant="headlineMedium">${Number(remixRecipe.Budget).toFixed(2)}</Text>
+											</View>
+											<View style={{ alignItems: 'center' }}>
+												<Text style={styles.subtext}>Time</Text>
+												<Text variant="headlineMedium">{ms(remixRecipe.CreationTime, { long: false })}</Text>
+											</View>
+										</View>
 									</View>
-									<View style={{ alignItems: 'center', paddingHorizontal: 25, borderColor: "rgb(0, 227, 138)", borderLeftWidth: '2', borderRightWidth: '2' }}>
-										<Text style={styles.subtext}>Budget</Text>
-										<Text variant="headlineMedium">${Number(remixRecipe.Budget).toFixed(2)}</Text>
-									</View>
-									<View style={{ alignItems: 'center' }}>
-										<Text style={styles.subtext}>Time</Text>
-										<Text variant="headlineMedium">{ms(remixRecipe.CreationTime, { long: false })}</Text>
-									</View>
-								</View>
-							</View>
-							: <></>}
-						<View style={{ margin: 20, marginTop: 0 }}>
+								}
+								{remixRecipeVisible && <View style={styles.divider}></View>}
+							</> : <></>}
+						<View style={{ margin: 20, marginVertical: 10, minHeight: '80%' }}>
 							<Text style={styles.categoryTitle}>Add some tags!</Text>
 							<TagSearch
 								updateSelectedTags={(tags) => setSelectedFilters(tags)}
@@ -295,28 +330,33 @@ export default function CreateRecipeModal(props) {
 							</View>
 							<HelperText type='error'>{ingredientHelperText}</HelperText>
 
-							<ScrollView horizontal={true}>
+							<ScrollView style={selectedIngredients.length > 0 ? { maxHeight: 40 } : { maxHeight: 0 }} horizontal={true}>
 								{ingredientTags}
 							</ScrollView>
 
-							<Text style={styles.categoryTitle}>More options</Text>
+							<Text style={styles.categoryTitle}>More options:</Text>
 							<BudgetSlider handleValueChange={(val) => budget.current = val} />
 
-							<MaskedView maskElement={<Button style={{ margin: 20, marginHorizontal: 50 }} buttonColor="black" mode="contained">
-								Generate Recipe
-							</Button>}>
-								<LinearGradient
-									colors={["#38FFA0", "#00C2FF"]}
-									start={{ x: 0, y: 1 }}
-									end={{ x: 1, y: 0 }}
-								>
-									<Button style={{ margin: 20, marginHorizontal: 50 }} onPress={handleCreateRecipe} disabled={recipeCharges == 0 ? true : false} buttonColor='transparent' textColor="black" mode="contained">Generate</Button>
-								</LinearGradient>
-							</MaskedView>
+							<View style={{ position: 'absolute', bottom: 0, height: 100, width: '100%', alignItems: 'center', flexDirection: 'row' }}>
+								<MaskedView maskElement={<Button buttonColor="black" mode="contained">
+									Generate Recipe
+								</Button>}>
+									<LinearGradient
+										colors={["#00C2FF", "#38FFA0"]}
+										start={{ x: 0, y: 1 }}
+										end={{ x: 1, y: 0 }}
+									>
+										<Button onPress={handleCreateRecipe} style={{ minWidth: '70%' }} disabled={recipeCharges == 0 ? true : false} buttonColor='transparent' textColor="black" mode="contained">Generate</Button>
+									</LinearGradient>
+								</MaskedView>
+								<Button style={{ minWidth: '30%' }} onPress={() => navigation.navigate("Main")}>
+									Cancel
+								</Button>
+							</View>
 						</View></>
 						: <View style={styles.loadingScreen}>
 							<ActivityIndicator size={"large"} animating={true}></ActivityIndicator>
-							<Text style={{ color: 'grey', paddingHorizontal: 10 }}>Generating recipe...</Text>
+							<Text style={{ color: 'grey', paddingVertical: 15 }}>Generating recipe...</Text>
 						</View>}
 				</View>
 
@@ -326,7 +366,7 @@ export default function CreateRecipeModal(props) {
 						{infoDialogContent[infoDialogPageNumber]}
 						<Dialog.Actions>
 							<Button disabled={infoDialogPageNumber <= 0 ? true : false} onPress={() => setInfoDialogPageNumber(infoDialogPageNumber - 1)}>Previous</Button>
-							<Button disabled={infoDialogPageNumber >= 2 ? true : false} onPress={() => setInfoDialogPageNumber(infoDialogPageNumber + 1)}>Next</Button>
+							<Button disabled={infoDialogPageNumber >= infoDialogContent.length - 1 ? true : false} onPress={() => setInfoDialogPageNumber(infoDialogPageNumber + 1)}>Next</Button>
 						</Dialog.Actions>
 					</Dialog>
 
@@ -388,10 +428,10 @@ const styles = StyleSheet.create({
 		fontWeight: 700
 	},
 	loadingScreen: {
+		display: "flex",
 		alignItems: "center",
 		justifyContent: "center",
-		width: '100%',
-		height: '90%',
+		height: "85%",
 	},
 	addIngredients: {
 		height: 35,
@@ -405,4 +445,9 @@ const styles = StyleSheet.create({
 		marginRight: 0,
 		marginLeft: 10
 	},
+	divider: {
+		height: 1,
+		backgroundColor: "#444444",
+		marginHorizontal: 20
+	}
 });

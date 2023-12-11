@@ -8,9 +8,9 @@ export default function EmptyList() {
         <View style={styles.container}>
             <Image
                 source={require("../../../assets/empty-list.png")}    
-                style={{width: 400, height: 225}}
+                style={{width: 300, height: 160}}
             />
-            <Text style={{ color: 'grey', marginBottom: 48 }}>There are no recipes here... yet.</Text>
+            <Text style={{ color: 'grey', marginBottom: "15%" }}>There are no recipes here... yet.</Text>
         </View>
     );
 };

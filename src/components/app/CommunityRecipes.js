@@ -117,7 +117,12 @@ export default function CommunityRecipes() {
 
 	return (
 		<View style={{ height: '100%' }}>
-			<View style={{ flexDirection: 'row', alignItems: 'center', padding: 3, marginTop: 5 }}>
+			<View style={{ 
+				flexDirection: 'row', 
+				alignItems: 'center',
+				padding: 3, 
+				marginTop: 5, 
+			}}>
 				<Searchbar
 					style={styles.searchbar}
 					placeholder={"search recipes"}

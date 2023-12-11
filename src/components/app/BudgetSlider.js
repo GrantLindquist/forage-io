@@ -31,7 +31,7 @@ export default function BudgetSlider(props) {
 
 	return (
 		<View>
-			<Text variant='bodyLarge'>Budget: {budget != minimumBudget - budgetStep ? "$" + budget.toFixed(2) : "-"} </Text>
+			<Text variant='bodyLarge' style={{color: 'grey'}}>Budget: {budget != minimumBudget - budgetStep ? "$" + budget.toFixed(2) : "-"} </Text>
 			<Slider
 				onValueChange={val => handleValueChange(val)}
 				minimumValue={minimumBudget - budgetStep}

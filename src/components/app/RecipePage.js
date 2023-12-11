@@ -205,7 +205,7 @@ ${instructionString}`,
 			<Appbar.Header style={{ backgroundColor: '#000000' }}>
 				<Appbar.BackAction onPress={() => navigation.goBack()} />
 				<Appbar.Content></Appbar.Content>
-				<Pressable style={{ paddingRight: 11 }} onPress={() => navigation.navigate('CreateRecipeModal', {
+				<Pressable style={{ paddingRight: 16 }} onPress={() => navigation.navigate('CreateRecipeModal', {
 					recipe: recipe
 				})}>
 					<MaskedView maskElement={<MaterialCommunityIcons name="creation" size={30} />}>
