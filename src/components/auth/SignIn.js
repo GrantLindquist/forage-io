@@ -87,6 +87,7 @@ export default function SignIn() {
 				keyboardAppearance="dark"
 				selectionColor="white"
 				activeOutlineColor="grey"
+				textContentType='oneTimeCode'
 			/>
 			{usernameHelperText != "" ? <HelperText type='error'>{usernameHelperText}</HelperText> : <></>}
 			<TextInput
@@ -99,6 +100,7 @@ export default function SignIn() {
 				selectionColor="white"
 				activeOutlineColor="grey"
 				secureTextEntry={true}
+				textContentType='oneTimeCode'
 			/>
 			{passwordHelperText != "" ? <HelperText type='error'>{passwordHelperText}</HelperText> : <></>}
 

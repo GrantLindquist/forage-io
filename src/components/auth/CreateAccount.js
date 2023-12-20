@@ -115,6 +115,7 @@ export default function CreateAccount() {
 				keyboardAppearance="dark"
 				selectionColor="white"
 				activeOutlineColor="grey"
+				textContentType='oneTimeCode'
 			/>
 			{usernameHelperText != "" ? <HelperText type='error'>{usernameHelperText}</HelperText> : <></>}
 			<TextInput
@@ -127,6 +128,7 @@ export default function CreateAccount() {
 				selectionColor="white"
 				activeOutlineColor="grey"
 				secureTextEntry={true}
+				textContentType='oneTimeCode'
 			/>
 			{passwordHelperText != "" ? <HelperText type='error'>{passwordHelperText}</HelperText> : <></>}
 			<TextInput
@@ -139,6 +141,7 @@ export default function CreateAccount() {
 				selectionColor="white"
 				activeOutlineColor="grey"
 				secureTextEntry={true}
+				textContentType='oneTimeCode'
 			/>
 			{confirmPasswordHelperText != "" ? <HelperText type='error'>{confirmPasswordHelperText}</HelperText> : <></>}
 

@@ -65,7 +65,7 @@ const recipeService = {
                         title: a creative, simple name for the recipe--please exclude any inedible/dangerous ingredients from the recipe name,
                         servings: the number of servings this recipe will create,
                         ingredients: an array of each ingredient for the recipe,
-                        instructions: an array of each step to make the recipe,
+                        instructions: an array of each step to make the recipe. Do not include instruction step numbers,
                         creationTime: the amount of time it takes to create the recipe in milliseconds,
                         budget: sum of approximate cost of ingredients (in xx.xx format)
                         nutritionFacts: {
