@@ -259,7 +259,7 @@ export default function CreateRecipeModal(props) {
 		<View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-end' }}>
 			<View style={{ height: '95%', backgroundColor: '#000000' }}>
 				<View>
-					<View style={{ backgroundColor: '#222222' }}>
+					<View style={{ backgroundColor: '#222222', borderBottomLeftRadius: 10, borderBottomRightRadius: 10 }}>
 						<ProgressBar progress={recipeCharges / 10} />
 						<View style={{ marginHorizontal: 15, marginTop: 15 }}>
 							<View style={{ alignItems: 'center', flexDirection: 'row' }}>
@@ -339,10 +339,10 @@ export default function CreateRecipeModal(props) {
 
 							<View style={{ position: 'absolute', bottom: 0, height: 100, width: '100%', alignItems: 'center', flexDirection: 'row' }}>
 								<MaskedView maskElement={<Button buttonColor="black" mode="contained">
-									Generate Recipe
+									Generate
 								</Button>}>
 									<LinearGradient
-										colors={["#00C2FF", "#38FFA0"]}
+										colors={recipeCharges == 0 ? ['grey, grey'] : ["#00C2FF", "#38FFA0"]}
 										start={{ x: 0, y: 1 }}
 										end={{ x: 1, y: 0 }}
 									>

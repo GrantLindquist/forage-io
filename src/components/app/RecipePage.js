@@ -10,6 +10,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import recipeService from "../../services/recipeService";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { LinearGradient } from "expo-linear-gradient";
+import RecipeTip from "./RecipeTip";
 const ms = require('ms');
 
 // Detailed page for a recipe that contains ingredients, instructions, etc.
@@ -207,6 +208,27 @@ ${instructionString}`,
 		)
 	});
 
+	// Renders each recipe tip
+	const recipeTips = (
+		<>
+			{
+				recipe.Tips &&
+				<ScrollView horizontal={true}>
+					<View style={{ marginVertical: 10, flexDirection: 'row' }}>
+						{recipe.Tips.map((tip) => {
+							return (
+								<RecipeTip>
+									{tip}
+								</RecipeTip>
+							)
+						})}
+					</View>
+
+				</ScrollView>
+			}
+		</>
+	)
+
 	// Renders each step of instructions 
 	var stepCounter = 0;
 	const instructions = recipe.Instructions.map((instruction) => {
@@ -279,11 +301,18 @@ ${instructionString}`,
 					<Text style={[styles.categoryTitle, { color: "rgb(0, 227, 138)" }]}>Ingredients:</Text>
 					{ingredients}
 					<Text style={[styles.categoryTitle, { color: "rgb(0, 227, 138)" }]}>Instructions:</Text>
+					{recipeTips}
 					{instructions}
-					<View style={{ backgroundColor: 'grey', height: 1, margin: 10 }}></View>
-					<Pressable onPress={() => setReportRecipeVisible(true)}>
-						<Text variant="labelLarge" style={{ color: 'grey', textAlign: 'center' }}>report this recipe</Text>
-					</Pressable>
+
+					{/* RECIPE FOOTER */}
+					{recipe.CreatorId != user.id &&
+						<>
+							<View style={{ backgroundColor: 'grey', height: 1, margin: 10 }}></View>
+							<Pressable onPress={() => setReportRecipeVisible(true)}>
+								<Text variant="labelLarge" style={{ color: 'grey', textAlign: 'center' }}>report this recipe</Text>
+							</Pressable>
+						</>
+					}
 				</View>
 			</ScrollView>
 			<Snackbar

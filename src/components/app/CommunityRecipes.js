@@ -39,6 +39,9 @@ export default function CommunityRecipes() {
 	const loadCommunityRecipes = async () => {
 		// Get response from recipeService
 		const response = await recipeService.getCommunityRecipes(user.id, searchQuery, activeFilters);
+
+		// Response is undefined if selecting a tag w/ a hyphen
+
 		setCommunityRecipes(response);
 		setEndNumber(response.length);
 	}
@@ -159,12 +162,11 @@ export default function CommunityRecipes() {
 							<RecipeCard recipe={item.item} />
 						</Pressable>
 					)
-
 				}}
 				ListEmptyComponent={() => <EmptyList />}
 				ListFooterComponent={<View style={{ paddingVertical: 60 }}></View>}
 			/>
-			{endNumber != 1 ? paginationButtons() : <></>}
+			{endNumber > 1 ? paginationButtons() : <></>}
 		</View>
 	);
 };

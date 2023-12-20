@@ -81,6 +81,11 @@ const recipeService = {
                             addedSugars: estimated number of grams of added sugar per serving
                             protein: estimated number of grams of protein per serving
                         }
+                        tips: an array containing anywhere between 0-3 recipe tips/pointers related to the recipe. 
+                        Tips can relate to the ingredients used, ingredient substitutes, appliances that make creating the recipe easier, or methods to make the recipe better.
+                        Avoid generating tips related to leftover ingredient user--try to focus on the current recipe.
+                        Avoid generating tips that are obvious (e.g. make your recipe sweeter by adding sugar!)
+                        Here's a good example: Apply pressure to your lemons to increase their flavor! (for a recipe containing lemons)
                     }
                     ${extraInstructions(request.tags)}`
                 }
@@ -106,7 +111,8 @@ const recipeService = {
                 budget: recipe.budget,
                 creationTime: recipe.creationTime,
                 servings: recipe.servings,
-                nutritionFacts: recipe.nutritionFacts
+                nutritionFacts: recipe.nutritionFacts,
+                tips: recipe.tips
             })
         });
         // Return response
@@ -148,7 +154,9 @@ const recipeService = {
                 creatorUsername: user.username,
                 budget: recipe.Budget,
                 creationTime: recipe.CreationTime,
-                servings: recipe.Servings
+                servings: recipe.Servings,
+                nutritionFacts: recipe.nutritionFacts,
+                tips: recipe.tips
             })
         });
         // Return response
