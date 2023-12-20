@@ -1,7 +1,8 @@
 import { useRoute } from "@react-navigation/native";
 import { useNavigation } from '@react-navigation/native';
 import { Alert, Share, ScrollView, View, StyleSheet, Pressable } from "react-native";
-import { Text, Snackbar, Appbar } from "react-native-paper";
+import { Text, Snackbar, Appbar, Checkbox } from "react-native-paper";
+import { Portal, Dialog, Button } from "react-native-paper";
 import { useUser } from "@clerk/clerk-expo";
 import RecipeTag from "./RecipeTag";
 import { useState, useEffect } from "react";
@@ -24,6 +25,14 @@ export default function RecipePage(props) {
 
 	// State that tracks snackbar status
 	const [snackbarVisible, setSnackbarVisible] = useState(false);
+	const [reportSnackbarVisible, setReportSnackbarVisible] = useState(false);
+
+	// State for tracking report recipe dialog
+	const [reportRecipeVisible, setReportRecipeVisible] = useState(false);
+	const [reportInaccurateChecked, setReportInaccurateChecked] = useState(false);
+	const [reportInappropriateRecipeChecked, setReportInappropriateRecipeChecked] = useState(false);
+	const [reportInappropriateUserChecked, setReportInappropriateUserChecked] = useState(false);
+	const [reportInedibleChecked, setReportInedibleChecked] = useState(false);
 
 	// Attempts to format time from ms to human-readable time
 	const formattedTime = (time) => {
@@ -36,7 +45,7 @@ export default function RecipePage(props) {
 		!user.unsafeMetadata.savedRecipeIds.includes(recipe.RecipeId));
 
 	useEffect(() => {
-    	setUserAction(determineUserAction());
+		setUserAction(determineUserAction());
 	}, [canBeSaved]);
 
 	// Method for determining user action in FAB group
@@ -173,6 +182,14 @@ ${instructionString}`,
 		}
 	}
 
+	// Reports recipe
+	const handleReportRecipe = () => {
+		setReportRecipeVisible(false);
+		setReportSnackbarVisible(true);
+
+		// Do more stuff here maybe
+	}
+
 	// Sub-component that lists a tag component for each recipe tag
 	const recipeTags = Object.entries(recipe.Tags).map((tag) => {
 		// Parse title from JSON property to tag string
@@ -249,7 +266,7 @@ ${instructionString}`,
 					<Text variant="bodyLarge" style={[styles.categoryTitle, { color: "rgb(0, 227, 138)" }]}>Nutrition:</Text>
 					<Text variant="bodyLarge"><Text style={{ color: 'grey' }}>Calories: </Text>{recipe.NutritionFacts.calories}</Text>
 					<Text variant="bodyLarge"><Text style={{ color: 'grey' }}>Total Fat: </Text>{recipe.NutritionFacts.totalFat}g</Text>
-					<Text variant="bodyLarge" style={{ marginLeft: 30 }}><Text style={{ color: 'grey'}}>Saturated Fat: </Text>{recipe.NutritionFacts.saturatedFat}g</Text>
+					<Text variant="bodyLarge" style={{ marginLeft: 30 }}><Text style={{ color: 'grey' }}>Saturated Fat: </Text>{recipe.NutritionFacts.saturatedFat}g</Text>
 					<Text variant="bodyLarge" style={{ marginLeft: 30 }}><Text style={{ color: 'grey' }}>Trans Fat: </Text>{recipe.NutritionFacts.transFat}g</Text>
 					<Text variant="bodyLarge"><Text style={{ color: 'grey' }}>Cholesterol: </Text>{recipe.NutritionFacts.cholesterol}mg</Text>
 					<Text variant="bodyLarge"><Text style={{ color: 'grey' }}>Sodium: </Text>{recipe.NutritionFacts.sodium}mg</Text>
@@ -258,11 +275,15 @@ ${instructionString}`,
 					<Text variant="bodyLarge" style={{ marginLeft: 30 }}><Text style={{ color: 'grey' }}>Total Sugars: </Text>{recipe.NutritionFacts.totalSugars}g</Text>
 					<Text variant="bodyLarge" style={{ marginLeft: 30 }}><Text style={{ color: 'grey' }}>Added Sugars: </Text>{recipe.NutritionFacts.addedSugars}g</Text>
 					<Text variant="bodyLarge"><Text style={{ color: 'grey' }}>Protein: </Text>{recipe.NutritionFacts.protein}g</Text>
-	
+
 					<Text style={[styles.categoryTitle, { color: "rgb(0, 227, 138)" }]}>Ingredients:</Text>
 					{ingredients}
 					<Text style={[styles.categoryTitle, { color: "rgb(0, 227, 138)" }]}>Instructions:</Text>
 					{instructions}
+					<View style={{ backgroundColor: 'grey', height: 1, margin: 10 }}></View>
+					<Pressable onPress={() => setReportRecipeVisible(true)}>
+						<Text variant="labelLarge" style={{ color: 'grey', textAlign: 'center' }}>report this recipe</Text>
+					</Pressable>
 				</View>
 			</ScrollView>
 			<Snackbar
@@ -274,6 +295,45 @@ ${instructionString}`,
 				}}>
 				{!canBeSaved ? "Recipe has been saved!" : "Recipe has been unsaved!"}
 			</Snackbar>
+			<Snackbar
+				visible={reportSnackbarVisible}
+				onDismiss={() => setReportSnackbarVisible(false)}
+				action={{
+					label: 'OK',
+					onPress: () => { },
+				}}>
+				{"Recipe reported."}
+			</Snackbar>
+
+			<Portal>
+				<Dialog visible={reportRecipeVisible} onDismiss={() => setReportRecipeVisible(false)}>
+					<Dialog.Title style={{ fontWeight: 700, color: "rgb(0, 227, 138)" }}>Report a recipe</Dialog.Title>
+					<Dialog.Content>
+						<View style={{ paddingVertical: 10 }}>
+							<Pressable onPress={() => setReportInaccurateChecked(!reportInaccurateChecked)} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+								<Checkbox.Android status={reportInaccurateChecked ? "checked" : "unchecked"} />
+								<Text variant="bodyMedium">This recipe is inaccurate</Text>
+							</Pressable>
+							<Pressable onPress={() => setReportInappropriateRecipeChecked(!reportInappropriateRecipeChecked)} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+								<Checkbox.Android status={reportInappropriateRecipeChecked ? "checked" : "unchecked"} />
+								<Text variant="bodyMedium">This recipe contains inappropriate content</Text>
+							</Pressable>
+							<Pressable onPress={() => setReportInappropriateUserChecked(!reportInappropriateUserChecked)} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+								<Checkbox.Android status={reportInappropriateUserChecked ? "checked" : "unchecked"} />
+								<Text variant="bodyMedium">This recipe's creator has an inappropriate or offensive username</Text>
+							</Pressable>
+							<Pressable onPress={() => setReportInedibleChecked(!reportInedibleChecked)} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+								<Checkbox.Android status={reportInedibleChecked ? "checked" : "unchecked"} />
+								<Text variant="bodyMedium">This recipe contains dangerous, illegal, or inedible ingredients</Text>
+							</Pressable>
+						</View>
+
+					</Dialog.Content>
+					<Dialog.Actions>
+						<Button onPress={handleReportRecipe} disabled={reportInaccurateChecked || reportInappropriateRecipeChecked || reportInappropriateUserChecked || reportInedibleChecked ? false : true}>Submit</Button>
+					</Dialog.Actions>
+				</Dialog>
+			</Portal>
 		</>
 	);
 };

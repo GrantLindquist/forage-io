@@ -68,12 +68,26 @@ const recipeService = {
                         instructions: an array of each step to make the recipe,
                         creationTime: the amount of time it takes to create the recipe in milliseconds,
                         budget: sum of approximate cost of ingredients (in xx.xx format)
+                        nutritionFacts: {
+                            calories: estimated number of calories per serving,
+                            totalFat: estimated number of grams of fat per serving,
+                            saturatedFat: estimated number of grams of saturated fat per serving,
+                            transFat: estimated number of grams of trans fat per serving,
+                            cholesterol: estimated number of milligrams of cholesterol per serving,
+                            sodium: estimated number of milligrams of sodium per serving,
+                            totalCarbohydrates: estimated number of grams of carbohydrates per serving,
+                            dietaryFiber: estimated number of grams of fiber per serving,
+                            totalSugars: estimated number of grams of sugar per serving,
+                            addedSugars: estimated number of grams of added sugar per serving
+                            protein: estimated number of grams of protein per serving
+                        }
                     }
                     ${extraInstructions(request.tags)}`
                 }
             ]
         })
         const recipe = JSON.parse(completion.choices[0].message.content);
+        console.log(completion.choices[0].message.content)
 
         // Place recipe into DB
         const response = await fetch(`${env['forageAPI-uri']}/recipes`, {
@@ -91,7 +105,8 @@ const recipeService = {
                 creatorUsername: user.username,
                 budget: recipe.budget,
                 creationTime: recipe.creationTime,
-                servings: recipe.servings
+                servings: recipe.servings,
+                nutritionFacts: recipe.nutritionFacts
             })
         });
         // Return response
