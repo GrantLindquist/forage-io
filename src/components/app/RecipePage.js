@@ -186,7 +186,7 @@ ${instructionString}`,
 	// Renders each ingredient 
 	const ingredients = recipe.Ingredients.map((ingredient) => {
 		return (
-			<Text variant='bodyLarge' style={{ marginVertical: 5 }} key={ingredient}><Text style={{ fontWeight: 700 }}>-</Text> {ingredient}</Text>
+			<Text variant='bodyLarge' style={{ marginVertical: 5 }} key={ingredient}><Text style={{ color: 'grey' }}>-</Text> {ingredient}</Text>
 		)
 	});
 
@@ -195,7 +195,7 @@ ${instructionString}`,
 	const instructions = recipe.Instructions.map((instruction) => {
 		stepCounter++;
 		return (
-			<Text variant='bodyLarge' style={{ marginVertical: 10 }} key={"instruction" + stepCounter}><Text style={{ fontWeight: 700 }}>{stepCounter}. </Text>{instruction}</Text>
+			<Text variant='bodyLarge' style={{ marginVertical: 10 }} key={"instruction" + stepCounter}><Text style={{ color: 'grey' }}>{stepCounter}. </Text>{instruction}</Text>
 		)
 	});
 
@@ -246,6 +246,19 @@ ${instructionString}`,
 							<Text variant="headlineMedium">{formattedTime(recipe.CreationTime)}</Text>
 						</View>
 					</View>
+					<Text variant="bodyLarge" style={[styles.categoryTitle, { color: "rgb(0, 227, 138)" }]}>Nutrition:</Text>
+					<Text variant="bodyLarge"><Text style={{ color: 'grey' }}>Calories: </Text>{recipe.NutritionFacts.calories}</Text>
+					<Text variant="bodyLarge"><Text style={{ color: 'grey' }}>Total Fat: </Text>{recipe.NutritionFacts.totalFat}g</Text>
+					<Text variant="bodyLarge" style={{ marginLeft: 30 }}><Text style={{ color: 'grey'}}>Saturated Fat: </Text>{recipe.NutritionFacts.saturatedFat}g</Text>
+					<Text variant="bodyLarge" style={{ marginLeft: 30 }}><Text style={{ color: 'grey' }}>Trans Fat: </Text>{recipe.NutritionFacts.transFat}g</Text>
+					<Text variant="bodyLarge"><Text style={{ color: 'grey' }}>Cholesterol: </Text>{recipe.NutritionFacts.cholesterol}mg</Text>
+					<Text variant="bodyLarge"><Text style={{ color: 'grey' }}>Sodium: </Text>{recipe.NutritionFacts.sodium}mg</Text>
+					<Text variant="bodyLarge"><Text style={{ color: 'grey' }}>Total Carbohydrates: </Text>{recipe.NutritionFacts.totalCarbohydrates}g</Text>
+					<Text variant="bodyLarge"><Text style={{ color: 'grey' }}>Dietary Fiber: </Text>{recipe.NutritionFacts.dietaryFiber}g</Text>
+					<Text variant="bodyLarge" style={{ marginLeft: 30 }}><Text style={{ color: 'grey' }}>Total Sugars: </Text>{recipe.NutritionFacts.totalSugars}g</Text>
+					<Text variant="bodyLarge" style={{ marginLeft: 30 }}><Text style={{ color: 'grey' }}>Added Sugars: </Text>{recipe.NutritionFacts.addedSugars}g</Text>
+					<Text variant="bodyLarge"><Text style={{ color: 'grey' }}>Protein: </Text>{recipe.NutritionFacts.protein}g</Text>
+	
 					<Text style={[styles.categoryTitle, { color: "rgb(0, 227, 138)" }]}>Ingredients:</Text>
 					{ingredients}
 					<Text style={[styles.categoryTitle, { color: "rgb(0, 227, 138)" }]}>Instructions:</Text>
