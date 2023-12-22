@@ -2,29 +2,41 @@ import { View } from "react-native";
 import { Card, IconButton, Text } from 'react-native-paper';
 
 export default function RecipeTip({ children }) {
-
     // Formats text to fit nicely within Card component
     const formatText = (text) => {
-        let words = text.split(' ');
-        // Don't ask why this works. I don't know
-        let newlineCount = words.length < 10 ? 1.8 : 2.4;
-        let newline = Math.floor(words.length / newlineCount);
-        
-        for(let i = 0; i < words.length; i++){
-            if(i % newline == 0 && i != 0){
-                words.splice(i, 0, '\n')
+
+        const width = Math.floor(text.length / 3);
+        const words = text.split(' ');
+
+        let lines = [];
+        let currentLine = '';
+
+        for (let word of words) {
+            if ((currentLine + word).length > width) {
+                lines.push(currentLine.trim());
+                currentLine = word + ' ';
+            } else {
+                currentLine += word + ' ';
             }
         }
-        words[0] = ' ' + words[0];
-        return words.join(' ');
+
+        if (currentLine.trim() !== '') {
+            if (lines.length < 3) {
+                lines.push(currentLine.trim());
+            } else {
+                lines[lines.length - 1] += ' ' + currentLine.trim();
+            }
+        }
+
+        return lines.join('\n');
     }
 
     return (
-        <Card style={{marginRight: 15}}>
-            <Card.Content style={{height: 100}}>
+        <Card style={{ marginRight: 15 }}>
+            <Card.Content style={{ height: 100 }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <IconButton style={{margin: 0, padding: 0, marginRight: 3}} disabled={true} size={50} icon={"information-outline"} />
-                    <Text variant="bodyMedium" style={{color: 'grey'}}>
+                    <IconButton style={{ margin: 0, padding: 0, marginRight: 3 }} disabled={true} size={50} icon={"information-outline"} />
+                    <Text variant="bodyMedium" style={{ color: 'grey' }}>
                         {formatText(children)}
                     </Text>
                 </View>

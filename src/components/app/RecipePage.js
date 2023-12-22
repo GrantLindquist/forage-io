@@ -300,8 +300,8 @@ ${instructionString}`,
 
 					<Text style={[styles.categoryTitle, { color: "rgb(0, 227, 138)" }]}>Ingredients:</Text>
 					{ingredients}
-					<Text style={[styles.categoryTitle, { color: "rgb(0, 227, 138)" }]}>Instructions:</Text>
 					{recipeTips}
+					<Text style={[styles.categoryTitle, { color: "rgb(0, 227, 138)" }]}>Instructions:</Text>
 					{instructions}
 
 					{/* RECIPE FOOTER */}

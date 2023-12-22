@@ -92,7 +92,6 @@ const recipeService = {
             ]
         })
         const recipe = JSON.parse(completion.choices[0].message.content);
-        console.log(completion.choices[0].message.content)
 
         // Place recipe into DB
         const response = await fetch(`${env['forageAPI-uri']}/recipes`, {
@@ -121,6 +120,7 @@ const recipeService = {
 
     // Generates a recipe with GPT that is similar to another existing recipe
     remixRecipe: async (request, user, baseRecipe) => {
+
         // Send recipe request to GPT
         const completion = await openai.chat.completions.create({
             model: 'gpt-3.5-turbo-1106',
@@ -143,6 +143,7 @@ const recipeService = {
             headers: {
                 'Content-Type': 'application/json'
             },
+            // Remember to capitalize the values from the recipe const!
             body: JSON.stringify({
                 creatorId: user.id,
                 recipeId: uuidv4(),
@@ -155,12 +156,11 @@ const recipeService = {
                 budget: recipe.Budget,
                 creationTime: recipe.CreationTime,
                 servings: recipe.Servings,
-                nutritionFacts: recipe.nutritionFacts,
-                tips: recipe.tips
+                nutritionFacts: recipe.NutritionFacts,
+                tips: recipe.Tips
             })
         });
         // Return response
-        console.log(response)
         return (response);
     },
 

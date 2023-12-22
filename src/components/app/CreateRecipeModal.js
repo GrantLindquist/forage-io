@@ -277,11 +277,14 @@ export default function CreateRecipeModal(props) {
 								<IconButton onPress={() => setInfoDialogVisible(true)} style={{ margin: 0 }} icon={"information-outline"}></IconButton>
 							</View>
 							{remixRecipe &&
-								<Pressable style={{ marginBottom: 15 }} onPress={() => setRemixRecipeVisible(!remixRecipeVisible)}>
-									{remixRecipeVisible ?
-										<Text>Hide Original</Text> : <Text>View Original</Text>
-									}
-
+								<Pressable onPress={() => setRemixRecipeVisible(!remixRecipeVisible)} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
+									<Text>{remixRecipeVisible ? "Hide Original" : "View Original"}</Text>
+									<IconButton
+										disabled={true}
+										icon={() => remixRecipeVisible ? <Image source={require('../../../assets/icons/up.png')} /> : <Image source={require('../../../assets/icons/down.png')} />}
+										style={{ margin: 0 }}
+										size={14}
+									/>
 								</Pressable>
 							}
 						</View>
