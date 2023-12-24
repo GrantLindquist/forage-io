@@ -7,10 +7,13 @@ export default function ErrorList(props) {
     return (
         <View style={styles.container}>
             <Image
-                source={require("../../../assets/empty-list.png")}    
-                style={{width: 300, height: 160}}
+                source={require("../../../assets/empty-list.png")}
+                style={{ width: 300, height: 160 }}
             />
-            <Text style={{ color: 'grey', marginBottom: "15%" }}>Something went terribly wrong! {props.errorMessage && props.errorMessage}</Text>
+            <View style={{ marginBottom: '15%' }}>
+                <Text variant="bodyLarge" style={{ fontWeight: 500 }}>Something went terribly wrong!</Text>
+                <Text style={{ color: 'grey', textAlign: 'center' }}>Error: {props.errorMessage ? props.errorMessage : "Unknown error--please try again later."}</Text>
+            </View>
         </View>
     );
 };

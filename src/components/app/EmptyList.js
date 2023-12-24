@@ -10,7 +10,7 @@ export default function EmptyList() {
                 source={require("../../../assets/empty-list.png")}    
                 style={{width: 300, height: 160}}
             />
-            <Text style={{ color: 'grey', marginBottom: "15%" }}>There are no recipes here... yet.</Text>
+            <Text variant="bodyLarge" style={{ color: 'grey', fontWeight: 500, marginBottom: "15%" }}>There are no recipes here... yet.</Text>
         </View>
     );
 };

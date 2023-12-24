@@ -214,7 +214,20 @@ const recipeService = {
         let data = await response.json();
         return data.Items;
     },
+    getProfileStatistics: async(userId) => {
+        const response = await recipeService.getCreatedRecipes(userId);
 
+        // Total created recipes
+        var totalCreatedRecipes = response.length;
+
+        // Total recipe stars
+        var totalRecipeStars = 0;
+        for(let recipe of response){
+            totalRecipeStars += recipe.Stars;
+        }
+
+        return [totalCreatedRecipes, totalRecipeStars]
+    },
     // Adds or removes a "star" from a recipe
     updateRecipeStars: async (userId, recipeId, value) => {
         // Executes request

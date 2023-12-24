@@ -80,7 +80,7 @@ export default function RecipePage(props) {
 
 		// Executes request
 		try {
-			const response = recipeService.deleteRecipe(user.id, recipe.RecipeId, saveRecord);
+			recipeService.deleteRecipe(user.id, recipe.RecipeId, saveRecord);
 		}
 		catch (e) {
 			// Put stuff here
@@ -93,9 +93,6 @@ export default function RecipePage(props) {
 		navigation.navigate("Created", {
 			removeId: recipe.RecipeId
 		});
-
-		// Returns response
-		return response;
 	}
 
 	// Appends or removes recipe id to/from user's saved recipe ids
@@ -348,7 +345,7 @@ ${instructionString}`,
 				<Dialog visible={reportRecipeVisible} onDismiss={() => setReportRecipeVisible(false)}>
 					<Dialog.Title style={{ fontWeight: 700, color: "rgb(0, 227, 138)" }}>Report a recipe</Dialog.Title>
 					<Dialog.Content>
-						<View style={{ paddingVertical: 10 }}>
+						<View style={{ paddingVertical: 10, paddingRight: 30 }}>
 							<Pressable onPress={() => setReportInaccurateChecked(!reportInaccurateChecked)} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
 								<Checkbox.Android status={reportInaccurateChecked ? "checked" : "unchecked"} />
 								<Text variant="bodyMedium">This recipe is inaccurate</Text>

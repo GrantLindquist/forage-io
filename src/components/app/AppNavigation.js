@@ -96,7 +96,7 @@ export default function AppNavigation() {
 								<MaterialCommunityIcons name="account" color={color} size={30} />
 							)
 						}}>
-							{() => <Profile />}
+							{() => <Profile refreshValue={refreshCreatedRecipes} />}
 						</Tab.Screen>
 					</Tab.Navigator>
 				}
