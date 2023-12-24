@@ -79,7 +79,12 @@ export default function RecipePage(props) {
 		let saveRecord = recipe.Stars > 0 ? true : false
 
 		// Executes request
-		const response = recipeService.deleteRecipe(user.id, recipe.RecipeId, saveRecord);
+		try {
+			const response = recipeService.deleteRecipe(user.id, recipe.RecipeId, saveRecord);
+		}
+		catch (e) {
+			// Put stuff here
+		}
 
 		// Refreshes createdRecipes.js
 		props.refreshCreatedRecipes();
@@ -108,18 +113,23 @@ export default function RecipePage(props) {
 		}
 
 		// Place newly handled recipe id into list if recipe id hasn't already been removed
-		if (canBeSaved) {
-			savedRecipeIds.push(recipe.RecipeId);
+		try {
+			if (canBeSaved) {
+				savedRecipeIds.push(recipe.RecipeId);
 
-			// Execute service request
-			let response = await recipeService.updateRecipeStars(recipe.CreatorId, recipe.RecipeId, Number(recipe.Stars) + 1);
-			console.log(response);
-			setCanBeSaved(false);
+				// Execute service request
+				const response = await recipeService.updateRecipeStars(recipe.CreatorId, recipe.RecipeId, Number(recipe.Stars) + 1);
+				console.log(response);
+				setCanBeSaved(false);
+			}
+			else {
+				const response = await recipeService.updateRecipeStars(recipe.CreatorId, recipe.RecipeId, Number(recipe.Stars) - 1);
+				console.log(response);
+				setCanBeSaved(true);
+			}
 		}
-		else {
-			let response = await recipeService.updateRecipeStars(recipe.CreatorId, recipe.RecipeId, Number(recipe.Stars) - 1);
-			console.log(response);
-			setCanBeSaved(true);
+		catch (e) {
+			// Put stuff here
 		}
 
 		// Update user with new list of ids

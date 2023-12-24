@@ -7,6 +7,7 @@ import RecipeCard from './RecipeCard';
 import { useUser } from '@clerk/clerk-expo';
 import recipeService from '../../services/recipeService';
 import EmptyList from './EmptyList';
+import ErrorList from './ErrorList';
 
 // Collection of recipes created by other users
 export default function CommunityRecipes() {
@@ -19,6 +20,9 @@ export default function CommunityRecipes() {
 
 	// State that provides navigation property
 	const navigation = useNavigation();
+
+	// Error handling
+	const [errorMessage, setErrorMessage] = useState("");
 
 	// State for handling modal visibility
 	const [communityRecipes, setCommunityRecipes] = useState([]);
@@ -38,12 +42,20 @@ export default function CommunityRecipes() {
 	// Gets a collection of up to 400 (20x20 matrix) recipes that the user has not created
 	const loadCommunityRecipes = async () => {
 		// Get response from recipeService
-		const response = await recipeService.getCommunityRecipes(user.id, searchQuery, activeFilters);
+		try {
+			const response = await recipeService.getCommunityRecipes(user.id, searchQuery, activeFilters);
+			
+			// Response is undefined if selecting a tag w/ a hyphen
+			setCommunityRecipes(response);
+			setEndNumber(response.length);
 
-		// Response is undefined if selecting a tag w/ a hyphen
-
-		setCommunityRecipes(response);
-		setEndNumber(response.length);
+			if (errorMessage != "") {
+				setErrorMessage("");
+			}
+		}
+		catch (e) {
+			setErrorMessage(e.message);
+		}
 	}
 
 	// Renders recipes on component load
@@ -120,53 +132,62 @@ export default function CommunityRecipes() {
 
 	return (
 		<View style={{ height: '100%' }}>
-			<View style={{ 
-				flexDirection: 'row', 
-				alignItems: 'center',
-				padding: 3, 
-				marginTop: 5, 
-			}}>
-				<Searchbar
-					style={styles.searchbar}
-					placeholder={"search recipes"}
-					placeholderTextColor={"grey"}
-					inputStyle={{ paddingLeft: 0, alignSelf: 'center' }}
-					showDivider={false}
-					mode={'view'}
-					onChangeText={query => setSearchText(query)}
-					onSubmitEditing={() => setSearchQuery(searchText)}
-					value={searchText}
-					keyboardAppearance='dark'
-				/>
-				<IconButton
-					icon={() => filtersVisible ? <Image source={require('../../../assets/icons/up.png')} /> : <Image source={require('../../../assets/icons/down.png')} />}
-					style={{ margin: 0, marginLeft: 'auto' }}
-					onPress={() => setFiltersVisible(!filtersVisible)}
-				/>
-			</View>
-			{filtersVisible ?
-				<View style={{ marginHorizontal: 20 }}>
-					<TagSearch
-						updateSelectedTags={(tags) => setActiveFilters(tags)}
-						defaultTags={[]}
+			{errorMessage == "" ?
+				<>
+					<View style={{
+						flexDirection: 'row',
+						alignItems: 'center',
+						padding: 3,
+						marginTop: 5,
+					}}>
+						<Searchbar
+							style={styles.searchbar}
+							placeholder={"search recipes"}
+							placeholderTextColor={"grey"}
+							inputStyle={{ paddingLeft: 0, alignSelf: 'center' }}
+							showDivider={false}
+							mode={'view'}
+							onChangeText={query => setSearchText(query)}
+							onSubmitEditing={() => setSearchQuery(searchText)}
+							value={searchText}
+							keyboardAppearance='dark'
+						/>
+						<IconButton
+							icon={() => filtersVisible ? <Image source={require('../../../assets/icons/up.png')} /> : <Image source={require('../../../assets/icons/down.png')} />}
+							style={{ margin: 0, marginLeft: 'auto' }}
+							onPress={() => setFiltersVisible(!filtersVisible)}
+						/>
+					</View>
+					{filtersVisible ?
+						<View style={{ marginHorizontal: 20 }}>
+							<TagSearch
+								updateSelectedTags={(tags) => setActiveFilters(tags)}
+								defaultTags={[]}
+							/>
+						</View> : <></>}
+					<FlatList
+						data={communityRecipes[pageNumber - 1]}
+						indicatorStyle='white'
+						renderItem={(item) => {
+							return (
+								<Pressable key={item.item.RecipeId} onPress={() => navigation.navigate('Recipe', {
+									recipe: item.item
+								})}>
+									<RecipeCard recipe={item.item} />
+								</Pressable>
+							)
+						}}
+						ListEmptyComponent={() => <EmptyList />}
+						ListFooterComponent={<View style={{ paddingVertical: 60 }}></View>}
 					/>
-				</View> : <></>}
-			<FlatList
-				data={communityRecipes[pageNumber - 1]}
-				indicatorStyle='white'
-				renderItem={(item) => {
-					return (
-						<Pressable key={item.item.RecipeId} onPress={() => navigation.navigate('Recipe', {
-							recipe: item.item
-						})}>
-							<RecipeCard recipe={item.item} />
-						</Pressable>
-					)
-				}}
-				ListEmptyComponent={() => <EmptyList />}
-				ListFooterComponent={<View style={{ paddingVertical: 60 }}></View>}
-			/>
-			{endNumber > 1 ? paginationButtons() : <></>}
+					{endNumber > 1 ? paginationButtons() : <></>}
+				</>
+				:
+				<>
+					<ErrorList errorMessage={errorMessage} />
+				</>
+			}
+
 		</View>
 	);
 };

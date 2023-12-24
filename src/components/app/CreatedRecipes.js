@@ -7,6 +7,7 @@ import RecipeCardPlaceholder from './RecipeCardPlaceholder';
 import { useUser } from '@clerk/clerk-expo';
 import recipeService from '../../services/recipeService';
 import EmptyList from './EmptyList';
+import ErrorList from './ErrorList';
 
 // Collection of recipes created or saved by the user
 export default function CreatedRecipes(props) {
@@ -21,6 +22,9 @@ export default function CreatedRecipes(props) {
 	// State that provides navigation property
 	const navigation = useNavigation();
 
+	// Error handling
+	const [errorMessage, setErrorMessage] = useState("");
+
 	// State for tracking user search input
 	const [searchQuery, setSearchQuery] = useState('');
 
@@ -33,10 +37,19 @@ export default function CreatedRecipes(props) {
 
 	// Gets recipes that user has created and sets state to response
 	const loadCreatedRecipes = async () => {
-		// Gets response from recipeService
-		const response = await recipeService.getCreatedRecipes(user.id);
-		setCreatedRecipes(response);
-		setIsLoading(false);
+		try {
+			// Gets response from recipeService
+			const response = await recipeService.getCreatedRecipes(user.id);
+			setCreatedRecipes(response);
+			setIsLoading(false);
+
+			if (errorMessage != "") {
+				setErrorMessage("");
+			}
+		}
+		catch (e) {
+			setErrorMessage(e.message);
+		}
 	}
 
 	// Renders recipes on component load & re-renders component when refreshValue is updated
@@ -58,46 +71,56 @@ export default function CreatedRecipes(props) {
 	return (
 		<>
 			<View style={{ minHeight: '100%' }}>
-				<View style={{ padding: 5, marginTop: 5 }}>
-					<Searchbar
-						style={styles.searchbar}
-						placeholder={"search recipes"}
-						placeholderTextColor={"grey"}
-						inputStyle={{ paddingLeft: 0, alignSelf: 'center' }}
-						showDivider={false}
-						mode={'view'}
-						onChangeText={query => setSearchQuery(query)}
-						value={searchQuery}
-						keyboardAppearance='dark'
-					/>
-				</View>
-				{!isLoading ?
-					<FlatList
-						data={createdRecipes}
-						indicatorStyle='white'
-						renderItem={(item) => {
-							if (item.item.Title.toLowerCase().includes(searchQuery.toLowerCase()) && item.item.RecipeId != removeRecipeId) {
-								return (
-									<Pressable key={item.item.RecipeId} onPress={() => navigation.navigate('Recipe', {
-										recipe: item.item
-									})}>
-										<RecipeCard recipe={item.item} />
-									</Pressable>
-								)
+				{
+					errorMessage == "" ?
+						<>
+							<View style={{ padding: 5, marginTop: 5 }}>
+								<Searchbar
+									style={styles.searchbar}
+									placeholder={"search recipes"}
+									placeholderTextColor={"grey"}
+									inputStyle={{ paddingLeft: 0, alignSelf: 'center' }}
+									showDivider={false}
+									mode={'view'}
+									onChangeText={query => setSearchQuery(query)}
+									value={searchQuery}
+									keyboardAppearance='dark'
+								/>
+							</View>
+							{!isLoading ?
+								<FlatList
+									data={createdRecipes}
+									indicatorStyle='white'
+									renderItem={(item) => {
+										if (item.item.Title.toLowerCase().includes(searchQuery.toLowerCase()) && item.item.RecipeId != removeRecipeId) {
+											return (
+												<Pressable key={item.item.RecipeId} onPress={() => navigation.navigate('Recipe', {
+													recipe: item.item
+												})}>
+													<RecipeCard recipe={item.item} />
+												</Pressable>
+											)
+										}
+									}}
+									ListEmptyComponent={() => <EmptyList />}
+									ListFooterComponent={<View style={{ paddingVertical: 30 }}></View>}
+								/> :
+								<View>
+									{/* Placeholder loading components */}
+									<RecipeCardPlaceholder />
+									<RecipeCardPlaceholder />
+									<RecipeCardPlaceholder />
+									<RecipeCardPlaceholder />
+									<RecipeCardPlaceholder />
+								</View>
 							}
-						}}
-						ListEmptyComponent={() => <EmptyList />}
-						ListFooterComponent={<View style={{ paddingVertical: 30 }}></View>}
-					/> :
-					<View>
-						{/* Placeholder loading components */}
-						<RecipeCardPlaceholder />
-						<RecipeCardPlaceholder />
-						<RecipeCardPlaceholder />
-						<RecipeCardPlaceholder />
-						<RecipeCardPlaceholder />
-					</View>
+						</>
+						:
+						<>
+							<ErrorList errorMessage={errorMessage} />
+						</>
 				}
+
 			</View>
 			{/* Recipe deletion snackbar */}
 			<Snackbar

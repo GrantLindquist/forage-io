@@ -189,11 +189,11 @@ export default function CreateRecipeModal(props) {
 			setRecipeCharges(10 - user.unsafeMetadata.recipeCharges.length);
 
 			// Confirm recipe completion and change state back to false once recipe is complete
-			const response = remixRecipe ? await recipeService.remixRecipe(recipeDTO, user, remixRecipe) : await recipeService.generateRecipe(recipeDTO, user);
-			setGeneratingRecipe(false);
+			try {
+				remixRecipe ? await recipeService.remixRecipe(recipeDTO, user, remixRecipe) : await recipeService.generateRecipe(recipeDTO, user);
+				setGeneratingRecipe(false);
 
-			// Display snackbar depending on service response
-			if (response.ok) {
+				// Display snackbar depending on service response
 				setInfoSnackbarVisible(true);
 				setSelectedIngredients([]);
 				setSelectedFilters([]);
@@ -201,9 +201,8 @@ export default function CreateRecipeModal(props) {
 				// Refreshes recipeMenu component so user can see updated recipe list
 				props.refreshCreatedRecipes();
 			}
-			else {
-				// Display error UI components
-				setErrorDialogContent(response.message);
+			catch (e) {
+				setGeneratingRecipe(false);
 				setErrorSnackbarVisible(true);
 
 				// Clear ingredients state of faulty input

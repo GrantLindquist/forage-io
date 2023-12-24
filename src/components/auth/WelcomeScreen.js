@@ -29,14 +29,14 @@ export default function WelcomeScreen() {
 
 	return (
 		<View style={styles.container}>
-			<Image 
-				style={{height: '100%', width: '100%'}}
+			<Image
+				style={{ height: '100%', width: '100%' }}
 				source={require('../../../assets/welcome-bg.png')}
 			/>
 			<View style={{ position: 'absolute', top: '15%', alignItems: "center", }}>
 				<Image
 					style={{ height: 80, width: 290 }}
-					source={require('../../../assets/logo/nav-logoface.png')}/>
+					source={require('../../../assets/logo/nav-logoface.png')} />
 				<Text style={styles.subtitle}>Powered by GPT</Text>
 			</View>
 
@@ -49,11 +49,11 @@ export default function WelcomeScreen() {
 				{isCreatingAccount ?
 					<Pressable style={{ alignItems: 'center' }} onPress={() => setCreatingAccount(false)}>
 						<Text style={{ color: 'white' }}>Already have an account?</Text>
-						<Text style={{ color: 'white' }}>Sign in here!</Text>
+						<Text style={{ color: 'white', textDecorationLine: 'underline' }}>Sign in here!</Text>
 					</Pressable> :
 					<Pressable style={{ alignItems: 'center' }} onPress={() => setCreatingAccount(true)}>
 						<Text style={{ color: 'white' }}>Don't have an account?</Text>
-						<Text style={{ color: 'white' }}>Create one for free!</Text>
+						<Text style={{ color: 'white', textDecorationLine: 'underline' }}>Create one for free!</Text>
 					</Pressable>}
 			</View>
 		</View>
