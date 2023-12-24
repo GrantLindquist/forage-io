@@ -94,6 +94,7 @@ export default function TagSearch(props) {
 
     // List of tags for user to select
     const tagList = tags.filter((tag) => tag.typeCode == displayTypeCode).map((tag) => {
+
         let selected = false;
         if (selectedTags.includes(tag.title)) {
             selected = true;
