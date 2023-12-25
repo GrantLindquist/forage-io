@@ -81,7 +81,7 @@ export default function Profile(props) {
 						</View>
 
 						<View style={{ position: 'absolute', bottom: 5, width: '100%' }}>
-							<Button mode="text" onPress={() => navigation.navigate('TermsOfService')}>Terms of Service</Button>
+							{/* <Button mode="text" onPress={() => navigation.navigate('TermsOfService')}>Terms of Service</Button> */}
 							<Divider style={{ marginHorizontal: 20 }} />
 							<Button mode="text" onPress={signOut}>Sign out</Button>
 						</View>
