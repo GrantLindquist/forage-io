@@ -236,7 +236,7 @@ ${instructionString}`,
 					<View style={{ marginVertical: 10, flexDirection: 'row' }}>
 						{recipe.Tips.map((tip) => {
 							return (
-								<RecipeTip>
+								<RecipeTip key={tip.substring(10)}>
 									{tip}
 								</RecipeTip>
 							)

@@ -42,7 +42,9 @@ const extraInstructions = (tags) => {
 
     console.log(dietaryInstructions)
 
-    return `Ensure that the ingredients and instructions values are simple arrays.
+    return `
+    Take your time to evaluate and ensure that you provide an answer that adheres to the following instructions:
+    Ensure that the ingredients and instructions values are simple arrays.
     Please make sure that all ingredients are edible. Do not create inedible or dangerous recipes. 
     Please make sure that creation time is calculated in milliseconds.
     ${dietaryInstructions}`
@@ -128,8 +130,10 @@ const recipeService = {
             messages: [
                 {
                     role: 'user',
-                    content: `Generate a ${request.description} in JSON format that is similar to this recipe: 
+                    content: `Analyze the following recipe: 
                     ${JSON.stringify(baseRecipe)}
+                    Now, take this recipe and change a few ingredients until it becomes a ${request.description}.
+                    Ensure that the new recipe still resembles the example recipe.
                     Ensure that the JSON format is the same as the example recipe.
                     ${extraInstructions(request.tags)}`
                 }
