@@ -1,6 +1,6 @@
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useContext, useMemo } from 'react';
 import { View, ScrollView, StyleSheet, Image, Pressable } from "react-native";
-import { Text, TextInput, Button, IconButton, Checkbox, ActivityIndicator, Snackbar, ProgressBar, Portal, Dialog, HelperText, useTheme } from 'react-native-paper';
+import { Text, TextInput, Button, IconButton, ActivityIndicator, ProgressBar, Portal, Dialog, HelperText, useTheme } from 'react-native-paper';
 import IngredientTag from './IngredientTag'
 import BudgetSlider from './BudgetSlider';
 import TagSearch from './TagSearch';
@@ -10,6 +10,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import RecipeTag from './RecipeTag';
 import { LinearGradient } from 'expo-linear-gradient';
 import MaskedView from '@react-native-masked-view/masked-view';
+import { SnackbarContext } from './SnackbarProvider';
 
 const ms = require('ms');
 
@@ -27,9 +28,8 @@ export default function CreateRecipeModal(props) {
 	// State that tracks whether or not recipe is being actively generated
 	const [isGeneratingRecipe, setGeneratingRecipe] = useState(false);
 
-	// State that tracks snackbar status
-	const [infoSnackbarVisible, setInfoSnackbarVisible] = useState(false);
-	const [errorSnackbarVisible, setErrorSnackbarVisible] = useState(false);
+	// Snackbar context
+	const { setMessage, setError, setVisible } = useContext(SnackbarContext);
 
 	// List states that track filter categories
 	const [selectedFilters, setSelectedFilters] = useState([]);
@@ -50,8 +50,6 @@ export default function CreateRecipeModal(props) {
 	}, [recipeCharges])
 
 	// State for tracking dialogs
-	const [errorDialogVisible, setErrorDialogVisible] = useState(false);
-	const [errorDialogContent, setErrorDialogContent] = useState("");
 	const [infoDialogVisible, setInfoDialogVisible] = useState(false);
 	const [infoDialogPageNumber, setInfoDialogPageNumber] = useState(0);
 
@@ -194,7 +192,10 @@ export default function CreateRecipeModal(props) {
 				setGeneratingRecipe(false);
 
 				// Display snackbar depending on service response
-				setInfoSnackbarVisible(true);
+				setMessage("Recipe generated");
+				setError(false);
+				setVisible(true);
+
 				setSelectedIngredients([]);
 				setSelectedFilters([]);
 
@@ -203,7 +204,9 @@ export default function CreateRecipeModal(props) {
 			}
 			catch (e) {
 				setGeneratingRecipe(false);
-				setErrorSnackbarVisible(true);
+				setMessage("There was an error handling your request");
+				setError(true);
+				setVisible(true);
 
 				// Clear ingredients state of faulty input
 				setSelectedIngredients([]);
@@ -362,8 +365,8 @@ export default function CreateRecipeModal(props) {
 						</View>}
 				</View>
 
+				{/* Dialogs */}
 				<Portal>
-					{/* Info dialog */}
 					<Dialog visible={infoDialogVisible} onDismiss={() => setInfoDialogVisible(false)}>
 						{infoDialogContent[infoDialogPageNumber]}
 						<Dialog.Actions>
@@ -371,40 +374,7 @@ export default function CreateRecipeModal(props) {
 							<Button disabled={infoDialogPageNumber >= infoDialogContent.length - 1 ? true : false} onPress={() => setInfoDialogPageNumber(infoDialogPageNumber + 1)}>Next</Button>
 						</Dialog.Actions>
 					</Dialog>
-
-					{/* Warning dialog */}
-					{/* <Dialog visible={errorDialogVisible} onDismiss={() => setErrorDialogVisible(false)}>
-					<Dialog.Content>
-						<Text variant="bodyMedium">{errorDialogContent}</Text>
-					</Dialog.Content>
-					<Dialog.Actions>
-						<Button onPress={() => setErrorDialogVisible(false)}>OK</Button>
-					</Dialog.Actions>
-				</Dialog> */}
 				</Portal>
-
-				{/* Info snackbar */}
-				<Snackbar
-					visible={infoSnackbarVisible}
-					onDismiss={() => setInfoSnackbarVisible(false)}
-					action={{
-						label: 'OK',
-						onPress: () => navigation.navigate('Main'),
-					}}>
-					Recipe was successfully generated!
-				</Snackbar>
-
-				{/* Error snackbar */}
-				<Snackbar
-					visible={errorSnackbarVisible}
-					onDismiss={() => setErrorSnackbarVisible(false)}
-					action={{
-						label: 'OK',
-						// onPress () => setErrorDialogVisible(true),
-						onPress: () => setErrorSnackbarVisible(false)
-					}}>
-					There was an error handling your request.
-				</Snackbar>
 			</View>
 		</View>
 	);

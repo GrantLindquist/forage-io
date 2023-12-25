@@ -1,16 +1,17 @@
 import { useRoute } from "@react-navigation/native";
 import { useNavigation } from '@react-navigation/native';
 import { Alert, Share, ScrollView, View, StyleSheet, Pressable } from "react-native";
-import { Text, Snackbar, Appbar, Checkbox } from "react-native-paper";
+import { Text, Appbar, Checkbox } from "react-native-paper";
 import { Portal, Dialog, Button } from "react-native-paper";
 import { useUser } from "@clerk/clerk-expo";
 import RecipeTag from "./RecipeTag";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import recipeService from "../../services/recipeService";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { LinearGradient } from "expo-linear-gradient";
 import RecipeTip from "./RecipeTip";
+import { SnackbarContext } from "./SnackbarProvider";
 const ms = require('ms');
 
 // Detailed page for a recipe that contains ingredients, instructions, etc.
@@ -24,9 +25,8 @@ export default function RecipePage(props) {
 	const { user } = useUser();
 	const { recipe } = route.params;
 
-	// State that tracks snackbar status
-	const [snackbarVisible, setSnackbarVisible] = useState(false);
-	const [reportSnackbarVisible, setReportSnackbarVisible] = useState(false);
+	// Snackbar context
+	const { setMessage, setError, setVisible } = useContext(SnackbarContext);
 
 	// State for tracking report recipe dialog
 	const [reportRecipeVisible, setReportRecipeVisible] = useState(false);
@@ -81,9 +81,15 @@ export default function RecipePage(props) {
 		// Executes request
 		try {
 			recipeService.deleteRecipe(user.id, recipe.RecipeId, saveRecord);
+
+			setMessage("Recipe deleted");
+			setError(false);
+			setVisible(true);
 		}
 		catch (e) {
-			// Put stuff here
+			setMessage("There was an error handling your request");
+			setError(true);
+			setVisible(true);
 		}
 
 		// Refreshes createdRecipes.js
@@ -116,17 +122,23 @@ export default function RecipePage(props) {
 
 				// Execute service request
 				const response = await recipeService.updateRecipeStars(recipe.CreatorId, recipe.RecipeId, Number(recipe.Stars) + 1);
-				console.log(response);
 				setCanBeSaved(false);
 			}
 			else {
 				const response = await recipeService.updateRecipeStars(recipe.CreatorId, recipe.RecipeId, Number(recipe.Stars) - 1);
-				console.log(response);
 				setCanBeSaved(true);
 			}
+
+			// Displays snackbar
+			setMessage(canBeSaved ? "Recipe has been saved!" : "Recipe has been unsaved!");
+			setError(false);
+			setVisible(true);
 		}
 		catch (e) {
-			// Put stuff here
+			// Displays snackbar
+			setMessage("There was an error handling your request");
+			setError(true);
+			setVisible(true);
 		}
 
 		// Update user with new list of ids
@@ -136,9 +148,6 @@ export default function RecipePage(props) {
 				recipeCharges: user.unsafeMetadata.recipeCharges,
 			}
 		});
-
-		// Displays Snackbar
-		setSnackbarVisible(true);
 
 		// Refreshes savedRecipes.js
 		props.refreshSavedRecipes();
@@ -193,7 +202,10 @@ ${instructionString}`,
 	// Reports recipe
 	const handleReportRecipe = () => {
 		setReportRecipeVisible(false);
-		setReportSnackbarVisible(true);
+
+		setMessage("Recipe reported");
+		setError(false);
+		setVisible(true);
 
 		// Do more stuff here maybe
 	}
@@ -251,18 +263,20 @@ ${instructionString}`,
 			<Appbar.Header style={{ backgroundColor: '#000000' }}>
 				<Appbar.BackAction onPress={() => navigation.goBack()} />
 				<Appbar.Content></Appbar.Content>
-				<Pressable style={{ paddingRight: 16 }} onPress={() => navigation.navigate('CreateRecipeModal', {
-					recipe: recipe
-				})}>
-					<MaskedView maskElement={<MaterialCommunityIcons name="creation" size={30} />}>
+				<Appbar.Action
+					size={30}
+					icon={() => <MaskedView maskElement={<MaterialCommunityIcons name="creation" size={30} />}>
 						<LinearGradient
 							colors={["#38FFA0", "#00C2FF"]}
 							start={{ x: 0, y: 0 }}
 							end={{ x: 1, y: 0 }}
 							style={{ width: 30, height: 30 }}
 						/>
-					</MaskedView>
-				</Pressable>
+					</MaskedView>}
+					onPress={() => navigation.navigate('CreateRecipeModal', {
+						recipe: recipe
+					})}
+				/>
 				<Appbar.Action
 					icon={"share"}
 					size={30}
@@ -322,25 +336,8 @@ ${instructionString}`,
 					}
 				</View>
 			</ScrollView>
-			<Snackbar
-				visible={snackbarVisible}
-				onDismiss={() => setSnackbarVisible(false)}
-				action={{
-					label: 'OK',
-					onPress: () => { },
-				}}>
-				{!canBeSaved ? "Recipe has been saved!" : "Recipe has been unsaved!"}
-			</Snackbar>
-			<Snackbar
-				visible={reportSnackbarVisible}
-				onDismiss={() => setReportSnackbarVisible(false)}
-				action={{
-					label: 'OK',
-					onPress: () => { },
-				}}>
-				{"Recipe reported."}
-			</Snackbar>
 
+			{/* Dialogs */}
 			<Portal>
 				<Dialog visible={reportRecipeVisible} onDismiss={() => setReportRecipeVisible(false)}>
 					<Dialog.Title style={{ fontWeight: 700, color: "rgb(0, 227, 138)" }}>Report a recipe</Dialog.Title>
@@ -363,7 +360,6 @@ ${instructionString}`,
 								<Text variant="bodyMedium">This recipe contains dangerous, illegal, or inedible ingredients</Text>
 							</Pressable>
 						</View>
-
 					</Dialog.Content>
 					<Dialog.Actions>
 						<Button onPress={handleReportRecipe} disabled={reportInaccurateChecked || reportInappropriateRecipeChecked || reportInappropriateUserChecked || reportInedibleChecked ? false : true}>Submit</Button>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { FlatList, View, StyleSheet, Pressable } from "react-native";
-import { Searchbar, Snackbar } from "react-native-paper";
+import { Searchbar } from "react-native-paper";
 import { useNavigation, useRoute } from '@react-navigation/native';
 import RecipeCard from './RecipeCard';
 import RecipeCardPlaceholder from './RecipeCardPlaceholder';
@@ -120,19 +120,7 @@ export default function CreatedRecipes(props) {
 							<ErrorList errorMessage={errorMessage} />
 						</>
 				}
-
 			</View>
-			{/* Recipe deletion snackbar */}
-			<Snackbar
-				visible={deleteSnackbarVisible}
-				onDismiss={() => setDeleteSnackbarVisible(false)}
-				style={{ marginBottom: 0 }}
-				action={{
-					label: 'OK',
-					onPress: () => { }
-				}}>
-				Recipe deleted.
-			</Snackbar>
 		</>
 	);
 };
