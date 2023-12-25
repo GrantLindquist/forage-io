@@ -16,37 +16,39 @@ const extraInstructions = (tags) => {
 
     // Adds instructions for dietary restrictions
     let dietaryInstructions = "";
-    switch(tags){
-        case(tags.includes("vegan")):
+    switch (tags) {
+        case (tags.includes("vegan")):
             dietaryInstructions = dietaryInstructions.concat("This is a vegan recipe, either exclude or substitute all non-vegan ingredients. ");
             break;
-        case(tags.includes("vegetarian")):
+        case (tags.includes("vegetarian")):
             dietaryInstructions = dietaryInstructions.concat("This is a vegetarian recipe, either exclude or substitute all non-vegetarian ingredients. ");
             break;
-        case(tags.includes("paleo")):
+        case (tags.includes("paleo")):
             dietaryInstructions = dietaryInstructions.concat("This is a paleo recipe, either exclude or substitute all non-paleo ingredients. ");
             break;
-        case(tags.includes("pescetarian")):
+        case (tags.includes("pescetarian")):
             dietaryInstructions = dietaryInstructions.concat("This is a pescetarian recipe, either exclude or substitute all non-pescetarian ingredients. ");
             break;
-        case(tags.includes("keto")):
+        case (tags.includes("keto")):
             dietaryInstructions = dietaryInstructions.concat("This is a keto recipe, either exclude or substitute all non-keto ingredients. ");
             break;
-        case(tags.includes("dairy-free")):
+        case (tags.includes("dairy-free")):
             dietaryInstructions = dietaryInstructions.concat("This is a dairy-free recipe, either exclude or substitute all ingredients containing dairy. ");
             break;
-        case(tags.includes("gluten-free")):
+        case (tags.includes("gluten-free")):
             dietaryInstructions = dietaryInstructions.concat("This is a gluten-free, either exclude or substitute all ingredients containing gluten. ");
             break;
     }
 
     console.log(dietaryInstructions)
 
-    return `Ensure that the ingredients and instructions values are simple arrays.
+    return `
+    Take your time to evaluate and ensure that you provide an answer that adheres to the following instructions:
+    Ensure that the ingredients and instructions values are simple arrays.
     Please make sure that all ingredients are edible. Do not create inedible or dangerous recipes. 
     Please make sure that creation time is calculated in milliseconds.
     ${dietaryInstructions}`
-} 
+}
 
 // Service that handles recipe CRUD functionality
 const recipeService = {
@@ -65,9 +67,27 @@ const recipeService = {
                         title: a creative, simple name for the recipe--please exclude any inedible/dangerous ingredients from the recipe name,
                         servings: the number of servings this recipe will create,
                         ingredients: an array of each ingredient for the recipe,
-                        instructions: an array of each step to make the recipe,
+                        instructions: an array of each step to make the recipe. Do not include instruction step numbers,
                         creationTime: the amount of time it takes to create the recipe in milliseconds,
                         budget: sum of approximate cost of ingredients (in xx.xx format)
+                        nutritionFacts: {
+                            calories: estimated number of calories per serving,
+                            totalFat: estimated number of grams of fat per serving,
+                            saturatedFat: estimated number of grams of saturated fat per serving,
+                            transFat: estimated number of grams of trans fat per serving,
+                            cholesterol: estimated number of milligrams of cholesterol per serving,
+                            sodium: estimated number of milligrams of sodium per serving,
+                            totalCarbohydrates: estimated number of grams of carbohydrates per serving,
+                            dietaryFiber: estimated number of grams of fiber per serving,
+                            totalSugars: estimated number of grams of sugar per serving,
+                            addedSugars: estimated number of grams of added sugar per serving
+                            protein: estimated number of grams of protein per serving
+                        }
+                        tips: an array containing anywhere between 0-3 recipe tips/pointers related to the recipe. 
+                        Tips can relate to the ingredients used, ingredient substitutes, appliances that make creating the recipe easier, or methods to make the recipe better.
+                        Avoid generating tips related to leftover ingredient user--try to focus on the current recipe.
+                        Avoid generating tips that are obvious (e.g. make your recipe sweeter by adding sugar!)
+                        Here's a good example: Apply pressure to your lemons to increase their flavor! (for a recipe containing lemons)
                     }
                     ${extraInstructions(request.tags)}`
                 }
@@ -91,7 +111,9 @@ const recipeService = {
                 creatorUsername: user.username,
                 budget: recipe.budget,
                 creationTime: recipe.creationTime,
-                servings: recipe.servings
+                servings: recipe.servings,
+                nutritionFacts: recipe.nutritionFacts,
+                tips: recipe.tips
             })
         });
         // Return response
@@ -99,7 +121,8 @@ const recipeService = {
     },
 
     // Generates a recipe with GPT that is similar to another existing recipe
-    remixRecipe: async(request, user, baseRecipe) => {
+    remixRecipe: async (request, user, baseRecipe) => {
+
         // Send recipe request to GPT
         const completion = await openai.chat.completions.create({
             model: 'gpt-3.5-turbo-1106',
@@ -107,8 +130,10 @@ const recipeService = {
             messages: [
                 {
                     role: 'user',
-                    content: `Generate a ${request.description} in JSON format that is similar to this recipe: 
+                    content: `Analyze the following recipe: 
                     ${JSON.stringify(baseRecipe)}
+                    Now, take this recipe and change a few ingredients until it becomes a ${request.description}.
+                    Ensure that the new recipe still resembles the example recipe.
                     Ensure that the JSON format is the same as the example recipe.
                     ${extraInstructions(request.tags)}`
                 }
@@ -122,6 +147,7 @@ const recipeService = {
             headers: {
                 'Content-Type': 'application/json'
             },
+            // Remember to capitalize the values from the recipe const!
             body: JSON.stringify({
                 creatorId: user.id,
                 recipeId: uuidv4(),
@@ -133,11 +159,12 @@ const recipeService = {
                 creatorUsername: user.username,
                 budget: recipe.Budget,
                 creationTime: recipe.CreationTime,
-                servings: recipe.Servings
+                servings: recipe.Servings,
+                nutritionFacts: recipe.NutritionFacts,
+                tips: recipe.Tips
             })
         });
         // Return response
-        console.log(response)
         return (response);
     },
 
@@ -191,7 +218,20 @@ const recipeService = {
         let data = await response.json();
         return data.Items;
     },
+    getProfileStatistics: async(userId) => {
+        const response = await recipeService.getCreatedRecipes(userId);
 
+        // Total created recipes
+        var totalCreatedRecipes = response.length;
+
+        // Total recipe stars
+        var totalRecipeStars = 0;
+        for(let recipe of response){
+            totalRecipeStars += recipe.Stars;
+        }
+
+        return [totalCreatedRecipes, totalRecipeStars]
+    },
     // Adds or removes a "star" from a recipe
     updateRecipeStars: async (userId, recipeId, value) => {
         // Executes request

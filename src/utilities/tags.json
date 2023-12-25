@@ -37,12 +37,12 @@
 
     { "title": "vegetarian", "typeCode": 2, "popularity": 0.90 },
     { "title": "vegan", "typeCode": 2, "popularity": 0.70 },
-    { "title": "high-protein", "typeCode": 2, "popularity": 0.69 },
+    { "title": "highProtein", "typeCode": 2, "popularity": 0.69 },
     { "title": "paleo", "typeCode": 2 , "popularity": 0.52 },
     { "title": "pescetarian", "typeCode": 2, "popularity": 0.62 },
     { "title": "keto", "typeCode": 2, "popularity": 0.28 },
-    { "title": "dairy-free", "typeCode": 2, "popularity": 0.79 },
-    { "title": "gluten-free", "typeCode": 2, "popularity": 0.62 },
+    { "title": "dairyFree", "typeCode": 2, "popularity": 0.79 },
+    { "title": "glutenFree", "typeCode": 2, "popularity": 0.62 },
 
     { "title": "bitter", "typeCode": 3, "popularity": 0.05 },
     { "title": "sweet", "typeCode": 3, "popularity": 0.78 },

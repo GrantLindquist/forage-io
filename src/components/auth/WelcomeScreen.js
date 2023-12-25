@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { KeyboardAvoidingView, View, Pressable, StyleSheet } from "react-native";
+import { KeyboardAvoidingView, View, Pressable, StyleSheet, Image } from "react-native";
 import { Text } from "react-native";
 import SignIn from "./SignIn";
 import CreateAccount from "./CreateAccount";
@@ -9,17 +9,17 @@ import { LinearGradient } from 'expo-linear-gradient';
 // Gradient text for title screen
 export const GradientText = (props) => {
 	return (
-	  <MaskedView maskElement={<Text {...props} />}>
-		<LinearGradient
-		  colors={["#38FFA0", "#00C2FF"]}
-		  start={{ x: 0, y: 1 }}
-		  end={{ x: 1, y: 0 }}
-		>
-		  <Text {...props} style={[props.style, { opacity: 0 }]} />
-		</LinearGradient>
-	  </MaskedView>
+		<MaskedView maskElement={<Text {...props} />}>
+			<LinearGradient
+				colors={["#38FFA0", "#00C2FF"]}
+				start={{ x: 0, y: 1 }}
+				end={{ x: 1, y: 0 }}
+			>
+				<Text {...props} style={[props.style, { opacity: 0 }]} />
+			</LinearGradient>
+		</MaskedView>
 	);
-  };
+};
 
 // Welcomes user to application and displays either sign-in or sign-up component
 export default function WelcomeScreen() {
@@ -28,30 +28,36 @@ export default function WelcomeScreen() {
 	const [isCreatingAccount, setCreatingAccount] = useState(false);
 
 	return (
-	<View style={styles.container}>
-		<View style={{position: 'absolute', top: '15%', alignItems: "center",}}>
-			<GradientText style={styles.title}>forage.io</GradientText>
-			<Text style={styles.subtitle}>Powered by GPT</Text>
-		</View>
-		
-		{/* Either sign-in or create account components are displayed, depending on which option user selects */}
-		<KeyboardAvoidingView behavior="padding" style={{width: "80%", position: 'absolute', bottom: "16%"}}>
-			{isCreatingAccount ? <CreateAccount/> : <SignIn/>}
-		</KeyboardAvoidingView>
+		<View style={styles.container}>
+			<Image
+				style={{ height: '100%', width: '100%' }}
+				source={require('../../../assets/welcome-bg.png')}
+			/>
+			<View style={{ position: 'absolute', top: '15%', alignItems: "center", }}>
+				<Image
+					style={{ height: 80, width: 290 }}
+					source={require('../../../assets/logo/nav-logoface.png')} />
+				<Text style={styles.subtitle}>Powered by GPT</Text>
+			</View>
 
-		<View style={{alignItems: 'center', margin: 10, position: 'absolute', bottom: "9%" }}>
-			{isCreatingAccount ? 
-			<Pressable style={{alignItems: 'center'}} onPress={() => setCreatingAccount(false)}>
-				<Text style={{ color: 'white' }}>Already have an account?</Text>
-				<Text style={{ color: 'white' }}>Sign in here!</Text>
-			</Pressable> :
-			<Pressable style={{alignItems: 'center'}} onPress={() => setCreatingAccount(true)}>
-				<Text style={{ color: 'white' }}>Don't have an account?</Text>
-				<Text style={{ color: 'white' }}>Create one for free!</Text>
-			</Pressable>}
+			{/* Either sign-in or create account components are displayed, depending on which option user selects */}
+			<KeyboardAvoidingView behavior="padding" style={{ width: "80%", position: 'absolute', bottom: "16%" }}>
+				{isCreatingAccount ? <CreateAccount /> : <SignIn />}
+			</KeyboardAvoidingView>
+
+			<View style={{ alignItems: 'center', margin: 10, position: 'absolute', bottom: "9%" }}>
+				{isCreatingAccount ?
+					<Pressable style={{ alignItems: 'center' }} onPress={() => setCreatingAccount(false)}>
+						<Text style={{ color: 'white' }}>Already have an account?</Text>
+						<Text style={{ color: 'white', textDecorationLine: 'underline' }}>Sign in here!</Text>
+					</Pressable> :
+					<Pressable style={{ alignItems: 'center' }} onPress={() => setCreatingAccount(true)}>
+						<Text style={{ color: 'white' }}>Don't have an account?</Text>
+						<Text style={{ color: 'white', textDecorationLine: 'underline' }}>Create one for free!</Text>
+					</Pressable>}
+			</View>
 		</View>
-	</View>
-	);	
+	);
 };
 
 const styles = StyleSheet.create({
@@ -64,9 +70,9 @@ const styles = StyleSheet.create({
 	title: {
 		fontSize: 58,
 		fontWeight: 700,
-		color: "white", 
+		color: "white",
 	},
 	subtitle: {
-		color: 'white',
+		color: 'grey',
 	}
 });

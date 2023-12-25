@@ -16,7 +16,7 @@ export default function SignIn() {
 	const [password, setPassword] = useState("");
 	const [usernameHelperText, setUsernameHelperText] = useState("");
 	const [passwordHelperText, setPasswordHelperText] = useState("");
- 
+
 	// Attempts to sign-in user
 	const handleSignIn = async () => {
 
@@ -24,7 +24,7 @@ export default function SignIn() {
 		if (!isLoaded) {
 			return;
 		}
-		
+
 		// Sends user input to Clerk
 		try {
 			const completeSignIn = await signIn.create({
@@ -33,10 +33,10 @@ export default function SignIn() {
 			});
 
 			// Creates user session and indicates successful sign-in
-			await setActive({ 
-				session: completeSignIn.createdSessionId 
+			await setActive({
+				session: completeSignIn.createdSessionId
 			});
-		} 
+		}
 		// If sign-in fails, return error from Clerk
 		catch (err) {
 			// Log error
@@ -47,28 +47,28 @@ export default function SignIn() {
 			setPasswordHelperText("");
 
 			// Update helper text state
-			for(e of err.errors){
-				if(e.meta.paramName == "identifier"){
+			for (e of err.errors) {
+				if (e.meta.paramName == "identifier") {
 					// If account does not exist
-					if(e.code == "form_identifier_not_found"){
+					if (e.code == "form_identifier_not_found") {
 						setUsernameHelperText("Account does not exist.");
 					}
 					// If username is invalid
-					else if(e.code == "form_param_format_invalid"){
+					else if (e.code == "form_param_format_invalid") {
 						setUsernameHelperText("Enter valid username.");
 					}
 					// For all other username errors
-					else{
+					else {
 						setUsernameHelperText(e.message);
 					}
 				}
-				else if(e.meta.paramName == "password"){
+				else if (e.meta.paramName == "password") {
 					// If password is incorrect
-					if(e.code == "form_password_incorrect"){
+					if (e.code == "form_password_incorrect") {
 						setPasswordHelperText("Password is incorrect.");
 					}
 					// For all other password errors
-					else{
+					else {
 						setPasswordHelperText(e.message);
 					}
 				}
@@ -76,43 +76,45 @@ export default function SignIn() {
 		}
 	};
 	return (
-	<View>
-		<TextInput
-			style={{ marginVertical: 3 }}
-			autoCapitalize="none"
-			value={username}
-			label="Username"
-			mode="outlined"
-			onChangeText={(username) => setUsername(username)}
-			keyboardAppearance="dark"
-			selectionColor="white"
-			activeOutlineColor="grey"
-		/> 
-		{usernameHelperText != "" ? <HelperText type='error'>{usernameHelperText}</HelperText> : <></>}
-		<TextInput
-			style={{ marginVertical: 3 }}
-			value={password}
-			label="Password"
-			mode="outlined"
-			onChangeText={(password) => setPassword(password)}
-			keyboardAppearance="dark"
-			selectionColor="white"
-			activeOutlineColor="grey"
-			secureTextEntry={true}
-		/>
-		{passwordHelperText != "" ? <HelperText type='error'>{passwordHelperText}</HelperText> : <></>}
-		
-		<MaskedView maskElement={ <Button style={{ margin: 10, marginHorizontal: 30 }} buttonColor="black" mode="contained" onPress={handleSignIn}>
-          Sign-in
-        </Button>}>
-			<LinearGradient
-			colors={["#38FFA0", "#00C2FF"]}
-			start={{ x: 0, y: 1 }}
-			end={{ x: 1, y: 0 }}
-			>
-				<Button style={{ margin: 10, marginHorizontal: 30 }} buttonColor='transparent' textColor="black" mode="contained" onPress={handleSignIn}>Sign-in</Button>
-			</LinearGradient>
-		</MaskedView>
-	</View>
+		<View>
+			<TextInput
+				style={{ marginVertical: 3 }}
+				autoCapitalize="none"
+				value={username}
+				label="Username"
+				mode="outlined"
+				onChangeText={(username) => setUsername(username)}
+				keyboardAppearance="dark"
+				selectionColor="white"
+				activeOutlineColor="grey"
+				textContentType='oneTimeCode'
+			/>
+			{usernameHelperText != "" ? <HelperText type='error'>{usernameHelperText}</HelperText> : <></>}
+			<TextInput
+				style={{ marginVertical: 3 }}
+				value={password}
+				label="Password"
+				mode="outlined"
+				onChangeText={(password) => setPassword(password)}
+				keyboardAppearance="dark"
+				selectionColor="white"
+				activeOutlineColor="grey"
+				secureTextEntry={true}
+				textContentType='oneTimeCode'
+			/>
+			{passwordHelperText != "" ? <HelperText type='error'>{passwordHelperText}</HelperText> : <></>}
+
+			<MaskedView maskElement={<Button style={{ margin: 10, marginHorizontal: 30 }} buttonColor="black" mode="contained" onPress={handleSignIn}>
+				Sign-in
+			</Button>}>
+				<LinearGradient
+					colors={["#38FFA0", "#00C2FF"]}
+					start={{ x: 0, y: 1 }}
+					end={{ x: 1, y: 0 }}
+				>
+					<Button style={{ margin: 10, marginHorizontal: 30 }} buttonColor='transparent' textColor="black" mode="contained" onPress={handleSignIn}>Sign-in</Button>
+				</LinearGradient>
+			</MaskedView>
+		</View>
 	);
 }
