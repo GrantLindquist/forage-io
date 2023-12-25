@@ -192,7 +192,7 @@ export default function CreateRecipeModal(props) {
 				setGeneratingRecipe(false);
 
 				// Display snackbar depending on service response
-				setMessage("Recipe generated");
+				setMessage("Recipe generated!");
 				setError(false);
 				setVisible(true);
 
@@ -204,7 +204,7 @@ export default function CreateRecipeModal(props) {
 			}
 			catch (e) {
 				setGeneratingRecipe(false);
-				setMessage("There was an error handling your request");
+				setMessage("There was an error handling your request.");
 				setError(true);
 				setVisible(true);
 

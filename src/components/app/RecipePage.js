@@ -82,12 +82,12 @@ export default function RecipePage(props) {
 		try {
 			recipeService.deleteRecipe(user.id, recipe.RecipeId, saveRecord);
 
-			setMessage("Recipe deleted");
+			setMessage("Recipe deleted.");
 			setError(false);
 			setVisible(true);
 		}
 		catch (e) {
-			setMessage("There was an error handling your request");
+			setMessage("There was an error handling your request.");
 			setError(true);
 			setVisible(true);
 		}
@@ -136,7 +136,7 @@ export default function RecipePage(props) {
 		}
 		catch (e) {
 			// Displays snackbar
-			setMessage("There was an error handling your request");
+			setMessage("There was an error handling your request.");
 			setError(true);
 			setVisible(true);
 		}
@@ -203,7 +203,7 @@ ${instructionString}`,
 	const handleReportRecipe = () => {
 		setReportRecipeVisible(false);
 
-		setMessage("Recipe reported");
+		setMessage("Recipe reported.");
 		setError(false);
 		setVisible(true);
 

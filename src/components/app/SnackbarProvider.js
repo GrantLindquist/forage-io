@@ -17,6 +17,7 @@ function NotificationSnackbar() {
                         labelStyle: { color: error ? "red" : "green" },
                         onPress: () => hideSnackbar,
                     }}
+                    style={{marginBottom: 50}}
                 >
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <Image
