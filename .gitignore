@@ -9,6 +9,8 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
+
+# Remove these when eas building
 assets/
 env.json
 

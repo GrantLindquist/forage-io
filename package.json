@@ -1,5 +1,5 @@
 {
-  "name": "forage-io",
+  "name": "forage.io",
   "version": "1.0.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@clerk/clerk-expo": "^0.17.7",
-    "@react-native-community/slider": "^4.4.2",
+    "@react-native-community/slider": "4.4.2",
     "@react-native-masked-view/masked-view": "0.2.8",
     "@react-navigation/bottom-tabs": "^6.5.7",
     "@react-navigation/material-bottom-tabs": "^6.2.16",
@@ -26,8 +26,7 @@
     "openai": "^4.16.1",
     "react": "18.2.0",
     "react-native": "0.71.14",
-    "react-native-get-random-values": "^1.9.0",
-    "react-native-google-mobile-ads": "^12.0.0",
+    "react-native-get-random-values": "~1.9.0",
     "react-native-pager-view": "6.1.2",
     "react-native-paper": "^5.10.1",
     "react-native-render-html": "^6.3.4",

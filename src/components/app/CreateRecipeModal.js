@@ -406,9 +406,8 @@ const styles = StyleSheet.create({
 		height: "85%",
 	},
 	addIngredients: {
-		height: 35,
+		height: 42,
 		width: '85%',
-		lineHeight: 18,
 	},
 	addIngredientButton: {
 		borderRadius: '5',
