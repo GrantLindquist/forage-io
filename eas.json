@@ -9,5 +9,14 @@
   },
   "cli": {
     "promptToConfigurePushNotifications": false
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "appleId": "grant.lindquist@icloud.com",
+        "ascAppId": "6475016431",
+        "appleTeamId": "TY3535BB57"
+      }
+    }
   }
 }
