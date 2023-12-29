@@ -15,7 +15,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.glindquist.forageio",
-      "buildNumber": "2.0.3"
+      "buildNumber": "2.0.4"
     },
     "extra": {
       "eas": {
