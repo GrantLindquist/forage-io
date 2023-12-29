@@ -6,7 +6,6 @@ import MaskedView from '@react-native-masked-view/masked-view';
 import { LinearGradient } from 'expo-linear-gradient';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import recipeService from '../../services/recipeService';
-import env from '../../../env.json'
 import { SnackbarContext } from './SnackbarProvider';
 
 // Contains information about the user and various modifiable settings/configurations
@@ -56,7 +55,7 @@ export default function Profile(props) {
 				method: 'DELETE',
 				headers: {
 					'Content-Type': 'application/json',
-					'authorization': 'Bearer ' + env['clerk-secretKey'],
+					'authorization': 'Bearer ' + process.env.EXPO_PUBLIC_CLERK_SECRET_KEY,
 				}
 			});
 

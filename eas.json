@@ -3,9 +3,22 @@
     "preview": {
       "ios": {
         "simulator": true
+      },
+      "env": {
+        "EXPO_PUBLIC_OPENAI_KEY": "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",
+        "EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY": "pk_test_bW9yYWwtbWFrby05NC5jbGVyay5hY2NvdW50cy5kZXYk",
+        "EXPO_PUBLIC_CLERK_SECRET_KEY": "sk_test_HzsEx0j19wgRsG6O7hq45WhqdgFpJRlJid7H6p0aPb",
+        "EXPO_PUBLIC_FORAGE_URI": "https://oongvnk9o0.execute-api.us-east-1.amazonaws.com/"
       }
     },
-    "production": {}
+    "production": {
+      "env": {
+        "EXPO_PUBLIC_OPENAI_KEY": "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",
+        "EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY": "pk_test_bW9yYWwtbWFrby05NC5jbGVyay5hY2NvdW50cy5kZXYk",
+        "EXPO_PUBLIC_CLERK_SECRET_KEY": "sk_test_HzsEx0j19wgRsG6O7hq45WhqdgFpJRlJid7H6p0aPb",
+        "EXPO_PUBLIC_FORAGE_URI": "https://oongvnk9o0.execute-api.us-east-1.amazonaws.com/"
+      }
+    }
   },
   "cli": {
     "promptToConfigurePushNotifications": false

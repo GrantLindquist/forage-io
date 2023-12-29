@@ -9,10 +9,10 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
+.env
 
-# Remove these when eas building
+# Remove this when eas building
 assets/
-env.json
 
 # macOS
 .DS_Store

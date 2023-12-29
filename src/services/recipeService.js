@@ -3,12 +3,12 @@ import OpenAI from 'openai';
 // UUID import
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
-import env from '../../env.json'
 
 // OpenAI API configuration
 const openai = new OpenAI({
-    apiKey: env['openAI-apiKey'],
+    apiKey: process.env.EXPO_PUBLIC_OPENAI_KEY
 });
+const stage = __DEV__ ? "dev" : "prod";
 
 // Extra instructions for recipe generation
 const extraInstructions = (tags) => {
@@ -96,7 +96,7 @@ const recipeService = {
         const recipe = JSON.parse(completion.choices[0].message.content);
 
         // Place recipe into DB
-        const response = await fetch(`${env['forageAPI-uri']}/recipes`, {
+        const response = await fetch(`${process.env.EXPO_PUBLIC_FORAGE_URI}${stage}/recipes`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -142,7 +142,7 @@ const recipeService = {
         const recipe = JSON.parse(completion.choices[0].message.content);
 
         // Place recipe into DB
-        const response = await fetch(`${env['forageAPI-uri']}/recipes`, {
+        const response = await fetch(`${process.env.EXPO_PUBLIC_FORAGE_URI}${stage}/recipes`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -171,7 +171,7 @@ const recipeService = {
     // Gets recipes that user has created
     getCreatedRecipes: async (userId) => {
         // Executes request
-        const response = await fetch(`${env['forageAPI-uri']}/recipes/user?creatorId=${userId}`, {
+        const response = await fetch(`${process.env.EXPO_PUBLIC_FORAGE_URI}${stage}/recipes/user?creatorId=${userId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -188,7 +188,7 @@ const recipeService = {
         var savedRecipeData = [];
         for (item of recipeIds) {
             // Executes request
-            const response = await fetch(`${env['forageAPI-uri']}/recipes/?recipeId=${item}`, {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_FORAGE_URI}${stage}/recipes/?recipeId=${item}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -208,7 +208,7 @@ const recipeService = {
     // Gets well-liked recipes to display on communityRecipes component
     getCommunityRecipes: async (userId, searchTerm, tags) => {
         // Executes request
-        const response = await fetch(`${env['forageAPI-uri']}/recipes/community?creatorId=${userId}&searchTerm=${searchTerm}&tags=${tags}`, {
+        const response = await fetch(`${process.env.EXPO_PUBLIC_FORAGE_URI}${stage}/recipes/community?creatorId=${userId}&searchTerm=${searchTerm}&tags=${tags}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -235,7 +235,7 @@ const recipeService = {
     // Adds or removes a "star" from a recipe
     updateRecipeStars: async (userId, recipeId, value) => {
         // Executes request
-        const response = await fetch(`${env['forageAPI-uri']}/recipes?creatorId=${userId}&recipeId=${recipeId}&value=${value}`, {
+        const response = await fetch(`${process.env.EXPO_PUBLIC_FORAGE_URI}${stage}/recipes?creatorId=${userId}&recipeId=${recipeId}&value=${value}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -250,7 +250,7 @@ const recipeService = {
     // Deletes recipe from user's catalog
     deleteRecipe: async (userId, recipeId, saveRecord) => {
         // Executes request
-        const response = await fetch(`${env['forageAPI-uri']}/recipes?creatorId=${userId}&recipeId=${recipeId}&saveRecord=${saveRecord}`, {
+        const response = await fetch(`${process.env.EXPO_PUBLIC_FORAGE_URI}${stage}/recipes?creatorId=${userId}&recipeId=${recipeId}&saveRecord=${saveRecord}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
