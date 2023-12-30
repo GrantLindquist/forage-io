@@ -188,7 +188,7 @@ export default function CreateRecipeModal(props) {
 
 			// Confirm recipe completion and change state back to false once recipe is complete
 			try {
-				remixRecipe ? await recipeService.remixRecipe(recipeDTO, user, remixRecipe) : await recipeService.generateRecipe(recipeDTO, user);
+				await recipeService.generateRecipe(recipeDTO, user, remixRecipe);
 				setGeneratingRecipe(false);
 
 				// Display snackbar depending on service response
@@ -204,7 +204,7 @@ export default function CreateRecipeModal(props) {
 			}
 			catch (e) {
 				setGeneratingRecipe(false);
-				setMessage("There was an error handling your request.");
+				setMessage("There was an error generating your recipe.");
 				setError(true);
 				setVisible(true);
 
