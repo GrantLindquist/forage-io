@@ -1,14 +1,14 @@
 // eas build -p ios --profile preview
 
 import { PaperProvider } from 'react-native-paper';
-import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
-import { createStackNavigator } from '@react-navigation/stack';
+import { ClerkProvider, SignedIn, SignedOut, useUser } from "@clerk/clerk-expo";
 import WelcomeScreen from './src/components/auth/WelcomeScreen';
 import AppNavigation from './src/components/app/AppNavigation';
 import { DarkTheme, NavigationContainer } from '@react-navigation/native';
 import { Asset } from 'expo-asset';
 import { useEffect } from 'react';
 import SnackbarProvider from './src/components/app/SnackbarProvider';
+import * as SecureStore from 'expo-secure-store';
 
 // App entry point
 export default function App() {
@@ -67,6 +67,23 @@ export default function App() {
 		},
 	}
 
+	// Session token stuff
+	const tokenCache = {
+		async getToken(key) {
+		  try {
+			return SecureStore.getItemAsync(key);
+		  } catch (err) {
+			return null;
+		  }
+		},
+		async saveToken(key, value) {
+		  try {
+			return SecureStore.setItemAsync(key, value);
+		  } catch (err) {
+			return;
+		  }
+		},
+	  };
 
 	// Prepares app for user upon login
 	useEffect(() => {
@@ -117,7 +134,10 @@ export default function App() {
 	}, [])
 
 	return (
-		<ClerkProvider publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY}>
+		<ClerkProvider 
+			publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY}
+			tokenCache={tokenCache}
+		>
 			{/* PaperProvider is used for UI management */}
 			<PaperProvider theme={theme}>
 				{/* These components display if user is signed-in with Clerk */}
