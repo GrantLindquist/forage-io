@@ -22,8 +22,8 @@ const recipeService = {
                 })
             });
             // Return response
-            if (response.statusCode != 200) {
-                throw new Error("There was an error from AWS");
+            if (response.status != 200) {
+                throw new Error("There was an error from AWS: error " + response.status);
             }
             else {
                 return (response);
@@ -33,7 +33,6 @@ const recipeService = {
             console.error(e.message);
             throw new Error("There was an error from AWS: " + e.message)
         }
-
     },
 
     // Gets recipes that user has created

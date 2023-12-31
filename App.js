@@ -70,6 +70,8 @@ export default function App() {
 
 	// Prepares app for user upon login
 	useEffect(() => {
+		console.log(`stage:${__DEV__ ? "dev" : "prod"}`);
+
 		// Preload images
 		const preloadImages = (images) => {
 			return images.map(image => {

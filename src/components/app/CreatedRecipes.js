@@ -8,7 +8,6 @@ import { useUser } from '@clerk/clerk-expo';
 import recipeService from '../../services/recipeService';
 import EmptyList from './EmptyList';
 import ErrorList from './ErrorList';
-// import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
 
 // Collection of recipes created or saved by the user
 export default function CreatedRecipes(props) {
@@ -72,10 +71,6 @@ export default function CreatedRecipes(props) {
 	return (
 		<>
 			<View style={{ minHeight: '100%' }}>
-				{/* <BannerAd
-					unitId={"ca-app-pub-9548603992233366/9758974901"}
-					size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-				/> */}
 				{
 					errorMessage == "" ?
 						<>
