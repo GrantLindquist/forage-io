@@ -2,11 +2,13 @@
   "expo": {
     "name": "forage.io",
     "slug": "forage-io",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/logo/forage.io-icon.png",
     "userInterfaceStyle": "dark",
     "splash": {
+      "image": "./assets/forage.io-splash.png",
+      "resizeMode": "contain",
       "backgroundColor": "#000000"
     },
     "assetBundlePatterns": [
@@ -15,7 +17,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.glindquist.forageio",
-      "buildNumber": "2.0.5"
+      "buildNumber": "2.0.6"
     },
     "extra": {
       "eas": {

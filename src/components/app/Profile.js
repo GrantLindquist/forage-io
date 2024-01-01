@@ -103,9 +103,9 @@ export default function Profile(props) {
 			</View>
 
 			<View style={{ position: 'absolute', bottom: 5, width: '100%' }}>
-				<Button mode="text" onPress={signOut}>Sign out</Button>
+				<Button mode="text" textColor='#FFF' onPress={signOut}>Sign out</Button>
 				<Divider style={{ marginHorizontal: 20 }} />
-				<Button mode="text" textColor='red' onPress={() => setWarningDialogVisible(true)}>Delete account</Button>
+				<Button mode="text" textColor='#FF5C5C' onPress={() => setWarningDialogVisible(true)}>Delete account</Button>
 			</View>
 
 			{/* Account deletion warning dialog */}
@@ -117,8 +117,8 @@ export default function Profile(props) {
 						<Text variant="bodyMedium">This action is irreversible.</Text>
 					</Dialog.Content>
 					<Dialog.Actions>
-						<Button onPress={() => setWarningDialogVisible(false)}>No way!</Button>
-						<Button textColor='red' onPress={handleDeleteAccount}>Yes, delete my account.</Button>
+						<Button textColor='#FFF' onPress={() => setWarningDialogVisible(false)}>No way!</Button>
+						<Button textColor='#FF5C5C' onPress={handleDeleteAccount}>Yes, delete my account.</Button>
 					</Dialog.Actions>
 				</Dialog>
 			</Portal>

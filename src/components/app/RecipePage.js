@@ -1,8 +1,8 @@
 import { useRoute } from "@react-navigation/native";
 import { useNavigation } from '@react-navigation/native';
-import { Alert, Share, ScrollView, View, StyleSheet, Pressable } from "react-native";
-import { Text, Appbar, Checkbox } from "react-native-paper";
-import { Portal, Dialog, Button } from "react-native-paper";
+import { Alert, Share, ScrollView, View, StyleSheet, Pressable, SafeAreaView } from "react-native";
+import { Text, Appbar, Checkbox, IconButton } from "react-native-paper";
+import { Portal, Dialog, Button, ActivityIndicator } from "react-native-paper";
 import { useUser } from "@clerk/clerk-expo";
 import RecipeTag from "./RecipeTag";
 import { useState, useEffect, useContext } from "react";
@@ -24,6 +24,8 @@ export default function RecipePage(props) {
 	const route = useRoute();
 	const { user } = useUser();
 	const { recipe } = route.params;
+
+	const [isSaving, setSaving] = useState(false);
 
 	// Snackbar context
 	const { setMessage, setError, setVisible } = useContext(SnackbarContext);
@@ -47,25 +49,33 @@ export default function RecipePage(props) {
 
 	useEffect(() => {
 		setUserAction(determineUserAction());
-	}, [canBeSaved]);
+	}, [canBeSaved, isSaving]);
 
 	// Method for determining user action in FAB group
 	const determineUserAction = () => {
 		// If user has created recipe, display delete action
 		if (user.id == recipe.CreatorId) {
 			return (
-				<Appbar.Action icon={'delete'} size={24} onPress={() => handleDeleteRecipe()} />
+				<IconButton icon={'delete'} size={30} onPress={() => handleDeleteRecipe()} />
 			)
 		}
 		// Otherwise, display save action
 		else {
 			return (
-				<Appbar.Action
-					icon={!canBeSaved ? "star" : "star-outline"}
-					size={30}
-					color={!canBeSaved ? "#FFFF78" : "white"}
-					onPress={() => handleSaveRecipe()}
-				/>
+				<>
+					{isSaving ?
+						<IconButton
+							icon={() => <ActivityIndicator size={30} animating={true} />}
+						/>
+						:
+						<IconButton
+							icon={!canBeSaved ? "star" : "star-outline"}
+							size={30}
+							iconColor={!canBeSaved ? "#FFFF78" : "white"}
+							onPress={() => handleSaveRecipe()}
+						/>
+					}
+				</>
 			)
 		}
 	}
@@ -103,6 +113,7 @@ export default function RecipePage(props) {
 
 	// Appends or removes recipe id to/from user's saved recipe ids
 	const handleSaveRecipe = async () => {
+		setSaving(true);
 		const prevSavedRecipeIds = user.unsafeMetadata.savedRecipeIds;
 		var savedRecipeIds = [];
 
@@ -133,12 +144,14 @@ export default function RecipePage(props) {
 			setMessage(canBeSaved ? "Recipe has been saved!" : "Recipe has been unsaved!");
 			setError(false);
 			setVisible(true);
+			setSaving(false);
 		}
 		catch (e) {
 			// Displays snackbar
 			setMessage("There was an error handling your request.");
 			setError(true);
 			setVisible(true);
+			setSaving(false);
 		}
 
 		// Update user with new list of ids
@@ -208,6 +221,7 @@ ${instructionString}`,
 		setVisible(true);
 
 		// Do more stuff here maybe
+		
 	}
 
 	// Sub-component that lists a tag component for each recipe tag
@@ -260,30 +274,35 @@ ${instructionString}`,
 	return (
 		<>
 			{/* Custom recipePage header */}
-			<Appbar.Header style={{ backgroundColor: '#000000' }}>
-				<Appbar.BackAction onPress={() => navigation.goBack()} />
-				<Appbar.Content></Appbar.Content>
-				<Appbar.Action
-					size={30}
-					icon={() => <MaskedView maskElement={<MaterialCommunityIcons name="creation" size={30} />}>
-						<LinearGradient
-							colors={["#38FFA0", "#00C2FF"]}
-							start={{ x: 0, y: 0 }}
-							end={{ x: 1, y: 0 }}
-							style={{ width: 30, height: 30 }}
-						/>
-					</MaskedView>}
-					onPress={() => navigation.navigate('CreateRecipeModal', {
-						recipe: recipe
-					})}
+			<SafeAreaView style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, height: 100 }}>
+				<IconButton
+					icon={"chevron-left"}
+					size={40}
+					onPress={() => navigation.goBack()}
 				/>
-				<Appbar.Action
-					icon={"share"}
-					size={30}
-					onPress={() => handleShareRecipe()}
-				/>
-				{userAction}
-			</Appbar.Header>
+				<View style={{ flexDirection: 'row', marginLeft: 'auto', marginRight: 10 }}>
+					<IconButton
+						size={30}
+						icon={() => <MaskedView maskElement={<MaterialCommunityIcons name="creation" size={30} />}>
+							<LinearGradient
+								colors={["#38FFA0", "#00C2FF"]}
+								start={{ x: 0, y: 0 }}
+								end={{ x: 1, y: 0 }}
+								style={{ width: 30, height: 30 }}
+							/>
+						</MaskedView>}
+						onPress={() => navigation.navigate('CreateRecipeModal', {
+							recipe: recipe
+						})}
+					/>
+					<IconButton
+						icon={"share"}
+						size={30}
+						onPress={() => handleShareRecipe()}
+					/>
+					{userAction}
+				</View>
+			</SafeAreaView>
 
 			<ScrollView>
 				<View style={styles.container}>

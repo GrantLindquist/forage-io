@@ -134,7 +134,7 @@ export default function CreateRecipeModal(props) {
 	// Creates a recipe using user-specified filters
 	const handleCreateRecipe = async () => {
 		// Alert user that ingredientInput is not empty before generating recipe
-		if (ingredientInput != '') {
+		if (ingredientInput != '' && ingredientHelperText == '') {
 			setIngredientHelperText("Did you mean to add this ingredient to your recipe?");
 		}
 		else {
