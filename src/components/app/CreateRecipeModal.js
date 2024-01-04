@@ -39,7 +39,7 @@ export default function CreateRecipeModal(props) {
 	const [recipeCharges, setRecipeCharges] = useState(10 - user.unsafeMetadata.recipeCharges.length);
 	const recipeChargesValueColor = useMemo(() => {
 		if (recipeCharges == 0) {
-			return "red";
+			return '#FF5C5C';
 		}
 		else if (recipeCharges <= 3) {
 			return "yellow";
@@ -325,7 +325,7 @@ export default function CreateRecipeModal(props) {
 								defaultTags={remixRecipe ? formatTags(remixRecipe.Tags) : []}
 							/>
 
-							<View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
+							<View style={{ flexDirection: 'row', alignItems: 'baseline', marginBottom: 10 }}>
 								<Text style={styles.categoryTitle}>Add some ingredients!</Text>
 								<Text style={{ color: 'grey' }}> ({ingredientTags.length}/5)</Text>
 							</View>
