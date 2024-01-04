@@ -12,7 +12,7 @@ web-build/
 .env
 
 # Remove this when eas building
-assets/
+# assets/
 
 # macOS
 .DS_Store
