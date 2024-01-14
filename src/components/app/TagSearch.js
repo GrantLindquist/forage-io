@@ -17,6 +17,8 @@ export default function TagSearch(props) {
 
     // Set display title of tag group
     useEffect(() => {
+        props.updateSelectedTags(selectedTags);
+
         // Determine styled elements
         switch (displayTypeCode) {
             case 0:
